@@ -1,0 +1,674 @@
+[
+  {
+    "actual": 58,
+    "category": "R",
+    "difference": 0,
+    "expected": 58,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 24,
+    "category": "HR",
+    "difference": 0,
+    "expected": 24,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 56,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 56,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 2,
+    "category": "SB",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 50,
+    "category": "BB",
+    "difference": 0,
+    "expected": 50,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 0.25471698113207547,
+    "category": "AVG",
+    "difference": 3.20754534044454e-11,
+    "expected": 0.2547169811,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 5,
+    "category": "W",
+    "difference": 0,
+    "expected": 5,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 5,
+    "category": "L",
+    "difference": 0,
+    "expected": 5,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 3,
+    "category": "SV",
+    "difference": 0,
+    "expected": 3,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 82,
+    "category": "K",
+    "difference": 0,
+    "expected": 82,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 3.157258064516129,
+    "category": "ERA",
+    "difference": 1.27305161288227e-05,
+    "expected": 3.157245334,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 1.1370967741935483,
+    "category": "WHIP",
+    "difference": 4.585193548178879e-06,
+    "expected": 1.137092189,
+    "matches": true,
+    "owner": "Brian"
+  },
+  {
+    "actual": 47,
+    "category": "R",
+    "difference": 0,
+    "expected": 47,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 14,
+    "category": "HR",
+    "difference": 0,
+    "expected": 14,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 53,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 53,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 4,
+    "category": "SB",
+    "difference": 0,
+    "expected": 4,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 33,
+    "category": "BB",
+    "difference": 0,
+    "expected": 33,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 0.23232323232323232,
+    "category": "AVG",
+    "difference": 2.3232332724276716e-11,
+    "expected": 0.2323232323,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 6,
+    "category": "W",
+    "difference": 0,
+    "expected": 6,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 2,
+    "category": "L",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 2,
+    "category": "SV",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 77,
+    "category": "K",
+    "difference": 0,
+    "expected": 77,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 2.7551020408163263,
+    "category": "ERA",
+    "difference": -5.6228183673567855e-05,
+    "expected": 2.755158269,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 1.2244897959183674,
+    "category": "WHIP",
+    "difference": -2.499008163270311e-05,
+    "expected": 1.224514786,
+    "matches": true,
+    "owner": "Mitch"
+  },
+  {
+    "actual": 47,
+    "category": "R",
+    "difference": 0,
+    "expected": 47,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 15,
+    "category": "HR",
+    "difference": 0,
+    "expected": 15,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 31,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 31,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 6,
+    "category": "SB",
+    "difference": 0,
+    "expected": 6,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 49,
+    "category": "BB",
+    "difference": 0,
+    "expected": 49,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 0.22946175637393768,
+    "category": "AVG",
+    "difference": -2.6062318969621856e-11,
+    "expected": 0.2294617564,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 1,
+    "category": "W",
+    "difference": 0,
+    "expected": 1,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 1,
+    "category": "L",
+    "difference": 0,
+    "expected": 1,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 2,
+    "category": "SV",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 72,
+    "category": "K",
+    "difference": 0,
+    "expected": 72,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 3.6818181818181817,
+    "category": "ERA",
+    "difference": 4.781481818172395e-05,
+    "expected": 3.681770367,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 1.0129870129870129,
+    "category": "WHIP",
+    "difference": 1.315598701290277e-05,
+    "expected": 1.012973857,
+    "matches": true,
+    "owner": "Ali"
+  },
+  {
+    "actual": 31,
+    "category": "R",
+    "difference": 0,
+    "expected": 31,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 8,
+    "category": "HR",
+    "difference": 0,
+    "expected": 8,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 32,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 32,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 3,
+    "category": "SB",
+    "difference": 0,
+    "expected": 3,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 24,
+    "category": "BB",
+    "difference": 0,
+    "expected": 24,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 0.25806451612903225,
+    "category": "AVG",
+    "difference": 2.9032276582796612e-11,
+    "expected": 0.2580645161,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 7,
+    "category": "W",
+    "difference": 0,
+    "expected": 7,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 5,
+    "category": "L",
+    "difference": 0,
+    "expected": 5,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 1,
+    "category": "SV",
+    "difference": 0,
+    "expected": 1,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 116,
+    "category": "K",
+    "difference": 0,
+    "expected": 116,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 2.814671814671815,
+    "category": "ERA",
+    "difference": -1.0867328184893665e-05,
+    "expected": 2.814682682,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 0.9382239382239382,
+    "category": "WHIP",
+    "difference": -3.6224760617820095e-06,
+    "expected": 0.9382275607,
+    "matches": true,
+    "owner": "Tim"
+  },
+  {
+    "actual": 32,
+    "category": "R",
+    "difference": 0,
+    "expected": 32,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 12,
+    "category": "HR",
+    "difference": 0,
+    "expected": 12,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 32,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 32,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 8,
+    "category": "SB",
+    "difference": 0,
+    "expected": 8,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 32,
+    "category": "BB",
+    "difference": 0,
+    "expected": 32,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 0.19791666666666666,
+    "category": "AVG",
+    "difference": -3.33333360913457e-11,
+    "expected": 0.1979166667,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 2,
+    "category": "W",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 2,
+    "category": "L",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 2,
+    "category": "SV",
+    "difference": 0,
+    "expected": 2,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 42,
+    "category": "K",
+    "difference": 0,
+    "expected": 42,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 3.24,
+    "category": "ERA",
+    "difference": -5.1840999999885895e-05,
+    "expected": 3.240051841,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 1.1280000000000001,
+    "category": "WHIP",
+    "difference": -1.8047999999826203e-05,
+    "expected": 1.128018048,
+    "matches": true,
+    "owner": "Baker"
+  },
+  {
+    "actual": 28,
+    "category": "R",
+    "difference": 0,
+    "expected": 28,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 8,
+    "category": "HR",
+    "difference": 0,
+    "expected": 8,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 27,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 27,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 4,
+    "category": "SB",
+    "difference": 0,
+    "expected": 4,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 18,
+    "category": "BB",
+    "difference": 0,
+    "expected": 18,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 0.2751937984496124,
+    "category": "AVG",
+    "difference": 4.9612369767970677e-11,
+    "expected": 0.2751937984,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 3,
+    "category": "W",
+    "difference": 0,
+    "expected": 3,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 4,
+    "category": "L",
+    "difference": 0,
+    "expected": 4,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 3,
+    "category": "SV",
+    "difference": 0,
+    "expected": 3,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 45,
+    "category": "K",
+    "difference": 0,
+    "expected": 45,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 3.306122448979592,
+    "category": "ERA",
+    "difference": 6.747097959181048e-05,
+    "expected": 3.306054978,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 1.183673469387755,
+    "category": "WHIP",
+    "difference": 2.415638775499218e-05,
+    "expected": 1.183649313,
+    "matches": true,
+    "owner": "Reed"
+  },
+  {
+    "actual": 43,
+    "category": "R",
+    "difference": 0,
+    "expected": 43,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 17,
+    "category": "HR",
+    "difference": 0,
+    "expected": 17,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 46,
+    "category": "RBI",
+    "difference": 0,
+    "expected": 46,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 0,
+    "category": "SB",
+    "difference": 0,
+    "expected": 0,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 29,
+    "category": "BB",
+    "difference": 0,
+    "expected": 29,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 0.2215568862275449,
+    "category": "AVG",
+    "difference": 2.754491079670629e-11,
+    "expected": 0.2215568862,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 3,
+    "category": "W",
+    "difference": 0,
+    "expected": 3,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 5,
+    "category": "L",
+    "difference": 0,
+    "expected": 5,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 0,
+    "category": "SV",
+    "difference": 0,
+    "expected": 0,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 35,
+    "category": "K",
+    "difference": 0,
+    "expected": 35,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 5.3076923076923075,
+    "category": "ERA",
+    "difference": -3.076925381151341e-10,
+    "expected": 5.307692308,
+    "matches": true,
+    "owner": "Russ"
+  },
+  {
+    "actual": 1.4615384615384615,
+    "category": "WHIP",
+    "difference": -4.615385851280962e-10,
+    "expected": 1.461538462,
+    "matches": true,
+    "owner": "Russ"
+  }
+]

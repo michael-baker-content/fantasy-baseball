@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>BABBD Fantasy Baseball</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.dataset.theme=localStorage.getItem('theme')||'light';</script>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="./" class="site-logo" aria-label="BABBD home">
+          <svg viewBox="0 0 36 36" aria-hidden="true">
+            <circle cx="18" cy="18" r="16" fill="#f8fafc" stroke="#d8dee7" stroke-width="1.5"/>
+            <path d="M9 5.5c4.5 5.5 4.5 19.5 0 25M27 5.5c-4.5 5.5-4.5 19.5 0 25" fill="none" stroke="#dc2626" stroke-width="1.4"/>
+            <path d="m10.8 9 3 1.7m-3.8 3 3.5 1.1m-3.8 3.6 3.7.2m-3.2 3.7 3.5-.8m11.5-12.5-3 1.7m3.8 3-3.5 1.1m3.8 3.6-3.7.2m3.2 3.7-3.5-.8" stroke="#dc2626" stroke-width="1"/>
+          </svg>
+        </a>
+        <div>
+          <h1 class="header-title">BABBD Fantasy Baseball</h1>
+          <p class="header-subtitle" id="header-subtitle">Rotisserie standings</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-meta"><div>Days elapsed <strong id="days-elapsed">—</strong></div><div>Days remaining <strong id="days-remaining">—</strong></div></div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme" aria-pressed="false">
+          <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.75 15A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.27-2.6.75-3.75A9.75 9.75 0 1 0 21.75 15Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="status-bar"><span class="status-dot"></span><span id="status-msg">Loading standings…</span></div>
+
+    <section id="standings-view">
+      <h2 class="section-heading">Leaderboard</h2>
+      <div class="legend desktop-only">
+        <span><i class="legend-dot pts-high"></i> Top category score</span>
+        <span><i class="legend-dot pts-low"></i> Bottom category score</span>
+        <span><i class="legend-dot pts-mid"></i> Mid-range score</span>
+      </div>
+      <div class="mobile-only mob-sort-bar"><label for="mobile-sort">Sort by</label><select id="mobile-sort"></select></div>
+      <div class="table-wrap desktop-only"><table class="leaderboard" id="standings-table"></table></div>
+      <div class="mobile-only" id="mobile-standings"></div>
+    </section>
+
+    <section id="owner-view" hidden>
+      <a href="./" class="back-link" id="back-link">← Back to standings</a>
+      <div class="owner-heading"><div><h2 id="owner-name">Team</h2><p id="owner-place"></p></div><strong id="owner-score"></strong></div>
+      <h3 class="section-heading">Hitters</h3>
+      <div class="table-wrap"><table class="leaderboard owner-table" id="hitter-table"></table></div>
+      <h3 class="section-heading owner-section">Pitchers</h3>
+      <div class="table-wrap"><table class="leaderboard owner-table" id="pitcher-table"></table></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="site-footer-inner"><span>Data through <span id="as-of">—</span></span><span>Official MLB game data</span></div></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>

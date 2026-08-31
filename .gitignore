@@ -1,0 +1,17 @@
+*.db
+*.pyc
+__pycache__/
+.env
+*.xlsx
+*.csv
+*.json
+!data/2025/*.json
+!data/2025/*.csv
+!config/league.json
+!config/roster.csv
+!docs/data/*.json
+fantasy_gamelogs_*
+data/mlb_cache/
+reference/
+.venv/
+venv/
