@@ -67,12 +67,34 @@ def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
     }
 
 
+def recalculate_payload(payload: dict, categories: dict) -> dict:
+    """Re-score the saved player stats without fetching games or changing dates."""
+    rows = [row for owner in payload["owners"] for row in owner["players"]]
+    totals = owner_totals(rows)
+    return payload | {
+        "league": payload["league"] | {"categories": categories},
+        "standings": roto_standings(totals),
+        "owners": [owner | {"totals": totals[owner["name"]]} for owner in payload["owners"]],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--through", help="last date to consider, YYYY-MM-DD (defaults to today)")
     parser.add_argument("--refresh", action="store_true", help="redownload cached final game feeds")
+    parser.add_argument("--recalculate", action="store_true",
+                        help="re-score the existing site snapshot offline; do not download MLB data")
     args = parser.parse_args()
+    if args.recalculate and (args.through or args.refresh):
+        parser.error("--recalculate cannot be combined with --through or --refresh")
     league, roster = load_config()
+    if args.recalculate:
+        output = ROOT / "docs/data/league.json"
+        payload = json.loads(output.read_text(encoding="utf-8"))
+        payload = recalculate_payload(payload, league["categories"])
+        output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        print(f"Recalculated {output.relative_to(ROOT)} using saved stats; no MLB data downloaded.")
+        return 0
     requested = args.through or date.today().isoformat()
     through = min(max(requested, league["start_date"]), league["end_date"])
     client = MlbStatsClient(ROOT / "data/mlb_cache")

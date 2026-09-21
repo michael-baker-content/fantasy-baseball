@@ -1,5 +1,5 @@
-const CATEGORIES=["R","HR","RBI","SB","AVG","W","SV","K","ERA","WHIP"];
-const LOWER_BETTER=new Set(["ERA","WHIP"]);
+const CATEGORIES=["R","HR","RBI","SB","BB","AVG","W","L","SV","K","ERA","WHIP"];
+const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
 
 const fmt=(key,value)=>["AVG","ERA","WHIP"].includes(key)?Number(value||0).toFixed(3).replace(/^0/,""):Number(value||0).toLocaleString();
@@ -75,7 +75,7 @@ function leagueMeta(){
   const start=new Date(data.league.start_date+'T00:00:00'),end=new Date(data.league.end_date+'T00:00:00'),today=new Date();
   const day=86400000,elapsed=Math.max(0,Math.min(Math.floor((today-start)/day),Math.round((end-start)/day)+1)),remaining=Math.max(0,Math.ceil((end-today)/day));
   document.querySelector("#days-elapsed").textContent=elapsed;document.querySelector("#days-remaining").textContent=remaining;
-  document.querySelector("#header-subtitle").textContent=`Rotisserie standings · ${data.league.start_date} – ${data.league.end_date}`;
+  document.querySelector("#header-subtitle").textContent=`Standings · ${data.league.start_date} – ${data.league.end_date}`;
   document.querySelector("#as-of").textContent=data.through_date||"No completed games";
   document.querySelector("#status-msg").textContent=`${data.games_counted} MLB games counted${data.through_date?` through ${data.through_date}`:''}`;
 }

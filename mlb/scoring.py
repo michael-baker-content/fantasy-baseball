@@ -7,6 +7,8 @@ COUNTING_HITTING = ("R", "HR", "RBI", "SB", "BB")
 COUNTING_PITCHING = ("W", "L", "SV", "K")
 ROTO_5X5 = (("R", False), ("HR", False), ("RBI", False), ("SB", False), ("AVG", False),
             ("W", False), ("SV", False), ("K", False), ("ERA", True), ("WHIP", True))
+ROTO_6X6 = (("R", False), ("HR", False), ("RBI", False), ("SB", False), ("BB", False), ("AVG", False),
+            ("W", False), ("L", True), ("SV", False), ("K", False), ("ERA", True), ("WHIP", True))
 
 
 def owner_totals(rows: list[dict]) -> dict[str, dict]:
@@ -33,10 +35,10 @@ def owner_totals(rows: list[dict]) -> dict[str, dict]:
     return owners
 
 
-def roto_standings(totals: dict[str, dict]) -> list[dict]:
+def roto_standings(totals: dict[str, dict], categories=ROTO_6X6) -> list[dict]:
     n = len(totals)
     points = {owner: {} for owner in totals}
-    for category, lower_is_better in ROTO_5X5:
+    for category, lower_is_better in categories:
         rate_category = category in {"ERA", "WHIP"}
 
         def ranking_key(owner: str):

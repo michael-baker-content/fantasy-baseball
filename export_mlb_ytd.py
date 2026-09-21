@@ -292,9 +292,40 @@ def write_excel(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict],
     workbook.save(path)
 
 
+def write_site_data(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict],
+                    season: int, start: str, through: str, roster_date: str) -> None:
+    """Publish a range alongside previously exported ranges for this season."""
+    payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"ranges": []}
+    range_id = "ytd" if start == f"{season}-01-01" else f"{start}_{through}"
+    fields = {
+        "batters": {"G": "games_played", "AB": "at_bats", "H": "hits", "R": "runs",
+                    "HR": "home_runs", "RBI": "rbi", "SB": "stolen_bases", "BB": "walks", "AVG": "batting_average"},
+        "pitchers": {"G": "games", "IP": "innings_pitched", "W": "wins", "L": "losses",
+                     "SV": "saves", "K": "strikeouts", "ERA": "era", "WHIP": "whip"},
+    }
+    def players(rows, group):
+        return [{"id": row["player_id"], "name": row["player_name"],
+                 "team": row["current_mlb_organization"],
+                 "position": row.get("primary_position", ""),
+                 "stats": {key: row.get(column, "") for key, column in fields[group].items()}}
+                for row in rows]
+    entry = {"id": range_id, "season": season, "start": start, "through": through,
+             "roster_date": roster_date,
+             "label": f"{season} year to date" if range_id == "ytd" else f"{start} – {through}",
+             "teams": sorted(PLAYOFF_TEAMS),
+             "batters": players(hitter_rows, "batters"), "pitchers": players(pitcher_rows, "pitchers")}
+    ranges = [row for row in payload.get("ranges", [])
+              if row["season"] == season and row["id"] != range_id]
+    ranges.append(entry)
+    ranges.sort(key=lambda row: (row["id"] != "ytd", row["start"], row["through"]))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"ranges": ranges}, indent=2), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--season", type=int, default=date.today().year)
+    parser.add_argument("--site", action="store_true", help="also publish this range to docs/data/player-stats.json")
     parser.add_argument("--start", help="first included date, YYYY-MM-DD (default: January 1 of --season)")
     parser.add_argument("--through", default=date.today().isoformat(), help="YYYY-MM-DD")
     parser.add_argument("--format", choices=("csv", "xlsx", "both"), default="both",
@@ -343,6 +374,10 @@ def main() -> int:
     if args.format in {"xlsx", "both"}:
         write_excel(workbook_path, hitter_rows, pitcher_rows, (start, through, roster_date.isoformat()))
         print(f"Wrote Batters and Pitchers worksheets to {workbook_path.relative_to(ROOT)}")
+    if args.site:
+        site_path = ROOT / "docs/data/player-stats.json"
+        write_site_data(site_path, hitter_rows, pitcher_rows, args.season, start, through, roster_date.isoformat())
+        print(f"Updated {site_path.relative_to(ROOT)}")
     return 0
 
 

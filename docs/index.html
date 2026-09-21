@@ -21,10 +21,17 @@
         </a>
         <div>
           <h1 class="header-title">BABBD Fantasy Baseball</h1>
-          <p class="header-subtitle" id="header-subtitle">Rotisserie standings</p>
+          <p class="header-subtitle" id="header-subtitle">Standings</p>
         </div>
       </div>
-      <div class="header-right">
+      <button class="mobile-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="header-menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="header-right" id="header-menu">
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="leaders-nav-link" href="./" aria-current="page">Standings</a>
+          <a class="leaders-nav-link" href="stats.html">Player Stats</a>
+        </nav>
         <div class="header-meta"><div>Days elapsed <strong id="days-elapsed">—</strong></div><div>Days remaining <strong id="days-remaining">—</strong></div></div>
         <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme" aria-pressed="false">
           <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.75 15A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.27-2.6.75-3.75A9.75 9.75 0 1 0 21.75 15Z"/></svg>
@@ -59,6 +66,7 @@
   </main>
 
   <footer class="site-footer"><div class="site-footer-inner"><span>Data through <span id="as-of">—</span></span><span>Official MLB game data</span></div></footer>
+  <script src="header.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

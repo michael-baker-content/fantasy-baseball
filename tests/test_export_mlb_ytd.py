@@ -1,4 +1,5 @@
 import csv
+import json
 from datetime import date
 
 import pytest
@@ -137,7 +138,7 @@ def test_range_export_uses_current_affiliation_and_all_team_totals(monkeypatch, 
             return {"stats": [{"splits": splits}]}
         if path == "/people":
             assert params["personIds"] == "1"
-            return {"people": [{"id": 1, "fullName": "Traded Player"}]}
+            return {"people": [{"id": 1, "fullName": "Traded Player", "primaryPosition": {"abbreviation": "SS"}}]}
         raise AssertionError(f"Unexpected API request: {path}")
 
     monkeypatch.setattr(exporter, "date", FixedDate)
@@ -146,8 +147,18 @@ def test_range_export_uses_current_affiliation_and_all_team_totals(monkeypatch, 
     monkeypatch.setattr(exporter, "api_get", fake_api)
     monkeypatch.setattr("sys.argv", ["export_mlb_ytd.py", "--season", "2026",
                                     "--start", "2026-05-01", "--through", "2026-05-30",
-                                    "--format", output_format])
+                                    "--format", output_format, "--site"])
     assert exporter.main() == 0
+    site = json.loads((tmp_path / "docs/data/player-stats.json").read_text(encoding="utf-8"))
+    published = site["ranges"][0]
+    assert published["start"] == "2026-05-01"
+    assert published["through"] == "2026-05-30"
+    assert published["roster_date"] == "2026-09-21"
+    assert len(published["batters"]) == 1
+    assert published["batters"][0]["team"] == "Test Club"
+    assert published["batters"][0]["position"] == "SS"
+    assert published["batters"][0]["stats"]["H"] == 21
+    assert published["pitchers"] == []
     output = tmp_path / "data" / "2026"
     assert len(list(output.glob("*.csv"))) == (2 if output_format in {"csv", "both"} else 0)
     assert len(list(output.glob("*.xlsx"))) == (1 if output_format in {"xlsx", "both"} else 0)
@@ -213,3 +224,32 @@ def test_default_start_is_january_first(monkeypatch):
 
     monkeypatch.setattr(exporter, "api_get", fake_api)
     assert exporter.season_splits("hitting", 2026, "2026-05-30") == []
+
+
+def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_path):
+    path = tmp_path / "player-stats.json"
+    batter = {"player_id": 1, "player_name": "Test Batter", "current_mlb_organization": "Test Club",
+              "games_played": 30, "at_bats": 100, "hits": 30, "runs": 20, "home_runs": 5,
+              "rbi": 15, "stolen_bases": 3, "walks": 10, "batting_average": ".300",
+              "birth_date": "2000-01-01", "primary_position": "C"}
+    pitcher = {"player_id": 2, "player_name": "Test Pitcher", "current_mlb_organization": "Test Club",
+               "games": 6, "innings_pitched": "30.2", "wins": 3, "losses": 1, "saves": 0,
+               "strikeouts": 40, "era": "2.35", "whip": "1.01", "primary_position": "P"}
+    for start, through in [("2026-01-01", "2026-09-20"), ("2026-05-01", "2026-05-30"),
+                           ("2026-01-01", "2026-09-21"), ("2026-05-01", "2026-05-30")]:
+        exporter.write_site_data(path, [batter], [pitcher], 2026, start, through, "2026-09-21")
+    ranges = json.loads(path.read_text(encoding="utf-8"))["ranges"]
+    assert len(ranges) == 2
+    assert ranges[0]["id"] == "ytd"
+    assert ranges[0]["through"] == "2026-09-21"
+    assert ranges[1]["start"] == "2026-05-01"
+    assert set(ranges[0]["batters"][0]["stats"]) == {"G", "AB", "H", "R", "HR", "RBI", "SB", "BB", "AVG"}
+    assert set(ranges[0]["pitchers"][0]["stats"]) == {"G", "IP", "W", "L", "SV", "K", "ERA", "WHIP"}
+    assert ranges[0]["pitchers"][0]["stats"]["IP"] == "30.2"
+    assert ranges[0]["batters"][0]["position"] == "C"
+    assert ranges[0]["pitchers"][0]["position"] == "P"
+    assert "birth_date" not in ranges[0]["batters"][0]
+    exporter.write_site_data(path, [], [], 2027, "2027-01-01", "2027-04-01", "2027-04-01")
+    ranges = json.loads(path.read_text(encoding="utf-8"))["ranges"]
+    assert len(ranges) == 1
+    assert ranges[0]["season"] == 2027

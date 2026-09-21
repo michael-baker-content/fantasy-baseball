@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Player Stats · BABBD Fantasy Baseball</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="stats.css">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('theme')||'light'}catch{}</script>
+</head>
+<body>
+  <header><div class="header-inner">
+    <div><h1 class="header-title">BABBD Fantasy Baseball</h1><p class="header-subtitle">Postseason player pool</p></div>
+    <button class="mobile-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="header-menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <nav class="header-right" id="header-menu" aria-label="Main navigation">
+      <a class="leaders-nav-link" href="./">Standings</a>
+      <a class="leaders-nav-link" href="stats.html" aria-current="page">Player Stats</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme" aria-pressed="false">
+        <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.75 15A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.27-2.6.75-3.75A9.75 9.75 0 1 0 21.75 15Z"/></svg>
+      </button>
+    </nav>
+  </div></header>
+  <main class="page-wrap">
+    <div class="stats-heading">
+      <h2 class="stats-title">Player Stats</h2>
+      <button id="stats-info-open" class="stats-info-button" type="button" aria-label="About player statistics" aria-haspopup="dialog" aria-controls="stats-info-dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg>
+      </button>
+    </div>
+    <dialog id="stats-info-dialog" aria-labelledby="stats-info-title" aria-describedby="stats-info-description stats-dates">
+      <div class="stats-info-heading">
+        <h2 id="stats-info-title">About Player Stats</h2>
+        <button id="stats-info-close" type="button" aria-label="Close information" autofocus>×</button>
+      </div>
+      <p id="stats-info-description" class="stats-intro">Regular-season stats for the selected organizations’ current players, including stats earned with previous teams.</p>
+      <p id="stats-dates" class="stats-meta">Statistics dates will appear when player data loads.</p>
+      <h3 class="stats-info-subheading">Tabs</h3>
+      <p>Batters and Pitchers show the complete lists. Position tabs use primary MLB position:</p>
+      <ul class="stats-info-rules">
+        <li><strong>IF:</strong> C, 1B, 2B, 3B, SS. <strong>OF:</strong> LF, CF, RF, OF.</li>
+        <li><strong>SP:</strong> SP and P. <strong>RP:</strong> RP and P, plus SPs with 2+ saves in the selected range.</li>
+        <li>Primary DHs and players without a listed position appear only in the complete lists.</li>
+      </ul>
+      <h3 class="stats-info-subheading">Eligibility</h3>
+      <p>No qualification minimums for AVG, ERA, or WHIP. Optioned and injured-list players are included; free agents and released players are excluded.</p>
+      <h3 class="stats-info-subheading">Sorting</h3>
+      <p>Default: most HR for batters, most K for pitchers. Select a column heading to sort; select again to reverse.</p>
+    </dialog>
+    <p id="stats-status" class="stats-meta" role="status">Loading player statistics…</p>
+    <div id="stats-content" hidden>
+      <div class="stats-tabs" role="tablist" aria-label="Player type">
+        <button id="batters-tab" role="tab" aria-selected="true" aria-controls="stats-panel" tabindex="0" data-group="batters">Batters</button>
+        <button id="pitchers-tab" role="tab" aria-selected="false" aria-controls="stats-panel" tabindex="-1" data-group="pitchers">Pitchers</button>
+        <button id="if-tab" role="tab" aria-selected="false" aria-controls="stats-panel" tabindex="-1" data-group="if">IF</button>
+        <button id="of-tab" role="tab" aria-selected="false" aria-controls="stats-panel" tabindex="-1" data-group="of">OF</button>
+        <button id="sp-tab" role="tab" aria-selected="false" aria-controls="stats-panel" tabindex="-1" data-group="sp">SP</button>
+        <button id="rp-tab" role="tab" aria-selected="false" aria-controls="stats-panel" tabindex="-1" data-group="rp">RP</button>
+      </div>
+      <section id="stats-panel" role="tabpanel" aria-labelledby="batters-tab">
+        <div class="stats-controls">
+          <div class="stats-search-row">
+            <label for="stats-search">Search players</label>
+            <input id="stats-search" type="search" placeholder="Player name" autocomplete="off">
+            <button id="stats-filters-toggle" type="button" aria-expanded="false" aria-controls="stats-filters-panel">Filters</button>
+          </div>
+          <div id="stats-filters-panel" class="stats-filter-fields" hidden>
+            <label>Statistics range<select id="stats-range"></select></label>
+            <label>Team<select id="stats-team"><option value="">All teams</option></select></label>
+          </div>
+        </div>
+        <p id="stats-count" class="stats-meta" role="status"></p>
+        <div class="stats-table-wrap" role="region" aria-label="Player statistics, scroll horizontally for more columns" tabindex="0">
+          <table id="player-stats-table"><caption class="sr-only">Player statistics</caption><thead></thead><tbody></tbody></table>
+        </div>
+        <p id="stats-empty" class="stats-meta" hidden>No players match these filters.</p>
+        <button id="stats-show-more" type="button" aria-controls="player-stats-table" hidden>Show more</button>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>Regular-season MLB statistics</span><a href="./">Back to standings</a></div></footer>
+  <script src="header.js" defer></script>
+  <script src="stats-positions.js" defer></script>
+  <script src="stats.js" defer></script>
+</body>
+</html>

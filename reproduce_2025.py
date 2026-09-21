@@ -10,7 +10,7 @@ from pathlib import Path
 from config.mlb_roster_2025 import EXPECTED_TOTALS_2025, PLAYER_ID_OVERRIDES_2025, ROSTER_2025
 from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds, candidate_players, player_output
-from mlb.scoring import owner_totals, roto_standings
+from mlb.scoring import ROTO_5X5, owner_totals, roto_standings
 
 
 def completed_game_ids(schedule: dict) -> list[int]:
@@ -110,7 +110,7 @@ def main() -> int:
         print(json.dumps({"unresolved": problems}, indent=2))
         return 2
     totals = owner_totals(roster)
-    standings = roto_standings(totals)
+    standings = roto_standings(totals, categories=ROTO_5X5)
     checks = reconciliation(totals)
     write_outputs(Path(args.output), roster, totals, standings, checks)
     matched = sum(row["matches"] for row in checks)
