@@ -5,7 +5,31 @@ const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../docs/stats-positions.js'), 'utf8');
 const eligible = vm.runInNewContext(source + '\neligibleForStatsView;');
-const player = (position, saves = 0) => ({position, stats: {SV: saves}});
+const filters = vm.runInNewContext(source + '\npositionFilters;');
+const matches = vm.runInNewContext(source + '\nmatchesPositionFilter;');
+const player = (position, saves = 0, starts = 0) => ({position, stats: {SV: saves, GS: starts}});
+
+test('position menus have only relevant positions in the requested order', () => {
+  const expected = {
+    batters: ['C','1B','2B','3B','SS','LF','CF','RF','DH'],
+    pitchers: ['SP','RP'], if: ['C','1B','2B','3B','SS'],
+    of: ['LF','CF','RF'], sp: ['SP'], rp: ['RP'],
+  };
+  for (const [view, positions] of Object.entries(expected)) {
+    assert.deepEqual(Array.from(filters[view]), positions);
+  }
+});
+
+test('pitching position filters use statistics, not generic P labels', () => {
+  assert.equal(matches(player('P', 0, 3), 'SP'), true);
+  assert.equal(matches(player('P', 0, 3), 'RP'), false);
+  assert.equal(matches(player('P', 0, 0), 'RP'), true);
+  assert.equal(matches(player('P', 2, 3), 'SP'), true);
+  assert.equal(matches(player('P', 2, 3), 'RP'), true);
+  assert.equal(matches(player('CF'), 'CF'), true);
+  assert.equal(matches(player('LF'), 'CF'), false);
+  assert.equal(matches(player('TWP'), ''), true);
+});
 
 test('infield includes catchers; outfield includes all outfield positions', () => {
   for (const position of ['C', '1B', '2B', '3B', 'SS']) {
@@ -17,26 +41,50 @@ test('infield includes catchers; outfield includes all outfield positions', () =
     assert.equal(eligible(player(position), 'if'), false);
   }
 });
-test('primary DH and missing positions remain in complete lists only', () => {
+test('primary DH and missing positions are excluded from fielding tabs', () => {
   for (const position of ['DH', '', undefined]) {
     assert.equal(eligible(player(position), 'batters'), true);
-    for (const view of ['if', 'of', 'sp', 'rp']) assert.equal(eligible(player(position), view), false);
+    for (const view of ['if', 'of']) assert.equal(eligible(player(position), view), false);
   }
   assert.equal(eligible(player(''), 'pitchers'), true);
 });
-test('generic P appears in both pitching subsets; RP remains RP', () => {
-  assert.equal(eligible(player('P'), 'sp'), true);
-  assert.equal(eligible(player('P'), 'rp'), true);
-  assert.equal(eligible(player('RP'), 'rp'), true);
-  assert.equal(eligible(player('RP'), 'sp'), false);
-});
-test('SP needs at least two saves to also appear in RP', () => {
-  for (const saves of [0, 1, '1', '']) {
-    assert.equal(eligible(player('SP', saves), 'sp'), true);
-    assert.equal(eligible(player('SP', saves), 'rp'), false);
+test('SP requires at least two starts regardless of position label', () => {
+  for (const position of ['P', 'SP', 'RP', 'TWP', '']) {
+    for (const starts of [0, 1, '1', '', undefined]) {
+      assert.equal(eligible(player(position, 0, starts), 'sp'), false);
+    }
+    for (const starts of [2, '2', 10]) {
+      assert.equal(eligible(player(position, 0, starts), 'sp'), true);
+    }
   }
-  for (const saves of [2, '2', 10]) {
-    assert.equal(eligible(player('SP', saves), 'sp'), true);
-    assert.equal(eligible(player('SP', saves), 'rp'), true);
+  assert.equal(eligible({position: 'SP', stats: {}}, 'sp'), false);
+});
+test('starters need at least two saves to also qualify for RP', () => {
+  for (const position of ['P', 'SP', 'RP', 'TWP', '']) {
+    for (const saves of [0, 1, '1', '']) {
+      assert.equal(eligible(player(position, saves, 10), 'rp'), false);
+    }
+    for (const saves of [2, '2', 10]) {
+      assert.equal(eligible(player(position, saves, 10), 'rp'), true);
+    }
+  }
+  assert.equal(eligible({position: 'RP', stats: {}}, 'rp'), false);
+});
+test('pitchers meeting neither threshold fall into RP; both thresholds qualify for both', () => {
+  const both = player('P', 2, 2), neither = player('P', 1, 1);
+  for (const view of ['sp', 'rp']) {
+    assert.equal(eligible(both, view), true);
+  }
+  assert.equal(eligible(neither, 'sp'), false);
+  assert.equal(eligible(neither, 'rp'), true);
+  assert.equal(eligible(player('P', 0, 0), 'rp'), true);
+  assert.equal(eligible(neither, 'pitchers'), true);
+});
+test('missing starts are not silently treated as zero starts', () => {
+  for (const GS of [undefined, null, '', 'unknown']) {
+    const row = {position: 'P', stats: {GS, SV: 0}};
+    assert.equal(eligible(row, 'sp'), false);
+    assert.equal(eligible(row, 'rp'), false);
+    assert.equal(eligible(row, 'pitchers'), true);
   }
 });

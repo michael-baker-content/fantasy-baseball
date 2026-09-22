@@ -11,7 +11,7 @@ from pathlib import Path
 
 from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds, player_output
-from mlb.scoring import owner_totals, roto_standings
+from mlb.scoring import owner_totals, roto_standings, scoring_categories
 
 
 ROOT = Path(__file__).resolve().parent
@@ -48,7 +48,7 @@ def build_roster_rows(roster: list[dict], pool: dict[int, dict]) -> list[dict]:
 
 def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
     totals = owner_totals(rows)
-    standings = roto_standings(totals)
+    standings = roto_standings(totals, scoring_categories(league["categories"]))
     owners = []
     for owner in league["owners"]:
         owners.append({
@@ -73,7 +73,7 @@ def recalculate_payload(payload: dict, categories: dict) -> dict:
     totals = owner_totals(rows)
     return payload | {
         "league": payload["league"] | {"categories": categories},
-        "standings": roto_standings(totals),
+        "standings": roto_standings(totals, scoring_categories(categories)),
         "owners": [owner | {"totals": totals[owner["name"]]} for owner in payload["owners"]],
     }
 

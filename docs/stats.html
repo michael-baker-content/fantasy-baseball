@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
   <title>Player Stats · BABBD Fantasy Baseball</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="stats.css">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('theme')||'light'}catch{}</script>
+  <script src="theme.js"></script>
 </head>
 <body>
   <header><div class="header-inner">
@@ -38,14 +39,15 @@
       <p id="stats-info-description" class="stats-intro">Regular-season stats for the selected organizations’ current players, including stats earned with previous teams.</p>
       <p id="stats-dates" class="stats-meta">Statistics dates will appear when player data loads.</p>
       <h3 class="stats-info-subheading">Tabs</h3>
-      <p>Batters and Pitchers show the complete lists. Position tabs use primary MLB position:</p>
+      <p>Batters and Pitchers show the complete lists. IF and OF use primary MLB position; SP and RP use stats in the selected range:</p>
       <ul class="stats-info-rules">
         <li><strong>IF:</strong> C, 1B, 2B, 3B, SS. <strong>OF:</strong> LF, CF, RF, OF.</li>
-        <li><strong>SP:</strong> SP and P. <strong>RP:</strong> RP and P, plus SPs with 2+ saves in the selected range.</li>
-        <li>Primary DHs and players without a listed position appear only in the complete lists.</li>
+        <li><strong>SP:</strong> 2+ starts. <strong>RP:</strong> 2+ saves or fewer than 2 starts. Players with 2+ starts and 2+ saves appear in both, regardless of position label.</li>
+        <li>Primary DHs and players without a listed position are excluded from IF and OF.</li>
       </ul>
       <h3 class="stats-info-subheading">Eligibility</h3>
-      <p>No qualification minimums for AVG, ERA, or WHIP. Optioned and injured-list players are included; free agents and released players are excluded.</p>
+      <p>Minimum AB applies to all batting views; minimum IP applies to all pitching views, regardless of sorting. Minimums use the selected range; zero includes everyone. Optioned and injured-list players are included; free agents and released players are excluded.</p>
+      <p>Last 30 days ends on the published through-date, includes that day, and stays within the season year.</p>
       <h3 class="stats-info-subheading">Sorting</h3>
       <p>Default: most HR for batters, most K for pitchers. Select a column heading to sort; select again to reverse.</p>
     </dialog>
@@ -69,6 +71,11 @@
           <div id="stats-filters-panel" class="stats-filter-fields" hidden>
             <label>Statistics range<select id="stats-range"></select></label>
             <label>Team<select id="stats-team"><option value="">All teams</option></select></label>
+            <label>Position<select id="stats-position"><option value="">All positions</option></select></label>
+            <label>Minimum AB<input id="stats-min-ab" type="number" min="0" step="1" value="0" inputmode="numeric" aria-describedby="stats-qualification-help stats-qualification-error"></label>
+            <label>Minimum IP (whole innings)<input id="stats-min-ip" type="number" min="0" step="1" value="0" inputmode="numeric" aria-describedby="stats-qualification-help stats-qualification-error"></label>
+            <p id="stats-qualification-help" class="stats-meta stats-filter-help">Applies to every player in the relevant batting or pitching view. Zero means no minimum.</p>
+            <p id="stats-qualification-error" class="stats-meta stats-filter-help" role="status" hidden>Enter a whole number of zero or greater for each minimum. The last valid minimums remain applied.</p>
           </div>
         </div>
         <p id="stats-count" class="stats-meta" role="status"></p>
@@ -83,6 +90,8 @@
   <footer class="site-footer"><div class="site-footer-inner"><span>Regular-season MLB statistics</span><a href="./">Back to standings</a></div></footer>
   <script src="header.js" defer></script>
   <script src="stats-positions.js" defer></script>
+  <script src="stats-sort.js" defer></script>
+  <script src="stats-filters.js" defer></script>
   <script src="stats.js" defer></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -293,14 +293,15 @@ def write_excel(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict],
 
 
 def write_site_data(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict],
-                    season: int, start: str, through: str, roster_date: str) -> None:
+                    season: int, start: str, through: str, roster_date: str,
+                    last_30_days: bool = False) -> None:
     """Publish a range alongside previously exported ranges for this season."""
     payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"ranges": []}
-    range_id = "ytd" if start == f"{season}-01-01" else f"{start}_{through}"
+    range_id = "last30" if last_30_days else "ytd" if start == f"{season}-01-01" else f"{start}_{through}"
     fields = {
         "batters": {"G": "games_played", "AB": "at_bats", "H": "hits", "R": "runs",
                     "HR": "home_runs", "RBI": "rbi", "SB": "stolen_bases", "BB": "walks", "AVG": "batting_average"},
-        "pitchers": {"G": "games", "IP": "innings_pitched", "W": "wins", "L": "losses",
+        "pitchers": {"G": "games", "GS": "games_started", "IP": "innings_pitched", "W": "wins", "L": "losses",
                      "SV": "saves", "K": "strikeouts", "ERA": "era", "WHIP": "whip"},
     }
     def players(rows, group):
@@ -311,22 +312,30 @@ def write_site_data(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict
                 for row in rows]
     entry = {"id": range_id, "season": season, "start": start, "through": through,
              "roster_date": roster_date,
-             "label": f"{season} year to date" if range_id == "ytd" else f"{start} – {through}",
+             "label": "Last 30 days" if last_30_days else f"{season} year to date" if range_id == "ytd" else f"{start} – {through}",
              "teams": sorted(PLAYOFF_TEAMS),
              "batters": players(hitter_rows, "batters"), "pitchers": players(pitcher_rows, "pitchers")}
     ranges = [row for row in payload.get("ranges", [])
               if row["season"] == season and row["id"] != range_id]
     ranges.append(entry)
-    ranges.sort(key=lambda row: (row["id"] != "ytd", row["start"], row["through"]))
+    ranges.sort(key=lambda row: ({"ytd": 0, "last30": 1}.get(row["id"], 2), row["start"], row["through"]))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"ranges": ranges}, indent=2), encoding="utf-8")
+
+
+def last_30_start(season: int, through: date) -> date:
+    """Thirty calendar days inclusive, bounded to the requested season's year."""
+    return max(date(season, 1, 1), through - timedelta(days=29))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--season", type=int, default=date.today().year)
     parser.add_argument("--site", action="store_true", help="also publish this range to docs/data/player-stats.json")
-    parser.add_argument("--start", help="first included date, YYYY-MM-DD (default: January 1 of --season)")
+    period = parser.add_mutually_exclusive_group()
+    period.add_argument("--start", help="first included date, YYYY-MM-DD (default: January 1 of --season)")
+    period.add_argument("--last-30-days", action="store_true",
+                        help="export the 30 calendar days ending on --through, bounded to --season")
     parser.add_argument("--through", default=date.today().isoformat(), help="YYYY-MM-DD")
     parser.add_argument("--format", choices=("csv", "xlsx", "both"), default="both",
                         help="output two CSVs, one Excel workbook, or both (default: both)")
@@ -339,6 +348,8 @@ def main() -> int:
         parser.error(f"--start and --through must be YYYY-MM-DD: {error}")
     if through_date.year != args.season or start_date.year != args.season:
         parser.error("--start and --through must fall within --season")
+    if args.last_30_days:
+        start_date = last_30_start(args.season, through_date)
     if start_date > through_date:
         parser.error("--start must be on or before --through")
     start = start_date.isoformat()
@@ -360,7 +371,7 @@ def main() -> int:
     hitter_rows = build_rows(hitting, HITTING_FIELDS, affiliations, people, "hitting")
     pitcher_rows = build_rows(pitching, PITCHING_FIELDS, affiliations, people, "pitching")
     output_dir = ROOT / "data" / str(args.season)
-    period_label = f"{start}_through_{through}" if args.start else f"ytd_{through}"
+    period_label = f"last30_{start}_through_{through}" if args.last_30_days else f"{start}_through_{through}" if args.start else f"ytd_{through}"
     hitter_path = output_dir / f"mlb_hitters_{period_label}.csv"
     pitcher_path = output_dir / f"mlb_pitchers_{period_label}.csv"
     workbook_path = output_dir / f"mlb_players_{period_label}.xlsx"
@@ -376,7 +387,8 @@ def main() -> int:
         print(f"Wrote Batters and Pitchers worksheets to {workbook_path.relative_to(ROOT)}")
     if args.site:
         site_path = ROOT / "docs/data/player-stats.json"
-        write_site_data(site_path, hitter_rows, pitcher_rows, args.season, start, through, roster_date.isoformat())
+        write_site_data(site_path, hitter_rows, pitcher_rows, args.season, start, through, roster_date.isoformat(),
+                        last_30_days=args.last_30_days)
         print(f"Updated {site_path.relative_to(ROOT)}")
     return 0
 

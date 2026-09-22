@@ -3,15 +3,6 @@
   const menu = document.getElementById('header-menu');
   if (!toggle || !menu) return;
   const mobile = window.matchMedia('(max-width: 780px)');
-  const themeToggle = menu.querySelector('.theme-toggle');
-  function updateThemeLabel() {
-    if (themeToggle) themeToggle.setAttribute('aria-label',
-      document.documentElement.dataset.theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
-  }
-  new MutationObserver(updateThemeLabel).observe(document.documentElement, {
-    attributes: true, attributeFilter: ['data-theme'],
-  });
-  updateThemeLabel();
   function setOpen(open, restoreFocus = false) {
     menu.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));

@@ -66,6 +66,11 @@ Then open `http://localhost:8000` and press `Ctrl+C` when finished.
 - `config/league.json`: dates, categories, name, and owners
 - `config/roster.csv`: owner, section, roster slot, MLB ID, and player name
 
+The configured category lists determine scoring and homepage column order.
+Both normal refreshes and offline recalculation use those lists; unsupported or
+duplicate categories are rejected. The historical 2025 reproduction continues
+to select its original 5×5 rules explicitly.
+
 ## GitHub Pages
 
 In the repository settings, choose **Deploy from a branch**, select the default
@@ -142,16 +147,20 @@ they do not download MLB data.
 The header's **Player Stats** link opens `docs/stats.html`. Its Batters, Pitchers,
 IF, OF, SP, and RP tabs support name search, current-team filtering, sortable columns,
 and selecting published date ranges. Batters show G, AB, H and the six hitting
-categories; pitchers show G, IP and the six pitching categories. Rate statistics
-have no qualification minimum. This page uses the exporter's 14-team pool, not
+categories; pitchers show G, IP and the six pitching categories. Qualification
+filters default to zero (no minimum). This page uses the exporter's 14-team pool, not
 the fantasy owners' rosters or the homepage's test league dates.
 
-Position tabs use the exported MLB primary position: IF includes C, 1B, 2B, 3B,
-and SS; OF includes LF, CF, RF, and OF. Generic P pitchers appear in both SP and
-RP. SP pitchers with at least two saves in the selected range also appear in RP.
-Primary DH players stay in Batters only. Unknown positions remain in the complete
-Batters/Pitchers lists. Re-export each published range to add position information
-to older website data. Position-rule tests can be run with
+IF and OF use the exported MLB primary position: IF includes C, 1B, 2B, 3B,
+and SS; OF includes LF, CF, RF, and OF. Primary DHs and unknown positions are
+excluded from IF and OF. SP includes players with at least two starts in the
+selected range; RP includes players with at least two saves or fewer than two
+starts, so players meeting neither original threshold fall into RP. A player
+with at least two starts and two saves appears in both, regardless of primary
+position. Missing starts data must be refreshed before assigning the fallback
+RP group. Games started (GS) is published for filtering without adding a visible
+table column. Re-export each published range
+to add starts data to older snapshots. Position-rule tests can be run with
 `node --test tests/test_stats_positions.cjs`.
 
 Publish regular-season year-to-date data through your chosen date:
@@ -172,11 +181,67 @@ Exporting a different season starts a new set of ranges. Each range records its
 own organization snapshot date, so rerun older ranges if membership needs updating.
 Visitors choose among these published ranges; their browsers never call MLB.
 
+To publish the last 30 calendar days alongside YTD, run a separate export:
+
+```powershell
+.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-21 --last-30-days --format csv --site
+```
+
+This covers August 23 through September 21 inclusive. `--last-30-days` ends on
+`--through`, not the visitor's current date, and cannot be combined with
+`--start`. It is bounded to January 1 of the selected season when necessary.
+Each run replaces the published `last30` entry while preserving YTD and custom
+ranges from that season. Refresh YTD and last-30-days exports with the same
+through-date when updating the site; the browser does not advance either range.
+
+Under **Filters**, minimum AB applies to all Batters/IF/OF results, and minimum
+IP applies to all Pitchers/SP/RP results, regardless of the sorted column. Both
+accept nonnegative whole numbers, use statistics from the selected range, and
+persist while switching tabs and ranges. IP comparisons use outs, so 9.2 IP does
+not meet a 10-IP minimum. Zero disables the minimum; missing statistics fail an
+active minimum. The result count displays the active minimum even when Filters
+is closed. Filters run before sorting and pagination; they do not alter exports.
+
+The **Position** dropdown narrows a tab by primary MLB position (for example,
+C within IF or CF within OF); SP/RP filters use the same starts/saves rules as
+their tabs. Options follow C, 1B, 2B, 3B, SS, LF, CF, RF, DH, SP, RP order, with
+only positions relevant to the selected tab included. TWP, P, and generic OF
+are not filter options; those players remain eligible for the broader lists. A
+selection is retained when available after switching tabs or ranges; otherwise
+it resets to All positions. It combines with team, search, and qualification
+filters, and the result count shows the selected position when Filters is closed.
+
+Each view initially displays 25 matching players. **Show more** reveals the next
+25; changing a tab, range, filter, or sort resets the visible list to 25. The
+browser downloads the complete static snapshot once, then filters and paginates
+locally. The Pos. column displays the source's primary MLB designation, which
+can be P or TWP even though those are not dropdown choices.
+
+Narrow layouts hide supporting statistics (G, AB, H, IP). If the selected sort
+column becomes hidden, sorting resets to HR for batting views or K for pitching
+views. Selecting a team similarly resets an active Team sort. Long player names
+wrap on mobile rather than requiring a hover tooltip. Both pages share saved
+theme handling, including when browser storage is unavailable.
+
 ## Tests
 
 ```powershell
 .venv\Scripts\python.exe -m pytest -q
 ```
+
+Run the JavaScript regression tests with Node.js (no additional packages needed):
+
+```powershell
+node --test tests/test_stats_positions.cjs tests/test_ui.cjs
+```
+
+These cover position eligibility, hidden-column sorting, theme behavior, and
+selected text/focus contrast pairs. They are not a full browser accessibility
+audit. Before publishing, preview both themes at narrow and wide widths, use
+Tab/Enter/Space to sort the homepage, and check the menu and modal with Escape.
+On Player Stats, sort by AB and then narrow below 641px; verify the HR sort
+indicator appears. Sort by Team and select one team; verify the visible default
+sort is restored. Confirm long player names remain readable on mobile.
 
 ## Optional static analysis with Skylos
 

@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from refresh import build_roster_rows, completed_games, load_config, public_payload, recalculate_payload
+from mlb.scoring import scoring_categories
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,3 +63,29 @@ def test_offline_recalculation_preserves_snapshot_and_adds_categories():
         assert len(standing["category_points"]) == 12
         assert standing["total_score"] == sum(standing["category_points"].values())
     assert sum(row["total_score"] for row in recalculated["standings"]) == 12 * sum(range(1, 8))
+
+
+def test_refresh_and_recalculation_use_configured_categories():
+    league, roster = load_config()
+    categories = {"hitting": ["BB"], "pitching": ["L"]}
+    rows = build_roster_rows(roster, {})
+    refreshed = public_payload(league | {"categories": categories}, [], rows)
+    original = public_payload(league, [], rows)
+    recalculated = recalculate_payload(original, categories)
+    for payload in (refreshed, recalculated):
+        assert payload["league"]["categories"] == categories
+        assert all(list(row["category_points"]) == ["BB", "L"] for row in payload["standings"])
+        assert all(row["total_score"] == 8 for row in payload["standings"])
+    assert original["league"]["categories"] == league["categories"]
+    assert scoring_categories(categories) == (("BB", False), ("L", True))
+
+
+@pytest.mark.parametrize("categories", [
+    {"hitting": ["BB", "BB"], "pitching": []},
+    {"hitting": ["L"], "pitching": []},
+    {"hitting": [], "pitching": ["NOT_A_STAT"]},
+    {"hitting": [], "pitching": []},
+])
+def test_invalid_scoring_configuration_is_rejected(categories):
+    with pytest.raises(ValueError):
+        scoring_categories(categories)

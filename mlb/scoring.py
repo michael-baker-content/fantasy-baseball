@@ -2,13 +2,32 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 
 COUNTING_HITTING = ("R", "HR", "RBI", "SB", "BB")
 COUNTING_PITCHING = ("W", "L", "SV", "K")
 ROTO_5X5 = (("R", False), ("HR", False), ("RBI", False), ("SB", False), ("AVG", False),
             ("W", False), ("SV", False), ("K", False), ("ERA", True), ("WHIP", True))
-ROTO_6X6 = (("R", False), ("HR", False), ("RBI", False), ("SB", False), ("BB", False), ("AVG", False),
-            ("W", False), ("L", True), ("SV", False), ("K", False), ("ERA", True), ("WHIP", True))
+LOWER_IS_BETTER = frozenset({"L", "ERA", "WHIP"})
+
+
+def scoring_categories(categories: dict) -> tuple[tuple[str, bool], ...]:
+    """Validate the configured selection and preserve its display/scoring order."""
+    supported = {"hitting": {*COUNTING_HITTING, "AVG"},
+                 "pitching": {*COUNTING_PITCHING, "ERA", "WHIP"}}
+    selected = []
+    for section in ("hitting", "pitching"):
+        for category in categories[section]:
+            if category not in supported[section]:
+                raise ValueError(f"Unsupported {section} scoring category: {category}")
+            if category in selected:
+                raise ValueError(f"Duplicate scoring category: {category}")
+            selected.append(category)
+    if not selected:
+        raise ValueError("At least one scoring category is required")
+    return tuple((category, category in LOWER_IS_BETTER) for category in selected)
 
 
 def owner_totals(rows: list[dict]) -> dict[str, dict]:
@@ -35,7 +54,10 @@ def owner_totals(rows: list[dict]) -> dict[str, dict]:
     return owners
 
 
-def roto_standings(totals: dict[str, dict], categories=ROTO_6X6) -> list[dict]:
+def roto_standings(totals: dict[str, dict], categories=None) -> list[dict]:
+    if categories is None:
+        config = Path(__file__).resolve().parents[1] / "config/league.json"
+        categories = scoring_categories(json.loads(config.read_text(encoding="utf-8"))["categories"])
     n = len(totals)
     points = {owner: {} for owner in totals}
     for category, lower_is_better in categories:

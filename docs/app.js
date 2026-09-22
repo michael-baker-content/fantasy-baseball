@@ -1,4 +1,4 @@
-const CATEGORIES=["R","HR","RBI","SB","BB","AVG","W","L","SV","K","ERA","WHIP"];
+let CATEGORIES=[];
 const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
 
@@ -6,16 +6,6 @@ const fmt=(key,value)=>["AVG","ERA","WHIP"].includes(key)?Number(value||0).toFix
 const placeClass=p=>p===1?"place place-1":p===2?"place place-2":p===3?"place place-3":"place place-n";
 const pointsClass=(pts,values)=>pts===Math.max(...values)?"pts-high":pts===Math.min(...values)?"pts-low":"pts-mid";
 const ownerUrl=name=>`?owner=${encodeURIComponent(name)}`;
-
-function applyTheme(){
-  const dark=document.documentElement.dataset.theme==="dark";
-  document.querySelector("#theme-toggle").setAttribute("aria-pressed",String(dark));
-}
-document.querySelector("#theme-toggle").addEventListener("click",()=>{
-  const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
-  document.documentElement.dataset.theme=next;localStorage.setItem("theme",next);applyTheme();
-});
-applyTheme();
 
 function statValue(row,key){return key==="total_score"?row.total_score:row.stats[key]??0}
 function sortedStandings(){return [...data.standings].sort((a,b)=>{
@@ -30,10 +20,14 @@ function categoryCell(row,category){
 }
 
 function renderDesktop(){
-  const headers=CATEGORIES.map(c=>`<th class="sortable ${sort.key===c?'sort-active':''}" data-sort="${c}">${c}<span class="sort-indicator">${sort.key===c?(sort.dir==='asc'?'▲':'▼'):''}</span></th>`).join("");
+  const heading=(key,label)=>`<th scope="col" class="sortable ${sort.key===key?'sort-active':''}" aria-sort="${sort.key===key?(sort.dir==='asc'?'ascending':'descending'):'none'}"><button type="button" data-sort="${key}">${label}<span class="sort-indicator" aria-hidden="true">${sort.key===key?(sort.dir==='asc'?'▲':'▼'):''}</span></button></th>`;
+  const headers=CATEGORIES.map(c=>heading(c,c)).join("");
   const rows=sortedStandings().map(row=>`<tr><td class="col-left"><span class="${placeClass(row.place)}">${row.place}</span></td><td class="col-left"><a class="owner-link" href="${ownerUrl(row.owner)}">${row.owner}</a></td><td class="${sort.key==='total_score'?'sort-active':''}"><span class="score">${row.total_score.toFixed(1)}</span></td>${CATEGORIES.map(c=>categoryCell(row,c)).join('')}</tr>`).join("");
-  document.querySelector("#standings-table").innerHTML=`<thead><tr><th class="col-left">Rank</th><th class="col-left">Owner</th><th class="sortable ${sort.key==='total_score'?'sort-active':''}" data-sort="total_score">Score <span class="sort-indicator">${sort.key==='total_score'?(sort.dir==='asc'?'▲':'▼'):''}</span></th>${headers}</tr></thead><tbody>${rows}</tbody>`;
-  document.querySelectorAll("[data-sort]").forEach(th=>th.addEventListener("click",()=>changeSort(th.dataset.sort)));
+  document.querySelector("#standings-table").innerHTML=`<thead><tr><th scope="col" class="col-left">Rank</th><th scope="col" class="col-left">Owner</th>${heading('total_score','Score')}${headers}</tr></thead><tbody>${rows}</tbody>`;
+  document.querySelectorAll("#standings-table button[data-sort]").forEach(button=>button.addEventListener("click",()=>{
+    changeSort(button.dataset.sort);
+    document.querySelector(`#standings-table button[data-sort="${sort.key}"]`).focus({preventScroll:true});
+  }));
 }
 
 function renderMobile(){
@@ -81,5 +75,5 @@ function leagueMeta(){
 }
 
 fetch("data/league.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json()}).then(payload=>{
-  data=payload;leagueMeta();const owner=new URLSearchParams(location.search).get("owner");owner?renderOwner(owner):renderStandings();
+  data=payload;CATEGORIES=[...data.league.categories.hitting,...data.league.categories.pitching];leagueMeta();const owner=new URLSearchParams(location.search).get("owner");owner?renderOwner(owner):renderStandings();
 }).catch(error=>{document.querySelector("#status-msg").textContent=`Could not load standings: ${error.message}`;document.querySelector(".status-dot").style.background="var(--red)"});

@@ -233,7 +233,7 @@ def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_pa
               "rbi": 15, "stolen_bases": 3, "walks": 10, "batting_average": ".300",
               "birth_date": "2000-01-01", "primary_position": "C"}
     pitcher = {"player_id": 2, "player_name": "Test Pitcher", "current_mlb_organization": "Test Club",
-               "games": 6, "innings_pitched": "30.2", "wins": 3, "losses": 1, "saves": 0,
+               "games": 6, "games_started": 4, "innings_pitched": "30.2", "wins": 3, "losses": 1, "saves": 0,
                "strikeouts": 40, "era": "2.35", "whip": "1.01", "primary_position": "P"}
     for start, through in [("2026-01-01", "2026-09-20"), ("2026-05-01", "2026-05-30"),
                            ("2026-01-01", "2026-09-21"), ("2026-05-01", "2026-05-30")]:
@@ -244,7 +244,8 @@ def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_pa
     assert ranges[0]["through"] == "2026-09-21"
     assert ranges[1]["start"] == "2026-05-01"
     assert set(ranges[0]["batters"][0]["stats"]) == {"G", "AB", "H", "R", "HR", "RBI", "SB", "BB", "AVG"}
-    assert set(ranges[0]["pitchers"][0]["stats"]) == {"G", "IP", "W", "L", "SV", "K", "ERA", "WHIP"}
+    assert set(ranges[0]["pitchers"][0]["stats"]) == {"G", "GS", "IP", "W", "L", "SV", "K", "ERA", "WHIP"}
+    assert ranges[0]["pitchers"][0]["stats"]["GS"] == 4
     assert ranges[0]["pitchers"][0]["stats"]["IP"] == "30.2"
     assert ranges[0]["batters"][0]["position"] == "C"
     assert ranges[0]["pitchers"][0]["position"] == "P"
@@ -253,3 +254,46 @@ def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_pa
     ranges = json.loads(path.read_text(encoding="utf-8"))["ranges"]
     assert len(ranges) == 1
     assert ranges[0]["season"] == 2027
+
+
+@pytest.mark.parametrize("through,expected", [
+    ("2026-09-21", "2026-08-23"),
+    ("2026-03-01", "2026-01-31"),
+    ("2024-03-01", "2024-02-01"),
+    ("2026-01-15", "2026-01-01"),
+])
+def test_last_30_days_are_inclusive_and_bounded_to_season(through, expected):
+    end = date.fromisoformat(through)
+    assert exporter.last_30_start(end.year, end).isoformat() == expected
+
+
+def test_last_30_cli_publishes_range_and_preserves_ytd(monkeypatch, tmp_path):
+    path = tmp_path / "docs/data/player-stats.json"
+    exporter.write_site_data(path, [], [], 2026, "2026-01-01", "2026-09-21", "2026-09-21")
+    exporter.write_site_data(path, [], [], 2026, "2026-08-22", "2026-09-20", "2026-09-20", last_30_days=True)
+    calls = []
+
+    def fake_splits(group, season, through, start):
+        calls.append((group, season, through, start))
+        return []
+
+    monkeypatch.setattr(exporter, "ROOT", tmp_path)
+    monkeypatch.setattr(exporter, "current_affiliations", lambda *args: ({}, {}))
+    monkeypatch.setattr(exporter, "season_splits", fake_splits)
+    monkeypatch.setattr("sys.argv", ["export_mlb_ytd.py", "--season", "2026", "--through", "2026-09-21",
+                                    "--last-30-days", "--format", "csv", "--site"])
+    assert exporter.main() == 0
+    assert calls == [(group, 2026, "2026-09-21", "2026-08-23") for group in ("hitting", "pitching")]
+    ranges = json.loads(path.read_text(encoding="utf-8"))["ranges"]
+    assert [row["id"] for row in ranges] == ["ytd", "last30"]
+    assert ranges[1]["start"] == "2026-08-23"
+    assert ranges[1]["through"] == "2026-09-21"
+    assert ranges[1]["label"] == "Last 30 days"
+    assert (tmp_path / "data/2026/mlb_pitchers_last30_2026-08-23_through_2026-09-21.csv").exists()
+
+
+def test_last_30_days_cannot_be_combined_with_explicit_start(monkeypatch):
+    monkeypatch.setattr("sys.argv", ["export_mlb_ytd.py", "--start", "2026-05-01", "--last-30-days"])
+    with pytest.raises(SystemExit) as error:
+        exporter.main()
+    assert error.value.code == 2
