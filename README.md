@@ -177,3 +177,25 @@ Visitors choose among these published ranges; their browsers never call MLB.
 ```powershell
 .venv\Scripts\python.exe -m pytest -q
 ```
+
+## Optional static analysis with Skylos
+
+The local Windows / Python 3.14 development environment uses Skylos 4.37.0 for
+static analysis and dead-code detection. Skylos is not required to refresh MLB
+data, run the website, or deploy GitHub Pages.
+
+Run the scan from the repository root:
+
+```powershell
+.\.venv\Scripts\skylos.exe scan . --no-grep-verify
+```
+
+The initial user-run scan reported A+ (100/100) across 16 project files with no
+dead code detected. Grep verification was disabled. This describes that scan,
+not a guarantee of correctness or a replacement for tests and browser checks.
+
+See [Python-focused Skylos setup](SETUP_SKYLOS.md) for the isolated installation
+procedure, compatible MCP constraint, parser stubs, and validation steps.
+The procedure is not yet verified on a fresh environment; the existing
+`requirements-skylos.txt` remains a snapshot of the original customized setup.
+The guide explains its dependency gaps and how to validate a replacement.

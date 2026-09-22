@@ -14,4 +14,5 @@ fantasy_gamelogs_*
 data/mlb_cache/
 reference/
 .venv/
+.venv-skylos/
 venv/
