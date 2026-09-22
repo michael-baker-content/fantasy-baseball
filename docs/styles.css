@@ -10,6 +10,19 @@ html{scrollbar-gutter:stable}body{font-family:-apple-system,BlinkMacSystemFont,"
 
 /* Keep all six hitting categories above all six pitching categories on mobile. */
 .site-nav{display:flex;align-items:center;gap:14px}
+.owner-table{min-width:0;width:auto}
+.owner-table th,.owner-table td{padding:8px 6px;white-space:nowrap}
+.owner-table th:first-child,.owner-table td:first-child{width:44px;min-width:44px;max-width:44px;padding-left:6px;padding-right:6px}
+.owner-table th:nth-child(2),.owner-table td:nth-child(2){width:1%;white-space:nowrap;padding-left:6px;padding-right:6px}
+@media(max-width:640px){
+  .owner-table th,.owner-table td{padding-left:4px;padding-right:4px}
+  /* Hide supporting stats in headers, player rows, and team totals alike. */
+  #hitter-table tr>:nth-child(3),#hitter-table tr>:nth-child(4),
+  #pitcher-table tr>:nth-child(3),#pitcher-table tr>:nth-child(8),
+  #pitcher-table tr>:nth-child(9),#pitcher-table tr>:nth-child(10){display:none}
+  .owner-table th:nth-child(2),.owner-table td:nth-child(2){padding-left:4px;padding-right:4px}
+  .owner-table td.player-name{min-width:110px;max-width:150px;white-space:normal;overflow-wrap:anywhere}
+}
 #standings-table th.sortable{padding:0}
 #standings-table th.sortable button{background:none;border:0;color:inherit;font:inherit;text-transform:inherit;letter-spacing:inherit;min-height:44px;width:100%;padding:10px;cursor:pointer}
 #standings-table th.sortable:hover,#standings-table th.sort-active{color:var(--sort-text)!important}
