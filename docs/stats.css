@@ -1,4 +1,5 @@
 .stats-title{font-size:26px;margin-bottom:8px}
+.stats-il-badge{display:inline-block;vertical-align:middle;margin-left:4px;padding:1px 5px;border:1px solid currentColor;border-radius:4px;background:var(--red-bg);color:var(--red-text);font-size:10px;font-weight:700;line-height:1.5;white-space:nowrap}
 #stats-show-more{display:block;min-height:44px;margin:16px auto;padding:10px 20px;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--text);font:inherit;font-weight:600;cursor:pointer}
 #stats-show-more[hidden]{display:none}
 #stats-show-more:hover{background:var(--hover)}
@@ -6,7 +7,8 @@
 .page-wrap{max-width:960px;padding-top:12px}
 #stats-status:empty{display:none}
 #stats-content .stats-tabs{margin-top:8px}
-@media(max-width:640px){#player-stats-table .stats-supporting{display:none}}
+#player-stats-table .stats-owner-cell{text-align:left}
+@media(max-width:640px){#player-stats-table .stats-supporting,#player-stats-table .stats-owner-cell{display:none}}
 .stats-heading{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .stats-heading .stats-title{margin-bottom:0}
 .stats-info-button{display:grid;place-items:center;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer}

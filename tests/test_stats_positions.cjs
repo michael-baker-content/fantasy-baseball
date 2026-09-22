@@ -7,7 +7,39 @@ const source = fs.readFileSync(path.join(__dirname, '../docs/stats-positions.js'
 const eligible = vm.runInNewContext(source + '\neligibleForStatsView;');
 const filters = vm.runInNewContext(source + '\npositionFilters;');
 const matches = vm.runInNewContext(source + '\nmatchesPositionFilter;');
+const forSource = vm.runInNewContext(source + '\nplayerForStatsSource;');
 const player = (position, saves = 0, starts = 0) => ({position, stats: {SV: saves, GS: starts}});
+
+test('Ohtani displays by statistics source without changing saved data or pitching eligibility', () => {
+  const original = {id: 660271, ...player('TWP', 0, 3)};
+  const batter = forSource(original, 'batters');
+  const pitcher = forSource(original, 'pitchers');
+  assert.equal(batter.position, 'DH');
+  assert.equal(matches(batter, 'DH'), true);
+  assert.equal(eligible(batter, 'if'), false);
+  assert.equal(eligible(batter, 'of'), false);
+  assert.equal(pitcher.position, 'SP');
+  assert.equal(matches(pitcher, 'SP'), true);
+  assert.equal(matches(pitcher, 'RP'), false);
+  assert.equal(eligible(forSource({...original, stats: {GS: 1, SV: 0}}, 'pitchers'), 'rp'), true);
+  assert.equal(original.position, 'TWP');
+  assert.equal(forSource({...original, id: '660271'}, 'batters').position, 'DH');
+  const other = {id: 123, ...player('TWP')};
+  assert.equal(forSource(other, 'batters'), other);
+});
+
+test('generic pitchers display their exclusive role for the selected range', () => {
+  for (const [starts, saves, expected] of [[3,0,'SP'], [0,3,'RP'], [1,0,'RP'], [0,0,'RP'], [3,2,'P']]) {
+    const original = player('P', saves, starts);
+    const displayed = forSource(original, 'pitchers');
+    assert.equal(displayed.position, expected);
+    assert.equal(original.position, 'P');
+    for (const view of ['sp', 'rp']) assert.equal(eligible(displayed, view), eligible(original, view));
+  }
+  assert.equal(forSource({position: 'P', stats: {}}, 'pitchers').position, 'P');
+  assert.equal(forSource(player('P', 0, 3), 'batters').position, 'P');
+  assert.equal(forSource(player('RP', 0, 3), 'pitchers').position, 'RP');
+});
 
 test('position menus have only relevant positions in the requested order', () => {
   const expected = {

@@ -2,7 +2,7 @@ let CATEGORIES=[];
 const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
 
-const fmt=(key,value)=>["AVG","ERA","WHIP"].includes(key)?Number(value||0).toFixed(3).replace(/^0/,""):Number(value||0).toLocaleString();
+const fmt=(key,value)=>key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
 const placeClass=p=>p===1?"place place-1":p===2?"place place-2":p===3?"place place-3":"place place-n";
 const pointsClass=(pts,values)=>pts===Math.max(...values)?"pts-high":pts===Math.min(...values)?"pts-low":"pts-mid";
 const ownerUrl=name=>`?owner=${encodeURIComponent(name)}`;

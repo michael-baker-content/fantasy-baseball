@@ -231,7 +231,8 @@ def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_pa
     batter = {"player_id": 1, "player_name": "Test Batter", "current_mlb_organization": "Test Club",
               "games_played": 30, "at_bats": 100, "hits": 30, "runs": 20, "home_runs": 5,
               "rbi": 15, "stolen_bases": 3, "walks": 10, "batting_average": ".300",
-              "birth_date": "2000-01-01", "primary_position": "C"}
+              "birth_date": "2000-01-01", "primary_position": "C",
+              "roster_status_code": "D10", "roster_status": "Injured 10-Day", "injured_list": True}
     pitcher = {"player_id": 2, "player_name": "Test Pitcher", "current_mlb_organization": "Test Club",
                "games": 6, "games_started": 4, "innings_pitched": "30.2", "wins": 3, "losses": 1, "saves": 0,
                "strikeouts": 40, "era": "2.35", "whip": "1.01", "primary_position": "P"}
@@ -248,6 +249,10 @@ def test_site_ranges_replace_ytd_preserve_custom_and_use_selected_columns(tmp_pa
     assert ranges[0]["pitchers"][0]["stats"]["GS"] == 4
     assert ranges[0]["pitchers"][0]["stats"]["IP"] == "30.2"
     assert ranges[0]["batters"][0]["position"] == "C"
+    assert ranges[0]["batters"][0]["roster_status_code"] == "D10"
+    assert ranges[0]["batters"][0]["roster_status"] == "Injured 10-Day"
+    assert ranges[0]["batters"][0]["injured_list"] is True
+    assert ranges[0]["pitchers"][0]["injured_list"] is False
     assert ranges[0]["pitchers"][0]["position"] == "P"
     assert "birth_date" not in ranges[0]["batters"][0]
     exporter.write_site_data(path, [], [], 2027, "2027-01-01", "2027-04-01", "2027-04-01")

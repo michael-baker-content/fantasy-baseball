@@ -1,4 +1,13 @@
 /* Shared position eligibility rules for the player statistics views. */
+function playerForStatsSource(player,source){
+  // Ohtani's displayed position depends on which statistics are being shown.
+  if(String(player.id)==="660271")return {...player,position:source==="pitchers"?"SP":"DH"};
+  if(source==="pitchers"&&String(player.position||"").trim().toUpperCase()==="P"){
+    const starter=eligibleForStatsView(player,"sp"),reliever=eligibleForStatsView(player,"rp");
+    if(starter!==reliever)return {...player,position:starter?"SP":"RP"};
+  }
+  return player;
+}
 const positionFilters={
   batters:["C","1B","2B","3B","SS","LF","CF","RF","DH"],
   pitchers:["SP","RP"],

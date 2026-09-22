@@ -308,6 +308,9 @@ def write_site_data(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict
         return [{"id": row["player_id"], "name": row["player_name"],
                  "team": row["current_mlb_organization"],
                  "position": row.get("primary_position", ""),
+                 "roster_status_code": row.get("roster_status_code", ""),
+                 "roster_status": row.get("roster_status", ""),
+                 "injured_list": row.get("injured_list", False),
                  "stats": {key: row.get(column, "") for key, column in fields[group].items()}}
                 for row in rows]
     entry = {"id": range_id, "season": season, "start": start, "through": through,

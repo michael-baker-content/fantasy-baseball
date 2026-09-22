@@ -7,7 +7,7 @@
   <title>Player Stats · BABBD Fantasy Baseball</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="stats.css">
+  <link rel="stylesheet" href="stats.css?v=20260922-owners">
   <script src="theme.js"></script>
 </head>
 <body>
@@ -43,9 +43,11 @@
       <ul class="stats-info-rules">
         <li><strong>IF:</strong> C, 1B, 2B, 3B, SS. <strong>OF:</strong> LF, CF, RF, OF.</li>
         <li><strong>SP:</strong> 2+ starts. <strong>RP:</strong> 2+ saves or fewer than 2 starts. Players with 2+ starts and 2+ saves appear in both, regardless of position label.</li>
-        <li>Primary DHs and players without a listed position are excluded from IF and OF.</li>
+        <li>Primary DHs and players without a listed position are excluded from IF and OF. Ohtani is displayed as DH for batting and SP for pitching.</li>
       </ul>
       <h3 class="stats-info-subheading">Eligibility</h3>
+      <p>Owner Status uses the same test rosters as Standings. Ownership applies across statistics ranges; filters only include players in this page’s postseason player pool.</p>
+      <p>Red IL badges show injured-list status as of the range's roster date, not an expected return date.</p>
       <p>Minimum AB applies to all batting views; minimum IP applies to all pitching views, regardless of sorting. Minimums use the selected range; zero includes everyone. Optioned and injured-list players are included; free agents and released players are excluded.</p>
       <p>Last 30 days ends on the published through-date, includes that day, and stays within the season year.</p>
       <h3 class="stats-info-subheading">Sorting</h3>
@@ -71,6 +73,7 @@
           <div id="stats-filters-panel" class="stats-filter-fields" hidden>
             <label>Statistics range<select id="stats-range"></select></label>
             <label>Team<select id="stats-team"><option value="">All teams</option></select></label>
+            <label>Owner Status<select id="stats-owner"><option value="">All Players</option></select></label>
             <label>Position<select id="stats-position"><option value="">All positions</option></select></label>
             <label>Minimum AB<input id="stats-min-ab" type="number" min="0" step="1" value="0" inputmode="numeric" aria-describedby="stats-qualification-help stats-qualification-error"></label>
             <label>Minimum IP (whole innings)<input id="stats-min-ip" type="number" min="0" step="1" value="0" inputmode="numeric" aria-describedby="stats-qualification-help stats-qualification-error"></label>
@@ -89,9 +92,11 @@
   </main>
   <footer class="site-footer"><div class="site-footer-inner"><span>Regular-season MLB statistics</span><a href="./">Back to standings</a></div></footer>
   <script src="header.js" defer></script>
-  <script src="stats-positions.js" defer></script>
-  <script src="stats-sort.js" defer></script>
+  <script src="stats-positions.js?v=20260922-pitcher-roles" defer></script>
+  <script src="stats-sort.js?v=20260922-owners" defer></script>
+  <script src="stats-owners.js?v=20260922-owners" defer></script>
   <script src="stats-filters.js" defer></script>
-  <script src="stats.js" defer></script>
+  <script src="stats-status.js" defer></script>
+  <script src="stats.js?v=20260922-owners" defer></script>
 </body>
 </html>

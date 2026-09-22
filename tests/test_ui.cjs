@@ -6,6 +6,42 @@ const vm = require('node:vm');
 const read = name => fs.readFileSync(path.join(__dirname, '../docs', name), 'utf8');
 const visibleSort = vm.runInNewContext(read('stats-sort.js') + '\nvisibleStatsSort;');
 const qualifies = vm.runInNewContext(read('stats-filters.js') + '\nmeetsQualification;');
+const injuryBadge = vm.runInNewContext(read('stats-status.js') + '\ninjuredListBadge;');
+const ownership = vm.runInNewContext(read('stats-owners.js') + '\nstatsOwnership;');
+const matchesOwner = vm.runInNewContext(read('stats-owners.js') + '\nmatchesOwnerStatus;');
+
+test('ownership matches player IDs, deduplicates two-way entries, and supports each filter', () => {
+  const lookup = ownership({owners: [
+    {name: 'Ali', players: [{player_id: 1}, {player_id: '1'}, {player_id: null}]},
+    {name: 'Tim', players: [{player_id: 2}, {player_id: 1}]},
+  ]});
+  assert.deepEqual(Array.from(lookup.get('1')), ['Ali', 'Tim']);
+  assert.equal(lookup.has('null'), false);
+  assert.equal(matchesOwner(lookup.get('1'), 'owner:Ali'), true);
+  assert.equal(matchesOwner(lookup.get('2'), 'owner:Ali'), false);
+  assert.equal(matchesOwner(lookup.get('2'), 'rostered'), true);
+  assert.equal(matchesOwner([], 'rostered'), false);
+  assert.equal(matchesOwner([], ''), true);
+  assert.throws(() => ownership({}), /unavailable/);
+});
+
+test('Owner sort resets when its column is hidden on mobile', () => {
+  assert.equal(visibleSort({key: 'owner', dir: 1}, 'batters', true, false).key, 'HR');
+  assert.equal(visibleSort({key: 'owner', dir: 1}, 'pitchers', true, false).key, 'K');
+  assert.equal(visibleSort({key: 'owner', dir: 1}, 'pitchers', false, false).key, 'owner');
+});
+
+test('IL badge recognizes official roster codes and descriptions', () => {
+  for (const days of [7, 10, 15, 60]) {
+    assert.equal(injuryBadge({roster_status_code: `D${days}`}).label, `IL-${days}`);
+    assert.equal(injuryBadge({roster_status_code: `IL${days}`}).label, `IL-${days}`);
+    assert.equal(injuryBadge({roster_status: `Injured ${days}-Day`}).label, `IL-${days}`);
+  }
+  assert.equal(injuryBadge({injured_list: true}).label, 'IL');
+  assert.equal(injuryBadge({roster_status_code: 'A', roster_status: 'Active', injured_list: false}), null);
+  assert.equal(injuryBadge({roster_status_code: 'MIN', roster_status: 'Minors'}), null);
+  assert.equal(injuryBadge({}), null);
+});
 
 test('AB minimum excludes players from the pool, independent of rate or counting stats', () => {
   const players = [{stats: {AB: 49, HR: 30, AVG: '.900'}}, {stats: {AB: '50', HR: 1, AVG: '.200'}}];

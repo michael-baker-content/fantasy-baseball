@@ -17,6 +17,36 @@ League standings count each drafted player's statistics regardless of their
 current MLB organization. These rosters are independent of the separate player
 exporter's 14-team pool, which remains unchanged.
 
+## Update all site statistics
+
+From the repository root, run this each morning to update through yesterday:
+
+```powershell
+.\update.cmd
+```
+
+To update again after games finish today:
+
+```powershell
+.\update.cmd --today
+```
+
+For a specific cutoff, use `.\update.cmd --through 2026-09-21`.
+The shortcut uses the repository's `.venv` Python and refreshes standings,
+owner pages, YTD Player Stats, and Last 30 Days. It also refreshes player roster
+status/IL badges as of the run date. Fixed custom ranges are preserved by the
+exporter. CSV exports are generated locally; Excel is not required.
+
+Standings retain the configured league dates and game types and count only final
+games. Player Stats retain their separate organization pool and regular-season
+scope; `--today` uses whatever statistics the API has published for today, which
+may lag completed games. This shortcut does not switch the league to postseason
+dates, rosters, or game types; configure those before postseason play.
+
+On a failed step, the shortcut restores both previous site JSON files. Downloaded
+cache files and CSV exports may remain. Run only one update at a time. Preview
+the results before committing and pushing yourself; the shortcut does neither.
+
 ## Refresh standings
 
 ```powershell
@@ -216,6 +246,13 @@ Each view initially displays 25 matching players. **Show more** reveals the next
 browser downloads the complete static snapshot once, then filters and paginates
 locally. The Pos. column displays the source's primary MLB designation, which
 can be P or TWP even though those are not dropdown choices.
+
+Alert-colored IL badges beside names show roster injury status, such as IL-10.
+The accessible description includes the roster snapshot date. When the duration
+is unavailable, the badge reads IL without inventing a duration. Status is not
+an expected return date and updates only on export. Re-export each published
+range to add injury fields to older website data; snapshots lacking those fields
+display no badge.
 
 Narrow layouts hide supporting statistics (G, AB, H, IP). If the selected sort
 column becomes hidden, sorting resets to HR for batting views or K for pitching
