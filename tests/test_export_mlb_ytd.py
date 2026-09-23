@@ -25,6 +25,30 @@ def test_roster_status_flags():
     assert not is_injured("A", "Active")
 
 
+@pytest.mark.parametrize("ip,outs", [("10.1", 31), ("10.2", 32), ("10.0", 30)])
+def test_pitching_rows_preserve_calculated_rate_precision(ip, outs, tmp_path):
+    stat = {"gamesPlayed": 3, "inningsPitched": ip, "earnedRuns": 3,
+            "hits": 9, "baseOnBalls": 2, "era": "2.61", "whip": "1.06"}
+    rows = build_rows([{"player": {"id": 1}, "stat": stat}], PITCHING_FIELDS,
+                      {1: {"organization_name": "Test Club", "status_code": "A", "status": "Active"}},
+                      {1: {"id": 1, "fullName": "Test Pitcher"}}, "pitching")
+    assert rows[0]["era"] == pytest.approx(81 / outs)
+    assert rows[0]["whip"] == pytest.approx(33 / outs)
+    assert stat["era"] == "2.61"
+    path = tmp_path / "stats.json"
+    exporter.write_site_data(path, [], rows, 2026, "2026-01-01", "2026-09-21", "2026-09-22")
+    saved = json.loads(path.read_text())["ranges"][0]["pitchers"][0]["stats"]
+    assert saved["ERA"] == pytest.approx(81 / outs)
+    assert saved["WHIP"] == pytest.approx(33 / outs)
+
+
+def test_pitching_rates_handle_zero_and_missing_inputs():
+    assert exporter.precise_pitching_rates({"inningsPitched": "0.0", "earnedRuns": 1}) == {"era": "", "whip": ""}
+    assert exporter.precise_pitching_rates({}) == {}
+    assert exporter.precise_pitching_rates({"inningsPitched": "2.1"}) == {}
+    assert exporter.precise_pitching_rates({"inningsPitched": "2.1", "earnedRuns": 0, "hits": 0, "baseOnBalls": 0}) == {"era": 0, "whip": 0}
+
+
 def test_build_rows_excludes_unaffiliated_players():
     splits = [
         {"player": {"id": 1}, "stat": {"gamesPlayed": 2, "hits": 3}},

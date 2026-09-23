@@ -5,7 +5,24 @@ const path = require('node:path');
 const vm = require('node:vm');
 const read = name => fs.readFileSync(path.join(__dirname, '../docs', name), 'utf8');
 const visibleSort = vm.runInNewContext(read('stats-sort.js') + '\nvisibleStatsSort;');
+const compareNames = vm.runInNewContext(read('stats-sort.js') + '\ncomparePlayerNames;');
+
+test('Player alphabetical sort uses surname then given name, preserving compound surnames', () => {
+  const players=['Will Smith','Bryan De La Cruz','Aaron Judge','Josh Smith','Ronald Acuña Jr.'].map(name=>({name}));
+  assert.deepEqual(players.sort(compareNames).map(p=>p.name), ['Ronald Acuña Jr.','Bryan De La Cruz','Aaron Judge','Josh Smith','Will Smith']);
+  assert.deepEqual(players.sort((a,b)=>-compareNames(a,b)).map(p=>p.name), ['Will Smith','Josh Smith','Aaron Judge','Bryan De La Cruz','Ronald Acuña Jr.']);
+  assert.ok(compareNames({name:'Aaron Smith Jr.'},{name:'Will Smith'})<0);
+});
 const qualifies = vm.runInNewContext(read('stats-filters.js') + '\nmeetsQualification;');
+const matchesSheet = vm.runInNewContext(read('stats-filters.js') + '\nmatchesSheet;');
+
+test('Sheet checkbox matches IDs across views and excludes absent IDs only when checked', () => {
+  const selected = new Set(['660271']);
+  assert.equal(matchesSheet({id: 660271}, true, selected), true);
+  assert.equal(matchesSheet({id: '660271'}, true, selected), true);
+  assert.equal(matchesSheet({id: 123}, true, selected), false);
+  assert.equal(matchesSheet({id: 123}, false, selected), true);
+});
 const injuryBadge = vm.runInNewContext(read('stats-status.js') + '\ninjuredListBadge;');
 const ownership = vm.runInNewContext(read('stats-owners.js') + '\nstatsOwnership;');
 const matchesOwner = vm.runInNewContext(read('stats-owners.js') + '\nmatchesOwnerStatus;');

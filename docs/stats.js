@@ -5,6 +5,7 @@ const teamLabel=player=>player.team_abbreviation||teamAbbreviations[player.team]
 const states=Object.fromEntries(Object.entries(statsViews).map(([view,details])=>[view,{key:details.source==="batters"?"HR":"K",dir:-1}]));
 let ranges=[],group="batters";
 let ownership=new Map();
+let sheetPlayers=new Set();
 const pageSize=25;
 let visibleLimit=pageSize;
 let qualificationMinimums=[0,0];
@@ -14,15 +15,19 @@ el("stats-filters-toggle").addEventListener("click",()=>{
   panel.hidden=!panel.hidden;
   el("stats-filters-toggle").setAttribute("aria-expanded",String(!panel.hidden));
 });
-const infoDialog=el("stats-info-dialog");
-el("stats-info-open").addEventListener("click",()=>infoDialog.showModal());
-el("stats-info-close").addEventListener("click",()=>infoDialog.close());
-infoDialog.addEventListener("click",event=>{
-  if(event.target!==infoDialog)return;
-  const bounds=infoDialog.getBoundingClientRect();
-  if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)infoDialog.close();
-});
-infoDialog.addEventListener("close",()=>el("stats-info-open").focus({preventScroll:true}));
+function connectInfoDialog(dialog,closeButton,triggers){
+  let opener;
+  triggers.forEach(button=>button.addEventListener("click",()=>{opener=button;dialog.showModal()}));
+  closeButton.addEventListener("click",()=>dialog.close());
+  dialog.addEventListener("click",event=>{
+    if(event.target!==dialog)return;
+    const bounds=dialog.getBoundingClientRect();
+    if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)dialog.close();
+  });
+  dialog.addEventListener("close",()=>opener?.focus({preventScroll:true}));
+}
+connectInfoDialog(el("stats-info-dialog"),el("stats-info-close"),[el("stats-info-open")]);
+connectInfoDialog(el("stats-minimum-dialog"),el("stats-minimum-close"),document.querySelectorAll("[data-minimum-info]"));
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const normalize=value=>String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function format(key,value){
@@ -41,23 +46,29 @@ function render(keepPage=false){
   if(keepPage!==true)visibleLimit=pageSize;
   const range=ranges[Number(el("stats-range").value)];if(!range)return;
   const minimumInputs=[el("stats-min-ab"),el("stats-min-ip")];
-  let valid=true;
-  minimumInputs.forEach(input=>{const ok=input.validity.valid;input.setAttribute("aria-invalid",String(!ok));valid=valid&&ok});
+  const activeMinimum=statsViews[group].source==="batters"?0:1;
+  minimumInputs.forEach((input,index)=>{
+    input.closest(".stats-minimum-field").hidden=index!==activeMinimum;
+    input.setAttribute("aria-invalid",String(index===activeMinimum&&!input.validity.valid));
+  });
+  const valid=minimumInputs[activeMinimum].validity.valid;
   el("stats-qualification-error").hidden=valid;
-  if(valid)qualificationMinimums=minimumInputs.map(input=>Number(input.value||0));
+  if(valid)qualificationMinimums[activeMinimum]=Number(minimumInputs[activeMinimum].value||0);
   const [minAB,minIP]=qualificationMinimums;
   const state=states[group],query=normalize(el("stats-search").value.trim()),team=el("stats-team").value;
   const ownerStatus=el("stats-owner").value;
   const view=statsViews[group],source=range[view.source].map(player=>({...playerForStatsSource(player,view.source),owners:ownership.get(String(player.id))||[],owner:(ownership.get(String(player.id))||[]).join(", ")}));
   Object.assign(state,visibleStatsSort(state,view.source,narrowStats.matches,Boolean(team)));
-  const eligible=source.filter(player=>eligibleForStatsView(player,group)&&matchesOwnerStatus(player.owners,ownerStatus));
+  const sheetOnly=el("stats-sheet").checked;
+  const eligible=source.filter(player=>eligibleForStatsView(player,group)&&matchesOwnerStatus(player.owners,ownerStatus)&&matchesSheet(player,sheetOnly,sheetPlayers));
   const position=el("stats-position").value;
   const rows=eligible.filter(player=>meetsQualification(player,view.source,minAB,minIP)&&matchesPositionFilter(player,position)&&(!team||player.team===team)&&normalize(player.name).includes(query));
   rows.sort((a,b)=>{
+    if(state.key==="name")return comparePlayerNames(a,b)*state.dir;
     const text=["name","team","position","owner"].includes(state.key);
     const av=text?(state.key==="team"?teamLabel(a):a[state.key]||null):numeric(state.key,a.stats[state.key]),bv=text?(state.key==="team"?teamLabel(b):b[state.key]||null):numeric(state.key,b.stats[state.key]);
-    if(av===null||bv===null)return av===bv?a.name.localeCompare(b.name):av===null?1:-1;
-    return (text?av.localeCompare(bv):av-bv)*state.dir||a.name.localeCompare(b.name);
+    if(av===null||bv===null)return av===bv?comparePlayerNames(a,b):av===null?1:-1;
+    return (text?av.localeCompare(bv):av-bv)*state.dir||comparePlayerNames(a,b);
   });
   const keys=["name","position",...(!team?["team"]:[]),"owner",...columns[view.source]];
   el("player-stats-table").querySelector("caption").textContent=`${view.label} statistics, ${range.start} through ${range.through}`;
@@ -67,6 +78,7 @@ function render(keepPage=false){
   const qualification=view.source==="batters"?(minAB?` · Minimum ${minAB} AB`:""):(minIP?` · Minimum ${minIP} IP`:"");
   el("stats-count").textContent=`Showing ${Math.min(visibleLimit,rows.length)} of ${rows.length} matching ${view.label} players${ownerStatus?` · ${el("stats-owner").selectedOptions[0].textContent}`:""}${position?` · Position: ${position}`:""}${qualification}`;
   el("stats-show-more").hidden=visibleLimit>=rows.length;
+  if(sheetOnly)el("stats-count").textContent+=" · Sheet Players Only";
   el("stats-show-more").textContent=`Show ${Math.min(pageSize,Math.max(0,rows.length-visibleLimit))} more`;
   el("stats-empty").hidden=rows.length!==0;
   el("stats-empty").textContent=["sp","rp"].includes(group)&&source.some(player=>player.stats.GS===undefined||player.stats.GS==="")?"Starts data is unavailable for some players in this range. Refresh its published data to populate the pitching tabs.":["if","of"].includes(group)&&source.some(player=>!player.position)?"Position information is missing for some players in this range. Refresh its published data to populate the position tabs.":"No players match these filters.";
@@ -108,6 +120,7 @@ el("player-stats-table").addEventListener("click",event=>{
 el("stats-range").addEventListener("change",selectRange);
 el("stats-team").addEventListener("change",render);
 el("stats-owner").addEventListener("change",render);
+el("stats-sheet").addEventListener("change",render);
 el("stats-position").addEventListener("change",render);
 el("stats-search").addEventListener("input",render);
 el("stats-min-ab").addEventListener("input",render);
@@ -128,7 +141,12 @@ Promise.all([fetch("data/player-stats.json",{cache:"no-store"}).then(response=>{
 }),fetch("data/league.json",{cache:"no-store"}).then(response=>{
   if(!response.ok)throw new Error("Roster ownership data could not be loaded. Please try again later.");
   return response.json();
-})]).then(([payload,league])=>{
+}),fetch("data/sheet-players.json",{cache:"no-store"}).then(response=>{
+  if(!response.ok)throw new Error("Sheet selections could not be loaded. Publish the Sheet data and reload.");
+  return response.json();
+})]).then(([payload,league,sheet])=>{
+  if(!Array.isArray(sheet.player_ids))throw new Error("Sheet selections are invalid.");
+  sheetPlayers=new Set(sheet.player_ids.map(String));
   if(!Array.isArray(payload.ranges)||!payload.ranges.length)throw new Error("Player statistics have not been published yet.");
   ranges=payload.ranges;
   ownership=statsOwnership(league);

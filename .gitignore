@@ -10,7 +10,11 @@ __pycache__/
 !data/2025/*.csv
 !config/league.json
 !config/roster.csv
+!config/sheet-players.csv
+config/sheet-players.csv.bak
+config/sheet-players.csv.tmp
 !docs/data/*.json
+docs/data/sheet-players.json.tmp
 fantasy_gamelogs_*
 data/mlb_cache/
 reference/

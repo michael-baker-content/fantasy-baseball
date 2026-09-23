@@ -1,3 +1,6 @@
+function matchesSheet(player,enabled,selected){
+  return !enabled||selected.has(String(player.id));
+}
 function numeric(key,value){
   if(value===null||value===undefined||String(value).trim()==="")return null;
   if(key==="IP"){

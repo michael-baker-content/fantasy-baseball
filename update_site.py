@@ -10,11 +10,12 @@ ROOT = Path(__file__).resolve().parent
 
 
 def refresh_site(through: date) -> None:
-    outputs = [ROOT / "docs/data/league.json", ROOT / "docs/data/player-stats.json"]
+    outputs = [ROOT / "docs/data/league.json", ROOT / "docs/data/player-stats.json", ROOT / "docs/data/sheet-players.json"]
     previous = {path: path.read_bytes() if path.exists() else None for path in outputs}
     export_args = ["--season", str(through.year), "--through", through.isoformat(),
                    "--format", "csv", "--site"]
     steps = [
+        ("Sheet selections", ["publish_sheet.py"]),
         ("Standings and owner pages", ["refresh.py", "--through", through.isoformat()]),
         ("Year-to-date Player Stats", ["export_mlb_ytd.py", *export_args]),
         ("Last 30 Days Player Stats", ["export_mlb_ytd.py", *export_args, "--last-30-days"]),

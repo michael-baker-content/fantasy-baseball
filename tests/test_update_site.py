@@ -11,13 +11,14 @@ def test_refreshes_all_views_with_shared_cutoff(tmp_path, monkeypatch):
     calls = []
     monkeypatch.setattr(update_site.subprocess, "run", lambda args, **kwargs: calls.append((args, kwargs)))
     update_site.refresh_site(date(2026, 9, 21))
-    assert len(calls) == 3
-    for args, kwargs in calls:
+    assert len(calls) == 4
+    assert calls[0][0][1].endswith("publish_sheet.py")
+    for args, kwargs in calls[1:]:
         assert args[args.index("--through") + 1] == "2026-09-21"
         assert kwargs == {"cwd": tmp_path, "check": True}
-    assert "--last-30-days" not in calls[1][0]
-    assert "--last-30-days" in calls[2][0]
-    assert all("--site" in args and "csv" in args for args, _ in calls[1:])
+    assert "--last-30-days" not in calls[2][0]
+    assert "--last-30-days" in calls[3][0]
+    assert all("--site" in args and "csv" in args for args, _ in calls[2:])
 
 
 @pytest.mark.parametrize("existing", [True, False])
@@ -25,7 +26,7 @@ def test_failed_refresh_restores_site_files(tmp_path, monkeypatch, existing):
     monkeypatch.setattr(update_site, "ROOT", tmp_path)
     data = tmp_path / "docs/data"
     data.mkdir(parents=True)
-    paths = [data / "league.json", data / "player-stats.json"]
+    paths = [data / "league.json", data / "player-stats.json", data / "sheet-players.json"]
     if existing:
         for path in paths:
             path.write_bytes(b"original")

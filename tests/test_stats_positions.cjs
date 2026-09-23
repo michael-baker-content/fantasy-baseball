@@ -92,7 +92,7 @@ test('SP requires at least two starts regardless of position label', () => {
   assert.equal(eligible({position: 'SP', stats: {}}, 'sp'), false);
 });
 test('starters need at least two saves to also qualify for RP', () => {
-  for (const position of ['P', 'SP', 'RP', 'TWP', '']) {
+  for (const position of ['P', 'SP', 'RP', 'TWP']) {
     for (const saves of [0, 1, '1', '']) {
       assert.equal(eligible(player(position, saves, 10), 'rp'), false);
     }
@@ -119,4 +119,17 @@ test('missing starts are not silently treated as zero starts', () => {
     assert.equal(eligible(row, 'rp'), false);
     assert.equal(eligible(row, 'pitchers'), true);
   }
+});
+
+test('RP excludes incidental position-player pitching but retains designated two-way players', () => {
+  for (const position of ['C','1B','2B','3B','SS','LF','CF','RF','OF','DH','']) {
+    for (const saves of [0, 2]) {
+      const row = player(position, saves, 0);
+      assert.equal(eligible(row, 'rp'), false);
+      assert.equal(matches(row, 'RP'), false);
+      assert.equal(eligible(row, 'pitchers'), true);
+    }
+  }
+  assert.equal(eligible(player('TWP', 0, 0), 'rp'), true);
+  assert.equal(eligible(player('TWP', 0, 3), 'rp'), false);
 });

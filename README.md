@@ -19,6 +19,49 @@ exporter's 14-team pool, which remains unchanged.
 
 ## Update all site statistics
 
+### Draft sheet review CSV
+
+Run `.\sheet.cmd` to generate `config/sheet-players.csv` from the saved YTD
+player pool without downloading data. Columns are League, Team, Last Name,
+First Name, MLB ID, and Sheet, sorted by the first four columns (ignoring accents
+and case). Players appearing in both batting and pitching data have one row.
+Display names are split after the first word, retaining compound surnames and
+suffixes. Sheet defaults to No; edit it to Yes for likely draft picks and save
+as CSV UTF-8. Keep MLB IDs unchanged.
+
+Close the CSV in Excel before rerunning. Existing Yes/No selections are retained
+for current players, new players default to No, and a `.csv.bak` copy preserves
+the previous review, including players who left the pool. The daily update does
+not edit this CSV. It publishes its Yes selections to `docs/data/sheet-players.json`.
+The unchecked-by-default **Sheet Players Only** checkbox in Player Stats filters
+all tabs by those IDs, together with the other filters. Missing IDs default to No.
+To publish CSV edits locally without downloading statistics, run:
+
+```powershell
+.\.venv\Scripts\python.exe publish_sheet.py
+```
+
+Commit the updated site JSON when ready to make the selections live.
+
+### Optional first-pass selections
+
+For an optional one-time first pass before manual review, run `.\seed-sheet.cmd`.
+This separate tool leaves `build_sheet.py` unchanged and creates the same review
+CSV with up to 11 hitters and 8 pitchers per organization marked Yes. Existing
+files are never overwritten; use `.\seed-sheet.cmd --output config/sheet-suggestions.csv`
+if you already have a review file. It reads saved YTD data without network access.
+Hitter score: AB + 8×HR + 12×SB + R + RBI + BB. Pitcher score:
+IP (true innings) + 0.5×K + 12×SV + 5×W. These are rough playing-time and
+fantasy-contribution estimates, not projections. Position players' incidental
+pitching appearances are excluded from pitcher selection. A two-way player can
+fill a slot in both groups but still has only one Yes/No row. Injured players
+remain candidates; review health and expected roles manually.
+
+### Daily refresh
+
+The daily refresh publishes only your current CSV Yes/No choices. It never runs
+the heuristic, changes those choices, or regenerates the review CSV.
+
 From the repository root, run this each morning to update through yesterday:
 
 ```powershell
@@ -43,7 +86,7 @@ scope; `--today` uses whatever statistics the API has published for today, which
 may lag completed games. This shortcut does not switch the league to postseason
 dates, rosters, or game types; configure those before postseason play.
 
-On a failed step, the shortcut restores both previous site JSON files. Downloaded
+On a failed step, the shortcut restores all three previous site JSON files. Downloaded
 cache files and CSV exports may remain. Run only one update at a time. Preview
 the results before committing and pushing yourself; the shortcut does neither.
 
@@ -174,6 +217,12 @@ they do not download MLB data.
 
 ## Website Player Stats page
 
+Pitching exports calculate ERA and WHIP from earned runs, hits, walks, and
+recorded outs, preserving precision for sorting. The site displays three decimal
+places. Zero innings produces an unavailable rate; if calculation inputs are
+missing, the exporter retains the API's rate. Re-export existing ranges to apply
+this precision to previously saved data.
+
 The header's **Player Stats** link opens `docs/stats.html`. Its Batters, Pitchers,
 IF, OF, SP, and RP tabs support name search, current-team filtering, sortable columns,
 and selecting published date ranges. Batters show G, AB, H and the six hitting
@@ -186,8 +235,10 @@ and SS; OF includes LF, CF, RF, and OF. Primary DHs and unknown positions are
 excluded from IF and OF. SP includes players with at least two starts in the
 selected range; RP includes players with at least two saves or fewer than two
 starts, so players meeting neither original threshold fall into RP. A player
-with at least two starts and two saves appears in both, regardless of primary
-position. Missing starts data must be refreshed before assigning the fallback
+with at least two starts and two saves appears in both if designated P, SP, RP,
+or TWP. RP excludes position players' incidental pitching appearances and
+unknown positions; the complete Pitchers tab retains those records.
+Missing starts data must be refreshed before assigning the fallback
 RP group. Games started (GS) is published for filtering without adding a visible
 table column. Re-export each published range
 to add starts data to older snapshots. Position-rule tests can be run with
@@ -224,13 +275,26 @@ Each run replaces the published `last30` entry while preserving YTD and custom
 ranges from that season. Refresh YTD and last-30-days exports with the same
 through-date when updating the site; the browser does not advance either range.
 
-Under **Filters**, minimum AB applies to all Batters/IF/OF results, and minimum
-IP applies to all Pitchers/SP/RP results, regardless of the sorted column. Both
+Under **Filters**, minimum AB is shown only for Batters/IF/OF, and minimum
+IP is shown only for Pitchers/SP/RP. Each applies regardless of the sorted column. Both
 accept nonnegative whole numbers, use statistics from the selected range, and
 persist while switching tabs and ranges. IP comparisons use outs, so 9.2 IP does
 not meet a 10-IP minimum. Zero disables the minimum; missing statistics fail an
 active minimum. The result count displays the active minimum even when Filters
 is closed. Filters run before sorting and pagination; they do not alter exports.
+
+Info buttons beside the minimum labels explain their behavior in a shared dialog.
+Only the visible minimum is validated, so an invalid hidden field cannot block
+the other player type. Filters use one column below 500px and two at 500px and
+above. At 500px and above, Sheet Players Only sits beside the visible minimum,
+aligned to the top; below 500px it has its own row.
+
+**Owner Status** offers All Players, Rostered Players, and each of the seven
+owners, matched by MLB ID against `docs/data/league.json`. The sortable Owner
+column shows Unrostered when there is no match and is hidden at 640px and below.
+These are the same test rosters used on Standings, but this page still limits
+results to the postseason organization pool. An owner's full roster may therefore
+not appear here. Sheet and owner filtering combine with all other filters.
 
 The **Position** dropdown narrows a tab by primary MLB position (for example,
 C within IF or CF within OF); SP/RP filters use the same starts/saves rules as
@@ -244,8 +308,16 @@ filters, and the result count shows the selected position when Filters is closed
 Each view initially displays 25 matching players. **Show more** reveals the next
 25; changing a tab, range, filter, or sort resets the visible list to 25. The
 browser downloads the complete static snapshot once, then filters and paginates
-locally. The Pos. column displays the source's primary MLB designation, which
-can be P or TWP even though those are not dropdown choices.
+locally. Player alphabetical sorting uses last name, then first name, ignoring
+case and accents; suffixes break ties after the given name. It also breaks ties
+for other sorted columns. Display names remain first-name-first. Compound
+surnames are retained using the saved display name's first word as the given name.
+
+The Pos. column normally displays the source's primary MLB designation. Generic
+P becomes SP or RP when eligible for only that group in the selected range;
+players eligible for both retain P. Ohtani displays DH in batting views (including
+the DH filter) and SP in pitching views; his tab eligibility still follows the
+starts/saves rules. Other TWP labels can remain in the complete lists.
 
 Alert-colored IL badges beside names show roster injury status, such as IL-10.
 The accessible description includes the roster snapshot date. When the duration
@@ -254,7 +326,7 @@ an expected return date and updates only on export. Re-export each published
 range to add injury fields to older website data; snapshots lacking those fields
 display no badge.
 
-Narrow layouts hide supporting statistics (G, AB, H, IP). If the selected sort
+Narrow layouts (640px and below) hide supporting statistics (G, AB, H, IP) and Owner. If the selected sort
 column becomes hidden, sorting resets to HR for batting views or K for pitching
 views. Selecting a team similarly resets an active Team sort. Long player names
 wrap on mobile rather than requiring a hover tooltip. Both pages share saved
@@ -262,8 +334,15 @@ theme handling, including when browser storage is unavailable.
 
 ## Tests
 
+Run these separately; a unique temporary directory avoids the Windows temp-folder
+permissions issue encountered during development:
+
 ```powershell
-.venv\Scripts\python.exe -m pytest -q
+$testTemp = Join-Path $env:TEMP ("babbd-pytest-" + [guid]::NewGuid().ToString())
+```
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q --basetemp="$testTemp"
 ```
 
 Run the JavaScript regression tests with Node.js (no additional packages needed):
@@ -279,6 +358,14 @@ Tab/Enter/Space to sort the homepage, and check the menu and modal with Escape.
 On Player Stats, sort by AB and then narrow below 641px; verify the HR sort
 indicator appears. Sort by Team and select one team; verify the visible default
 sort is restored. Confirm long player names remain readable on mobile.
+Check 499px, 500px, and desktop filter layouts, both minimum info buttons and
+focus return, surname sorting, Sheet/Owner filter combinations, and RP exclusion
+of position players. Tests use saved fixtures or mocks and do not fetch MLB data.
+
+Before committing, include the new scripts, tests, `config/sheet-players.csv`,
+and `docs/data/sheet-players.json` alongside the website changes. The reviewed
+`sheet-players-updated.csv`, suggestions, CSV exports, and backups remain local
+and ignored. `sheet-players.csv` is the authoritative selection file.
 
 ## Optional static analysis with Skylos
 

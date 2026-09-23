@@ -1,3 +1,5 @@
+.stats-controls .stats-sheet-toggle{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px;min-height:44px;cursor:pointer}
+.stats-controls .stats-sheet-toggle input{width:18px;min-width:18px;height:18px;padding:0;accent-color:var(--focus)}
 .stats-title{font-size:26px;margin-bottom:8px}
 .stats-il-badge{display:inline-block;vertical-align:middle;margin-left:4px;padding:1px 5px;border:1px solid currentColor;border-radius:4px;background:var(--red-bg);color:var(--red-text);font-size:10px;font-weight:700;line-height:1.5;white-space:nowrap}
 #stats-show-more{display:block;min-height:44px;margin:16px auto;padding:10px 20px;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--text);font:inherit;font-weight:600;cursor:pointer}
@@ -14,15 +16,15 @@
 .stats-info-button{display:grid;place-items:center;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer}
 .stats-info-button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .stats-info-button:hover{background:var(--hover);color:var(--text)}
-#stats-info-dialog{margin:auto;width:calc(100% - 32px);max-width:520px;max-height:calc(100dvh - 32px);overflow:auto;padding:24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--text);box-shadow:0 20px 60px #0005}
-#stats-info-dialog::backdrop{background:rgb(0 0 0 / .55)}
+:is(#stats-info-dialog,#stats-minimum-dialog){margin:auto;width:calc(100% - 32px);max-width:520px;max-height:calc(100dvh - 32px);overflow:auto;padding:24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--text);box-shadow:0 20px 60px #0005}
+:is(#stats-info-dialog,#stats-minimum-dialog)::backdrop{background:rgb(0 0 0 / .55)}
 .stats-info-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 .stats-info-heading h2{font-size:20px}
 .stats-info-subheading{font-size:15px;margin:18px 0 8px}
 .stats-info-rules{padding-left:20px;margin:12px 0}
 .stats-info-rules li{margin:8px 0}
-#stats-info-close{flex-shrink:0;width:44px;height:44px;border:0;border-radius:7px;background:var(--hover);color:var(--text);font-size:26px;cursor:pointer}
-.stats-info-button:focus-visible,#stats-info-close:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+:is(#stats-info-close,#stats-minimum-close){flex-shrink:0;width:44px;height:44px;border:0;border-radius:7px;background:var(--hover);color:var(--text);font-size:26px;cursor:pointer}
+.stats-info-button:focus-visible,:is(#stats-info-close,#stats-minimum-close):focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .stats-intro{max-width:760px;color:var(--muted);margin-bottom:14px}
 .stats-meta{color:var(--muted);font-size:12px;margin:10px 0}
 .stats-tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-top:20px;overflow-x:auto}
@@ -39,9 +41,16 @@
 #stats-filters-toggle[aria-expanded=true]{background:var(--hover)}
 .stats-filter-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;border:1px solid var(--border);border-radius:7px;background:var(--card)}
 .stats-filter-fields[hidden]{display:none}
+@media(width < 500px){.stats-filter-fields{grid-template-columns:1fr}}
 .stats-filter-help{grid-column:1/-1;margin:0}
+.stats-minimum-field{min-width:0;display:flex;flex-direction:column;gap:6px}
+.stats-minimum-field[hidden]{display:none}
+@media(min-width:500px){
+  .stats-controls .stats-sheet-toggle{grid-column:2;align-self:start}
+}
+.stats-minimum-label{display:flex;align-items:center;gap:4px;flex:1}
+.stats-minimum-label .stats-info-button{flex-shrink:0;min-width:28px;min-height:28px;padding:3px}
 .stats-controls input[aria-invalid=true]{border-color:var(--red)}
-@media(max-width:640px){.stats-filter-fields{grid-template-columns:1fr}}
 .stats-controls label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);min-width:0}
 .stats-controls input,.stats-controls select{width:100%;min-width:0;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:10px;font:inherit;font-size:16px}
 .stats-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}

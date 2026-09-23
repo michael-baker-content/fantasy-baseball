@@ -1,0 +1,658 @@
+﻿League,Team,Last Name,First Name,MLB ID,Sheet
+AL,Boston Red Sox,Abreu,Wilyer,677800,Yes
+AL,Boston Red Sox,Anthony,Roman,701350,Yes
+AL,Boston Red Sox,Bello,Brayan,678394,Yes
+AL,Boston Red Sox,Bennett,Jake,687562,Yes
+AL,Boston Red Sox,Brebbia,John,605154,No
+AL,Boston Red Sox,Burgos,Raymond,670103,No
+AL,Boston Red Sox,Chapman,Aroldis,547973,Yes
+AL,Boston Red Sox,Cheng,Tsung-Che,691907,No
+AL,Boston Red Sox,Contreras,Willson,575929,Yes
+AL,Boston Red Sox,Crochet,Garrett,676979,No
+AL,Boston Red Sox,Duran,Jarren,680776,Yes
+AL,Boston Red Sox,Durbin,Caleb,702332,No
+AL,Boston Red Sox,Eaton,Nate,681987,No
+AL,Boston Red Sox,Gamboa,Alec,687941,No
+AL,Boston Red Sox,Gasper,Mickey,681508,Yes
+AL,Boston Red Sox,Gonzalez,Romy,663853,No
+AL,Boston Red Sox,Gray,Sonny,543243,Yes
+AL,Boston Red Sox,Guerrero,Tyron,594027,No
+AL,Boston Red Sox,Jones,Jahmai,663330,No
+AL,Boston Red Sox,Kahnle,Tommy,592454,No
+AL,Boston Red Sox,Kelly,Zack,677161,No
+AL,Boston Red Sox,Kiner-Falefa,Isiah,643396,No
+AL,Boston Red Sox,La Sorsa,Joe,686747,No
+AL,Boston Red Sox,Martinez,Seth,661527,No
+AL,Boston Red Sox,Mead,Curtis,678554,Yes
+AL,Boston Red Sox,Miller,Erik,669062,Yes
+AL,Boston Red Sox,Monasterio,Andruw,655316,No
+AL,Boston Red Sox,Morán,Jovani,663558,No
+AL,Boston Red Sox,Olds,Wyatt,681544,No
+AL,Boston Red Sox,Oviedo,Johan,670912,No
+AL,Boston Red Sox,Paez,Jedixson,699151,No
+AL,Boston Red Sox,Rafaela,Ceddanne,678882,Yes
+AL,Boston Red Sox,Rivera,Eduardo,700842,No
+AL,Boston Red Sox,Rutschman,Adley,668939,Yes
+AL,Boston Red Sox,Samaniego,Tyler,701719,No
+AL,Boston Red Sox,Sandoval,Patrick,663776,No
+AL,Boston Red Sox,Seigler,Anthony,678011,No
+AL,Boston Red Sox,Slaten,Justin,686580,No
+AL,Boston Red Sox,Sogard,Nick,686765,Yes
+AL,Boston Red Sox,Story,Trevor,596115,Yes
+AL,Boston Red Sox,Suarez,Ranger,624133,Yes
+AL,Boston Red Sox,Tolle,Payton,801139,Yes
+AL,Boston Red Sox,Weissert,Greg,669711,No
+AL,Boston Red Sox,White,Eli,642201,No
+AL,Boston Red Sox,Whitlock,Garrett,676477,Yes
+AL,Boston Red Sox,Wong,Connor,657136,No
+AL,Boston Red Sox,Yoshida,Masataka,807799,No
+AL,Chicago White Sox,Acuña,Luisangel,682668,No
+AL,Chicago White Sox,Antonacci,Sam,803011,Yes
+AL,Chicago White Sox,Bart,Joey,663698,No
+AL,Chicago White Sox,Benintendi,Andrew,643217,Yes
+AL,Chicago White Sox,Brazobán,Huascar,623211,No
+AL,Chicago White Sox,Burke,Sean,680732,Yes
+AL,Chicago White Sox,Cannon,Jonathan,686563,No
+AL,Chicago White Sox,Castillo,Luis,622491,No
+AL,Chicago White Sox,Davis,Tyler,699823,No
+AL,Chicago White Sox,Domínguez,Seranthony,622554,No
+AL,Chicago White Sox,Doyle,Brenton,686668,Yes
+AL,Chicago White Sox,Fedde,Erick,607200,Yes
+AL,Chicago White Sox,Gilbert,Tyler,656457,No
+AL,Chicago White Sox,Grichuk,Randal,545341,Yes
+AL,Chicago White Sox,Hicks,Jordan,663855,No
+AL,Chicago White Sox,Hudson,Bryan,663542,Yes
+AL,Chicago White Sox,Kay,Anthony,641743,Yes
+AL,Chicago White Sox,Leasure,Jordan,673929,No
+AL,Chicago White Sox,Martin,Davis,663436,Yes
+AL,Chicago White Sox,McDougal,Tanner,701780,No
+AL,Chicago White Sox,Meidroth,Chase,805367,Yes
+AL,Chicago White Sox,Montgomery,Braden,695731,Yes
+AL,Chicago White Sox,Montgomery,Colson,695657,Yes
+AL,Chicago White Sox,Murakami,Munetaka,808959,Yes
+AL,Chicago White Sox,Murphy,Chris,669684,No
+AL,Chicago White Sox,Murray,Tanner,695020,No
+AL,Chicago White Sox,Newcomb,Sean,656794,No
+AL,Chicago White Sox,Nishida,Rikuu,807747,No
+AL,Chicago White Sox,Pallette,Peyton,688883,No
+AL,Chicago White Sox,Perez,Junior,678577,No
+AL,Chicago White Sox,Peters,Tristan,671976,Yes
+AL,Chicago White Sox,Pham,Tommy,502054,No
+AL,Chicago White Sox,Quero,Edgar,700337,No
+AL,Chicago White Sox,Richards,Trevor,670950,No
+AL,Chicago White Sox,Rogers,Jake,668670,No
+AL,Chicago White Sox,Romo,Drew,691011,No
+AL,Chicago White Sox,Sandlin,David,689818,Yes
+AL,Chicago White Sox,Schultz,Noah,702273,No
+AL,Chicago White Sox,Schweitzer,Tyler,805326,No
+AL,Chicago White Sox,Smith,Hagen,696146,Yes
+AL,Chicago White Sox,Smith,Shane,681343,No
+AL,Chicago White Sox,Taylor,Grant,691799,Yes
+AL,Chicago White Sox,Teel,Kyle,691019,Yes
+AL,Chicago White Sox,Vargas,Miguel,678246,Yes
+AL,Chicago White Sox,Wiemer,Joey,686894,No
+AL,Cleveland Guardians,Adell,Jo,666176,Yes
+AL,Cleveland Guardians,Aleman,Franco,680916,No
+AL,Cleveland Guardians,Allen,Logan,671106,No
+AL,Cleveland Guardians,Armstrong,Shawn,542888,No
+AL,Cleveland Guardians,Bailey,Patrick,672275,Yes
+AL,Cleveland Guardians,Bazzana,Travis,683953,Yes
+AL,Cleveland Guardians,Bibee,Tanner,676440,Yes
+AL,Cleveland Guardians,Borucki,Ryan,621366,No
+AL,Cleveland Guardians,Brogdon,Connor,641401,No
+AL,Cleveland Guardians,Cantillo,Joey,676282,Yes
+AL,Cleveland Guardians,Cecconi,Slade,677944,No
+AL,Cleveland Guardians,DeLauter,Chase,800050,Yes
+AL,Cleveland Guardians,Espino,Daniel,682982,No
+AL,Cleveland Guardians,Festa,Matt,670036,No
+AL,Cleveland Guardians,Fry,David,681807,No
+AL,Cleveland Guardians,Gaddis,Hunter,683769,Yes
+AL,Cleveland Guardians,Genao,Angel,694197,No
+AL,Cleveland Guardians,Griffin,Foster,656492,Yes
+AL,Cleveland Guardians,Halpin,Petey,690984,Yes
+AL,Cleveland Guardians,Hedges,Austin,595978,No
+AL,Cleveland Guardians,Hernández,Carlos,672578,No
+AL,Cleveland Guardians,Herrin,Tim,682120,No
+AL,Cleveland Guardians,Holderman,Colin,670059,No
+AL,Cleveland Guardians,Hoskins,Rhys,656555,Yes
+AL,Cleveland Guardians,Ingle,Cooper,694876,No
+AL,Cleveland Guardians,Kayfus,CJ,692216,No
+AL,Cleveland Guardians,Kwan,Steven,680757,Yes
+AL,Cleveland Guardians,Lowe,Nathaniel,663993,Yes
+AL,Cleveland Guardians,Manzardo,Kyle,700932,No
+AL,Cleveland Guardians,Martínez,Angel,682657,Yes
+AL,Cleveland Guardians,Messick,Parker,800048,Yes
+AL,Cleveland Guardians,Perkins,Blake,663368,No
+AL,Cleveland Guardians,Peterson,Austin,804926,No
+AL,Cleveland Guardians,Ramírez,José,608070,Yes
+AL,Cleveland Guardians,Rocchio,Brayan,677587,Yes
+AL,Cleveland Guardians,Sabrowski,Erik,681870,Yes
+AL,Cleveland Guardians,Schneemann,Daniel,682177,No
+AL,Cleveland Guardians,Smith,Cade,671922,Yes
+AL,Cleveland Guardians,Valera,George,671655,No
+AL,Cleveland Guardians,Watson,Kahlil,696135,No
+AL,Cleveland Guardians,Williams,Gavin,668909,Yes
+AL,Cleveland Guardians,Yoho,Craig,684974,No
+AL,Houston Astros,Abreu,Bryan,650556,Yes
+AL,Houston Astros,Alexander,Jason,669920,No
+AL,Houston Astros,Allen,Nick,669397,No
+AL,Houston Astros,Altuve,Jose,514888,Yes
+AL,Houston Astros,Alvarez,Yordan,670541,Yes
+AL,Houston Astros,Barrosa,Jorge,678489,No
+AL,Houston Astros,Blanco,Ronel,669854,No
+AL,Houston Astros,Blubaugh,AJ,805123,Yes
+AL,Houston Astros,Bolton,Cody,675989,No
+AL,Houston Astros,Brown,Hunter,686613,Yes
+AL,Houston Astros,Burrows,Mike,681347,No
+AL,Houston Astros,Cole,Zach,805904,No
+AL,Houston Astros,Correa,Carlos,621043,No
+AL,Houston Astros,De Los Santos,Enyel,660853,No
+AL,Houston Astros,Delgado,Raynel,669384,No
+AL,Houston Astros,Dezenzo,Zach,701305,No
+AL,Houston Astros,Diaz,Yainer,673237,Yes
+AL,Houston Astros,Hader,Josh,623352,Yes
+AL,Houston Astros,Imai,Tatsuya,837227,No
+AL,Houston Astros,Javier,Cristian,664299,Yes
+AL,Houston Astros,King,Bryan,687911,No
+AL,Houston Astros,Lambert,Peter,663567,Yes
+AL,Houston Astros,Loperfido,Joey,694388,No
+AL,Houston Astros,Matthews,Brice,694728,No
+AL,Houston Astros,Meyers,Jake,676694,No
+AL,Houston Astros,Muñoz,Roddery,682610,No
+AL,Houston Astros,Okert,Steven,595345,No
+AL,Houston Astros,Paredes,Isaac,670623,Yes
+AL,Houston Astros,Pecko,Ethan,814490,No
+AL,Houston Astros,Peña,Jeremy,665161,Yes
+AL,Houston Astros,Price,Collin,805672,No
+AL,Houston Astros,Roa,Christian,685005,No
+AL,Houston Astros,Salazar,César,663967,No
+AL,Houston Astros,Santa,Alimber,695001,No
+AL,Houston Astros,Shewmake,Braden,669699,No
+AL,Houston Astros,Smith,Cam,701358,Yes
+AL,Houston Astros,Sousa,Bennett,656986,Yes
+AL,Houston Astros,Spence,Lucas,828599,No
+AL,Houston Astros,Teng,Kai-Wei,678906,No
+AL,Houston Astros,Trammell,Taylor,666211,Yes
+AL,Houston Astros,Ullola,Miguel,699044,No
+AL,Houston Astros,VanWey,Logan,701121,No
+AL,Houston Astros,Varsho,Daulton,662139,Yes
+AL,Houston Astros,Vázquez,Christian,543877,No
+AL,Houston Astros,Velázquez,Nelson,676369,No
+AL,Houston Astros,Wade Jr.,LaMonte,664774,Yes
+AL,Houston Astros,Walker,Christian,572233,Yes
+AL,Houston Astros,Weiss,Ryan,680802,No
+AL,Houston Astros,Wesneski,Hayden,669713,Yes
+AL,Houston Astros,Whitcomb,Shay,694376,Yes
+AL,New York Yankees,Beck,Brendan,694341,No
+AL,New York Yankees,Bednar,David,670280,Yes
+AL,New York Yankees,Bellinger,Cody,641355,Yes
+AL,New York Yankees,Blackburn,Paul,621112,Yes
+AL,New York Yankees,Caballero,José,676609,Yes
+AL,New York Yankees,Castro,Kervin,665645,No
+AL,New York Yankees,Chisholm Jr.,Jazz,665862,Yes
+AL,New York Yankees,Chivilli,Angel,683409,No
+AL,New York Yankees,Cole,Gerrit,543037,Yes
+AL,New York Yankees,Cruz,Fernando,518585,No
+AL,New York Yankees,De los Santos,Yerry,660787,No
+AL,New York Yankees,Domínguez,Jasson,691176,No
+AL,New York Yankees,Doval,Camilo,666808,No
+AL,New York Yankees,Escarra,J.C.,641555,No
+AL,New York Yankees,Fried,Max,608331,Yes
+AL,New York Yankees,Fulmer,Michael,605242,No
+AL,New York Yankees,García Jr.,Luis,671277,Yes
+AL,New York Yankees,Garver,Mitch,641598,No
+AL,New York Yankees,Gil,Luis,661563,No
+AL,New York Yankees,Goldschmidt,Paul,502671,Yes
+AL,New York Yankees,Grisham,Trent,663757,No
+AL,New York Yankees,Hanner,Bradley,690440,No
+AL,New York Yankees,Headrick,Brent,687396,Yes
+AL,New York Yankees,Hill,Tim,657612,No
+AL,New York Yankees,Jones,Spencer,682987,Yes
+AL,New York Yankees,Judge,Aaron,592450,Yes
+AL,New York Yankees,Kelenic,Jarred,672284,No
+AL,New York Yankees,Lombard Jr.,George,806146,No
+AL,New York Yankees,McMahon,Ryan,641857,Yes
+AL,New York Yankees,Morgan,Eli,669212,No
+AL,New York Yankees,Ramos,Heliot,671218,Yes
+AL,New York Yankees,Rice,Ben,700250,Yes
+AL,New York Yankees,Rodón,Carlos,607074,Yes
+AL,New York Yankees,Rodríguez,Elmer,695684,No
+AL,New York Yankees,Rosario,Amed,642708,No
+AL,New York Yankees,Sánchez,Ali,645305,No
+AL,New York Yankees,Schlittler,Cam,693645,Yes
+AL,New York Yankees,Schmidt,Clarke,657376,No
+AL,New York Yankees,Schreiber,John,670167,No
+AL,New York Yankees,Schuemann,Max,680474,No
+AL,New York Yankees,Stanton,Giancarlo,519317,No
+AL,New York Yankees,Topa,Justin,623437,No
+AL,New York Yankees,Volpe,Anthony,683011,No
+AL,New York Yankees,Warren,Will,701542,Yes
+AL,New York Yankees,Weathers,Ryan,677960,No
+AL,New York Yankees,Wells,Austin,669224,Yes
+AL,New York Yankees,Yarbrough,Ryan,642232,No
+AL,Tampa Bay Rays,Aranda,Jonathan,666018,Yes
+AL,Tampa Bay Rays,Baker,Bryan,641329,Yes
+AL,Tampa Bay Rays,Booser,Cam,592155,No
+AL,Tampa Bay Rays,Boyle,Joe,671212,No
+AL,Tampa Bay Rays,Brooks,Aaron,605156,No
+AL,Tampa Bay Rays,Caminero,Junior,691406,Yes
+AL,Tampa Bay Rays,Cleavinger,Garrett,664076,Yes
+AL,Tampa Bay Rays,Cook,Alex,702047,No
+AL,Tampa Bay Rays,DeLuca,Jonny,676356,Yes
+AL,Tampa Bay Rays,Díaz,Yandy,650490,Yes
+AL,Tampa Bay Rays,Dunn,Oliver,686554,No
+AL,Tampa Bay Rays,Englert,Mason,669438,No
+AL,Tampa Bay Rays,Fortes,Nick,663743,No
+AL,Tampa Bay Rays,Heasley,Jonathan,669169,No
+AL,Tampa Bay Rays,Hicks,Liam,689414,Yes
+AL,Tampa Bay Rays,Hopkins,Brody,811315,No
+AL,Tampa Bay Rays,Jax,Griffin,643377,Yes
+AL,Tampa Bay Rays,Johnson,Ty,694494,No
+AL,Tampa Bay Rays,Kelly,Kevin,687330,No
+AL,Tampa Bay Rays,Legumina,Casey,668984,No
+AL,Tampa Bay Rays,Madrigal,Nick,663611,No
+AL,Tampa Bay Rays,Martinez,Nick,607259,Yes
+AL,Tampa Bay Rays,Mateo,Jorge,622761,No
+AL,Tampa Bay Rays,Matz,Steven,571927,No
+AL,Tampa Bay Rays,McClanahan,Shane,663556,Yes
+AL,Tampa Bay Rays,Mesa Jr.,Victor,683748,Yes
+AL,Tampa Bay Rays,Mullins,Cedric,656775,Yes
+AL,Tampa Bay Rays,Oliva,Jared,666931,No
+AL,Tampa Bay Rays,Palacios,Richie,680700,Yes
+AL,Tampa Bay Rays,Peralta,Freddy,642547,Yes
+AL,Tampa Bay Rays,Piper,Kenny,700652,No
+AL,Tampa Bay Rays,Rasmussen,Drew,656876,Yes
+AL,Tampa Bay Rays,Rodríguez,Manuel,655889,No
+AL,Tampa Bay Rays,Scholtens,Jesse,669947,No
+AL,Tampa Bay Rays,Seymour,Ian,693855,No
+AL,Tampa Bay Rays,Simpson,Chandler,802415,Yes
+AL,Tampa Bay Rays,Slater,Austin,596103,No
+AL,Tampa Bay Rays,Sulser,Cole,642121,No
+AL,Tampa Bay Rays,Vilade,Ryan,668723,No
+AL,Tampa Bay Rays,Walls,Taylor,670764,Yes
+AL,Tampa Bay Rays,Wells,Tyler,669330,Yes
+AL,Tampa Bay Rays,Williams,Carson,700246,No
+AL,Tampa Bay Rays,Williamson,Ben,810938,No
+AL,Tampa Bay Rays,Woodford,Jake,663765,No
+AL,Texas Rangers,Ahlstrom,Robby,695239,No
+AL,Texas Rangers,Alexander,Tyler,641302,Yes
+AL,Texas Rangers,Baumler,Carter,691945,No
+AL,Texas Rangers,Beeks,Jalen,656222,No
+AL,Texas Rangers,Bradford,Cody,674003,No
+AL,Texas Rangers,Bride,Jonah,681146,No
+AL,Texas Rangers,Burger,Jake,669394,Yes
+AL,Texas Rangers,Carter,Evan,694497,Yes
+AL,Texas Rangers,Cauley,Cam,695508,No
+AL,Texas Rangers,Collyer,Gavin,686560,No
+AL,Texas Rangers,Corniell,Jose,692030,No
+AL,Texas Rangers,Curvelo,Luis,681168,No
+AL,Texas Rangers,deGrom,Jacob,594798,Yes
+AL,Texas Rangers,Díaz,Elias,553869,No
+AL,Texas Rangers,Duran,Ezequiel,677649,Yes
+AL,Texas Rangers,Eovaldi,Nathan,543135,Yes
+AL,Texas Rangers,Foscue,Justin,679822,Yes
+AL,Texas Rangers,Freeman,Cody,683227,No
+AL,Texas Rangers,Garcia,Robert,676395,No
+AL,Texas Rangers,Gore,MacKenzie,669022,Yes
+AL,Texas Rangers,Gray,Peyton,682608,No
+AL,Texas Rangers,Helman,Michael,680737,No
+AL,Texas Rangers,Higashioka,Kyle,543309,No
+AL,Texas Rangers,Jansen,Danny,643376,Yes
+AL,Texas Rangers,Jung,Josh,673962,Yes
+AL,Texas Rangers,Junis,Jakob,596001,No
+AL,Texas Rangers,King,John,667463,No
+AL,Texas Rangers,Langford,Wyatt,694671,Yes
+AL,Texas Rangers,Latz,Jacob,656641,Yes
+AL,Texas Rangers,Leiter,Jack,683004,No
+AL,Texas Rangers,Lopez,Nicky,670032,Yes
+AL,Texas Rangers,Macko,Adam,671936,No
+AL,Texas Rangers,Montgomery,Jordan,656756,No
+AL,Texas Rangers,Nimmo,Brandon,607043,Yes
+AL,Texas Rangers,O'Hoppe,Logan,681351,No
+AL,Texas Rangers,Osuna,Alejandro,696030,No
+AL,Texas Rangers,Pederson,Joc,592626,Yes
+AL,Texas Rangers,Peoples,Ben,687239,No
+AL,Texas Rangers,Quantrill,Cal,615698,No
+AL,Texas Rangers,Rocker,Kumar,677958,Yes
+AL,Texas Rangers,Ross,Joe,605452,No
+AL,Texas Rangers,Santos,Winston,692437,No
+AL,Texas Rangers,Seager,Corey,608369,Yes
+AL,Texas Rangers,Silseth,Chase,681217,Yes
+AL,Texas Rangers,Teodo,Emiliano,693713,No
+AL,Texas Rangers,Williams,Trevor,592866,No
+AL,Texas Rangers,Winn,Cole,668390,No
+NL,Arizona Diamondbacks,Arenado,Nolan,571448,Yes
+NL,Arizona Diamondbacks,Bratt,Mitch,683352,No
+NL,Arizona Diamondbacks,Burgos,Juan,686228,No
+NL,Arizona Diamondbacks,Burnes,Corbin,669203,Yes
+NL,Arizona Diamondbacks,Cabrera,Jose,703615,No
+NL,Arizona Diamondbacks,Carrillo,Gerardo,672629,No
+NL,Arizona Diamondbacks,Carroll,Corbin,682998,Yes
+NL,Arizona Diamondbacks,Clarke,Taylor,664199,No
+NL,Arizona Diamondbacks,Del Castillo,Adrian,680728,No
+NL,Arizona Diamondbacks,Drake,Kohl,684442,No
+NL,Arizona Diamondbacks,Espinal,Santiago,669289,No
+NL,Arizona Diamondbacks,Fernandez,Jose,699912,No
+NL,Arizona Diamondbacks,Gallen,Zac,668678,No
+NL,Arizona Diamondbacks,Garcia,Aramis,605244,No
+NL,Arizona Diamondbacks,Garcia,Brandyn,805299,No
+NL,Arizona Diamondbacks,Ginkel,Kevin,656464,Yes
+NL,Arizona Diamondbacks,Groover,LuJames,694410,No
+NL,Arizona Diamondbacks,Jameson,Drey,686753,No
+NL,Arizona Diamondbacks,Kelly,Merrill,518876,Yes
+NL,Arizona Diamondbacks,Law,Derek,571882,No
+NL,Arizona Diamondbacks,Lawlar,Jordan,691783,Yes
+NL,Arizona Diamondbacks,Loáisiga,Jonathan,642528,Yes
+NL,Arizona Diamondbacks,Locklear,Tyler,682988,No
+NL,Arizona Diamondbacks,Marte,Ketel,606466,Yes
+NL,Arizona Diamondbacks,Martinez,Justin,679885,No
+NL,Arizona Diamondbacks,McCann,James,543510,No
+NL,Arizona Diamondbacks,Moreno,Gabriel,672515,Yes
+NL,Arizona Diamondbacks,Morillo,Juan,666661,No
+NL,Arizona Diamondbacks,Nelson,Ryne,669194,No
+NL,Arizona Diamondbacks,Nootbaar,Lars,663457,Yes
+NL,Arizona Diamondbacks,Perdomo,Geraldo,672695,Yes
+NL,Arizona Diamondbacks,Pfaadt,Brandon,694297,Yes
+NL,Arizona Diamondbacks,Rodriguez,Eduardo,593958,Yes
+NL,Arizona Diamondbacks,Sánchez,Jesús,660821,Yes
+NL,Arizona Diamondbacks,Santana,Dennis,642701,Yes
+NL,Arizona Diamondbacks,Smith,Pavin,656976,Yes
+NL,Arizona Diamondbacks,Soroka,Michael,647336,Yes
+NL,Arizona Diamondbacks,Strowd,Kade,669704,No
+NL,Arizona Diamondbacks,Tawa,Tim,694374,Yes
+NL,Arizona Diamondbacks,Thompson,Ryan,657044,No
+NL,Arizona Diamondbacks,Troy,Tommy,694371,No
+NL,Arizona Diamondbacks,Vargas,Ildemaro,545121,Yes
+NL,Arizona Diamondbacks,Waldschmidt,Ryan,814439,No
+NL,Arizona Diamondbacks,Walston,Blake,686796,No
+NL,Atlanta Braves,Acuña Jr.,Ronald,660670,Yes
+NL,Atlanta Braves,Albies,Ozzie,645277,Yes
+NL,Atlanta Braves,Azócar,José,640492,No
+NL,Atlanta Braves,Baldwin,Drake,686948,Yes
+NL,Atlanta Braves,Burkhalter,Blake,686628,No
+NL,Atlanta Braves,Camargo,Jair,665856,No
+NL,Atlanta Braves,Dodd,Dylan,689266,No
+NL,Atlanta Braves,Dubón,Mauricio,643289,Yes
+NL,Atlanta Braves,Elder,Bryce,693821,No
+NL,Atlanta Braves,Falter,Bailey,663559,No
+NL,Atlanta Braves,Farmer,Kyle,571657,No
+NL,Atlanta Braves,Fuentes,Didier,800311,Yes
+NL,Atlanta Braves,Grove,Michael,675627,No
+NL,Atlanta Braves,Haase,Eric,606992,No
+NL,Atlanta Braves,Hamilton,Ian,641656,No
+NL,Atlanta Braves,Handley,Maverick,668974,No
+NL,Atlanta Braves,Harris II,Michael,671739,Yes
+NL,Atlanta Braves,Hernández,Elieser,622694,No
+NL,Atlanta Braves,Hicklen,Brewer,676551,No
+NL,Atlanta Braves,Holmes,Grant,656550,Yes
+NL,Atlanta Braves,Iglesias,Raisel,628452,Yes
+NL,Atlanta Braves,Jarvis,Jim,805347,No
+NL,Atlanta Braves,Karinchak,James,675916,No
+NL,Atlanta Braves,Keirsey Jr.,DaShawn,680577,No
+NL,Atlanta Braves,Kerr,Ray,678061,No
+NL,Atlanta Braves,Kim,Ha-Seong,673490,Yes
+NL,Atlanta Braves,Lee,Dylan,669276,No
+NL,Atlanta Braves,León,Sandy,506702,No
+NL,Atlanta Braves,López,Reynaldo,625643,No
+NL,Atlanta Braves,Mahle,Tyler,641816,Yes
+NL,Atlanta Braves,Mederos,Victor,682989,No
+NL,Atlanta Braves,Muñoz,Rolddy,691548,No
+NL,Atlanta Braves,Murphy,Owen,702566,No
+NL,Atlanta Braves,Murphy,Sean,669221,No
+NL,Atlanta Braves,Olson,Matt,621566,Yes
+NL,Atlanta Braves,Payamps,Joel,606303,No
+NL,Atlanta Braves,Pérez,Martín,527048,Yes
+NL,Atlanta Braves,Riley,Austin,663586,Yes
+NL,Atlanta Braves,Ritchie,JR,702275,Yes
+NL,Atlanta Braves,Robinson,Chuckie,642020,No
+NL,Atlanta Braves,Sale,Chris,519242,Yes
+NL,Atlanta Braves,Smith,Dominic,642086,Yes
+NL,Atlanta Braves,Smith-Shawver,AJ,700363,No
+NL,Atlanta Braves,Strider,Spencer,675911,No
+NL,Atlanta Braves,Suarez,Robert,663158,Yes
+NL,Atlanta Braves,Suter,Brent,608718,No
+NL,Atlanta Braves,Tellez,Rowdy,642133,No
+NL,Atlanta Braves,Thomas,Lane,657041,Yes
+NL,Atlanta Braves,Uberstine,Tyler,700413,No
+NL,Atlanta Braves,Vanasco,Ricky,676568,No
+NL,Atlanta Braves,Waldrep,Hurston,694462,No
+NL,Atlanta Braves,Williams,Luke,663897,No
+NL,Atlanta Braves,Yastrzemski,Mike,573262,Yes
+NL,Atlanta Braves,Young,Danny,664849,No
+NL,Chicago Cubs,Alcántara,Kevin,682634,No
+NL,Chicago Cubs,Amaya,Miguel,665804,No
+NL,Chicago Cubs,Arias,Gabriel,672356,No
+NL,Chicago Cubs,Assad,Javier,665871,No
+NL,Chicago Cubs,Boyd,Matthew,571510,Yes
+NL,Chicago Cubs,Bregman,Alex,608324,Yes
+NL,Chicago Cubs,Brown,Ben,676962,No
+NL,Chicago Cubs,Busch,Michael,683737,Yes
+NL,Chicago Cubs,Cabrera,Edward,665795,No
+NL,Chicago Cubs,Civale,Aaron,650644,No
+NL,Chicago Cubs,Conforto,Michael,624424,Yes
+NL,Chicago Cubs,Crow-Armstrong,Pete,691718,Yes
+NL,Chicago Cubs,Dean,Justin,681909,No
+NL,Chicago Cubs,Ferguson,Tyler,621053,No
+NL,Chicago Cubs,Garrett,Braxton,666129,No
+NL,Chicago Cubs,Gausman,Kevin,592332,Yes
+NL,Chicago Cubs,Happ,Ian,664023,Yes
+NL,Chicago Cubs,Harvey,Hunter,640451,No
+NL,Chicago Cubs,Hoerner,Nico,663538,Yes
+NL,Chicago Cubs,Hollowell,Gavin,668970,No
+NL,Chicago Cubs,Holmes,Clay,605280,Yes
+NL,Chicago Cubs,Horton,Cade,690990,No
+NL,Chicago Cubs,Imanaga,Shota,684007,Yes
+NL,Chicago Cubs,Jones,Greg,675659,No
+NL,Chicago Cubs,Kelly,Antoine,681520,No
+NL,Chicago Cubs,Kelly,Carson,608348,Yes
+NL,Chicago Cubs,Martin,Corbin,656686,No
+NL,Chicago Cubs,Martin,Riley,702303,No
+NL,Chicago Cubs,Maton,Phil,664208,No
+NL,Chicago Cubs,Murray,Jayden,681151,No
+NL,Chicago Cubs,Murray Jr.,BJ,681230,No
+NL,Chicago Cubs,Nikhazy,Doug,680951,No
+NL,Chicago Cubs,Palencia,Daniel,694037,Yes
+NL,Chicago Cubs,Peterson,David,656849,Yes
+NL,Chicago Cubs,Ramírez,Pedro,699393,Yes
+NL,Chicago Cubs,Rea,Colin,607067,No
+NL,Chicago Cubs,Ríos,Yacksel,605441,No
+NL,Chicago Cubs,Roberts,Ethan,681799,No
+NL,Chicago Cubs,Rolison,Ryan,669020,No
+NL,Chicago Cubs,Shaw,Matt,807713,No
+NL,Chicago Cubs,Suzuki,Seiya,673548,Yes
+NL,Chicago Cubs,Swanson,Dansby,621020,Yes
+NL,Chicago Cubs,Taillon,Jameson,592791,No
+NL,Chicago Cubs,Taylor,Tyrone,621438,Yes
+NL,Chicago Cubs,Thielbar,Caleb,573204,No
+NL,Chicago Cubs,Thornton,Trent,663423,No
+NL,Chicago Cubs,Triantos,James,701649,No
+NL,Chicago Cubs,Wantz,Andrew,681806,No
+NL,Chicago Cubs,Webb,Jacob,657097,Yes
+NL,Chicago Cubs,Wicks,Jordan,696136,No
+NL,Chicago Cubs,Wynns,Austin,642851,No
+NL,Chicago Cubs,Zeferjahn,Ryan,666171,Yes
+NL,Los Angeles Dodgers,Alfonzo,Eliezer,672613,No
+NL,Los Angeles Dodgers,Barnes,Charlie,656212,No
+NL,Los Angeles Dodgers,Betts,Mookie,605141,Yes
+NL,Los Angeles Dodgers,Bubic,Kris,663460,No
+NL,Los Angeles Dodgers,Call,Alex,669743,No
+NL,Los Angeles Dodgers,Casparius,Ben,676508,No
+NL,Los Angeles Dodgers,De Paula,Josue,800543,Yes
+NL,Los Angeles Dodgers,Díaz,Edwin,621242,No
+NL,Los Angeles Dodgers,Dreyer,Jack,676263,No
+NL,Los Angeles Dodgers,Edman,Tommy,669242,Yes
+NL,Los Angeles Dodgers,Feduccia,Hunter,676439,No
+NL,Los Angeles Dodgers,Freeland,Alex,690976,No
+NL,Los Angeles Dodgers,Freeman,Freddie,518692,Yes
+NL,Los Angeles Dodgers,Gervase,Paul,801434,No
+NL,Los Angeles Dodgers,Glasnow,Tyler,607192,Yes
+NL,Los Angeles Dodgers,Halvorsen,Seth,678020,No
+NL,Los Angeles Dodgers,Henriquez,Edgardo,683618,No
+NL,Los Angeles Dodgers,Hernández,Enrique,571771,No
+NL,Los Angeles Dodgers,Hernández,Jonathan,642546,No
+NL,Los Angeles Dodgers,Hernández,Teoscar,606192,Yes
+NL,Los Angeles Dodgers,Hurt,Kyle,669165,No
+NL,Los Angeles Dodgers,Irvin,Cole,608344,No
+NL,Los Angeles Dodgers,Kim,Hyeseong,808975,No
+NL,Los Angeles Dodgers,Klein,Will,694361,No
+NL,Los Angeles Dodgers,Knack,Landon,689017,No
+NL,Los Angeles Dodgers,Lauer,Eric,641778,No
+NL,Los Angeles Dodgers,Miller,Bobby,676272,No
+NL,Los Angeles Dodgers,Muncy,Max,571970,Yes
+NL,Los Angeles Dodgers,Ohtani,Shohei,660271,Yes
+NL,Los Angeles Dodgers,Pages,Andy,681624,Yes
+NL,Los Angeles Dodgers,Phillips,Evan,623465,No
+NL,Los Angeles Dodgers,Rojas,Miguel,500743,Yes
+NL,Los Angeles Dodgers,Rortvedt,Ben,666163,No
+NL,Los Angeles Dodgers,Rushing,Dalton,687221,No
+NL,Los Angeles Dodgers,Sasaki,Roki,808963,No
+NL,Los Angeles Dodgers,Scott,Tanner,656945,Yes
+NL,Los Angeles Dodgers,Sheehan,Emmet,686218,Yes
+NL,Los Angeles Dodgers,Skubal,Tarik,669373,Yes
+NL,Los Angeles Dodgers,Smith,Will,669257,Yes
+NL,Los Angeles Dodgers,Snell,Blake,605483,Yes
+NL,Los Angeles Dodgers,Stewart,Brock,592779,Yes
+NL,Los Angeles Dodgers,Thomas,Alek,677950,No
+NL,Los Angeles Dodgers,Treinen,Blake,595014,No
+NL,Los Angeles Dodgers,Tromp,Chadwick,644433,No
+NL,Los Angeles Dodgers,Tucker,Kyle,663656,Yes
+NL,Los Angeles Dodgers,Vesia,Alex,681911,No
+NL,Los Angeles Dodgers,Wrobleski,Justin,680736,Yes
+NL,Los Angeles Dodgers,Yamamoto,Yoshinobu,808967,Yes
+NL,Milwaukee Brewers,Anderson,Grant,681982,No
+NL,Milwaukee Brewers,Ashby,Aaron,676879,Yes
+NL,Milwaukee Brewers,Bae,Jihwan,678225,No
+NL,Milwaukee Brewers,Bauers,Jake,641343,Yes
+NL,Milwaukee Brewers,Black,Tyler,672012,No
+NL,Milwaukee Brewers,Chourio,Jackson,694192,Yes
+NL,Milwaukee Brewers,Contreras,William,661388,Yes
+NL,Milwaukee Brewers,Crow,Coleman,689441,No
+NL,Milwaukee Brewers,Drohan,Shane,675660,No
+NL,Milwaukee Brewers,Fitzpatrick,Brian,702153,No
+NL,Milwaukee Brewers,Frelick,Sal,686217,No
+NL,Milwaukee Brewers,Gasser,Robert,688107,Yes
+NL,Milwaukee Brewers,Gordon,Colton,676467,No
+NL,Milwaukee Brewers,Hall,DL,669084,Yes
+NL,Milwaukee Brewers,Hamilton,David,666152,Yes
+NL,Milwaukee Brewers,Harrison,Kyle,690986,No
+NL,Milwaukee Brewers,Henderson,Logan,701656,Yes
+NL,Milwaukee Brewers,Koenig,Jared,657649,No
+NL,Milwaukee Brewers,Lara,Luis,800325,Yes
+NL,Milwaukee Brewers,Lockridge,Brandon,663604,No
+NL,Milwaukee Brewers,Matos,Luis,682641,No
+NL,Milwaukee Brewers,May,Dustin,669160,Yes
+NL,Milwaukee Brewers,Megill,Trevor,656730,Yes
+NL,Milwaukee Brewers,Misiorowski,Jacob,694819,Yes
+NL,Milwaukee Brewers,Mitchell,Garrett,669003,Yes
+NL,Milwaukee Brewers,Naylor,Bo,666310,No
+NL,Milwaukee Brewers,Ornelas,Jonathan,680716,No
+NL,Milwaukee Brewers,Ortiz,Joey,687401,Yes
+NL,Milwaukee Brewers,Pannone,Thomas,623381,No
+NL,Milwaukee Brewers,Patrick,Chad,694477,No
+NL,Milwaukee Brewers,Pratt,Cooper,806198,Yes
+NL,Milwaukee Brewers,Quero,Jeferson,691620,No
+NL,Milwaukee Brewers,Richardson,Lyon,680689,No
+NL,Milwaukee Brewers,Rodriguez,Carlos,692230,No
+NL,Milwaukee Brewers,Romero,JoJo,668941,No
+NL,Milwaukee Brewers,Sánchez,Gary,596142,No
+NL,Milwaukee Brewers,Senzatela,Antonio,622608,No
+NL,Milwaukee Brewers,Sproat,Brandon,687075,No
+NL,Milwaukee Brewers,Stallings,Garrett,668831,No
+NL,Milwaukee Brewers,Turang,Brice,668930,Yes
+NL,Milwaukee Brewers,Uribe,Abner,682842,Yes
+NL,Milwaukee Brewers,Vaughn,Andrew,683734,Yes
+NL,Milwaukee Brewers,Wilson,Bryse,669060,No
+NL,Milwaukee Brewers,Woodruff,Brandon,605540,No
+NL,Milwaukee Brewers,Yelich,Christian,592885,Yes
+NL,Milwaukee Brewers,Zerpa,Angel,672582,No
+NL,Philadelphia Phillies,Allard,Kolby,663465,No
+NL,Philadelphia Phillies,Alvarado,José,621237,No
+NL,Philadelphia Phillies,Arraez,Luis,650333,Yes
+NL,Philadelphia Phillies,Backhus,Kyle,679775,No
+NL,Philadelphia Phillies,Banks,Tanner,621383,No
+NL,Philadelphia Phillies,Berroa,Steward,672642,No
+NL,Philadelphia Phillies,Bohm,Alec,664761,Yes
+NL,Philadelphia Phillies,Bowlan,Jonathan,680742,No
+NL,Philadelphia Phillies,Crawford,Justin,702222,Yes
+NL,Philadelphia Phillies,De La Cruz,Bryan,650559,No
+NL,Philadelphia Phillies,Duran,Jhoan,661395,Yes
+NL,Philadelphia Phillies,García,Adolis,666969,No
+NL,Philadelphia Phillies,Harper,Bryce,547180,Yes
+NL,Philadelphia Phillies,Hill,Derek,656537,Yes
+NL,Philadelphia Phillies,Hoffmann,Andrew,694851,No
+NL,Philadelphia Phillies,Holman,Grant,680880,No
+NL,Philadelphia Phillies,Keller,Brad,641745,No
+NL,Philadelphia Phillies,Keller,Brian,662144,No
+NL,Philadelphia Phillies,Kemp,Otto,805249,No
+NL,Philadelphia Phillies,Kerkering,Orion,689147,Yes
+NL,Philadelphia Phillies,Kilian,Caleb,668873,No
+NL,Philadelphia Phillies,Lazar,Max,676661,No
+NL,Philadelphia Phillies,Luzardo,Jesús,666200,Yes
+NL,Philadelphia Phillies,Marchán,Rafael,665561,No
+NL,Philadelphia Phillies,Marsh,Brandon,669016,Yes
+NL,Philadelphia Phillies,Mayza,Tim,641835,No
+NL,Philadelphia Phillies,McFarlane,Alex,686934,No
+NL,Philadelphia Phillies,Misner,Kameron,670224,No
+NL,Philadelphia Phillies,Moore,Dylan,664238,No
+NL,Philadelphia Phillies,Nola,Aaron,605400,Yes
+NL,Philadelphia Phillies,Painter,Andrew,691725,Yes
+NL,Philadelphia Phillies,Raley,Brooks,548384,No
+NL,Philadelphia Phillies,Rangel,Alan,660604,No
+NL,Philadelphia Phillies,Realmuto,J.T.,592663,Yes
+NL,Philadelphia Phillies,Reyes,Felix,694025,No
+NL,Philadelphia Phillies,Rincones Jr.,Gabriel,687282,No
+NL,Philadelphia Phillies,Sánchez,Cristopher,650911,Yes
+NL,Philadelphia Phillies,Schwarber,Kyle,656941,Yes
+NL,Philadelphia Phillies,Shugart,Chase,663767,No
+NL,Philadelphia Phillies,Sosa,Edmundo,624641,Yes
+NL,Philadelphia Phillies,Stott,Bryson,681082,Yes
+NL,Philadelphia Phillies,Stubbs,Garrett,596117,No
+NL,Philadelphia Phillies,Thomas,Colby,687515,No
+NL,Philadelphia Phillies,Trivino III,Lou,642152,No
+NL,Philadelphia Phillies,Turner,Trea,607208,Yes
+NL,Philadelphia Phillies,Urquidy,José,664353,No
+NL,Philadelphia Phillies,Wheeler,Zack,554430,Yes
+NL,San Diego Padres,Adam,Jason,592094,No
+NL,San Diego Padres,Andujar,Miguel,609280,No
+NL,San Diego Padres,Bogaerts,Xander,593428,Yes
+NL,San Diego Padres,Bowen,Jase,687749,No
+NL,San Diego Padres,Brito,Jhony,666745,No
+NL,San Diego Padres,Buehler,Walker,621111,Yes
+NL,San Diego Padres,Campusano,Luis,669134,Yes
+NL,San Diego Padres,Canning,Griffin,656288,No
+NL,San Diego Padres,Cronenworth,Jake,630105,Yes
+NL,San Diego Padres,Durán,Rodolfo,660710,No
+NL,San Diego Padres,Estrada,Jeremiah,669093,Yes
+NL,San Diego Padres,Fermin,Freddy,666023,No
+NL,San Diego Padres,France,Ty,664034,Yes
+NL,San Diego Padres,Giolito,Lucas,608337,No
+NL,San Diego Padres,Harris,Dustin,687957,Yes
+NL,San Diego Padres,Hart,Kyle,606996,No
+NL,San Diego Padres,Hays,Austin,669720,Yes
+NL,San Diego Padres,Jacob,Alek,689690,No
+NL,San Diego Padres,Johnson,Bryce,669369,No
+NL,San Diego Padres,King,Michael,650633,Yes
+NL,San Diego Padres,Laureano,Ramón,657656,No
+NL,San Diego Padres,Machado,Manny,592518,Yes
+NL,San Diego Padres,Matsui,Yuki,673513,No
+NL,San Diego Padres,Merrill,Jackson,701538,Yes
+NL,San Diego Padres,Miller,Mason,695243,Yes
+NL,San Diego Padres,Mize,Casey,663554,Yes
+NL,San Diego Padres,Morejon,Adrian,670970,Yes
+NL,San Diego Padres,Morgan,David,688158,No
+NL,San Diego Padres,Peralta,Wandy,593974,No
+NL,San Diego Padres,Pivetta,Nick,601713,Yes
+NL,San Diego Padres,Ray,Robbie,592662,Yes
+NL,San Diego Padres,Rengifo,Luis,650859,No
+NL,San Diego Padres,Rodriguez,Bradgley,699134,No
+NL,San Diego Padres,Salas,Ethan,806956,No
+NL,San Diego Padres,Sears,JP,676664,No
+NL,San Diego Padres,Sheets,Gavin,657757,Yes
+NL,San Diego Padres,Solak,Nick,669256,No
+NL,San Diego Padres,Song,Sung-Mun,823550,No
+NL,San Diego Padres,Stratton,Hunter,676702,No
+NL,San Diego Padres,Tatis Jr.,Fernando,665487,Yes
+NL,San Diego Padres,Taylor,Samad,669392,Yes
+NL,San Diego Padres,Vásquez,Randy,681190,No
+NL,San Diego Padres,Wagner,Will,695238,No
+NL,San Diego Padres,Workman,Gage,669398,No

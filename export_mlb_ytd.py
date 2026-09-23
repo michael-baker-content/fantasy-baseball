@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
@@ -159,6 +160,22 @@ def bio_row(person: dict, affiliation: dict) -> dict:
     }
 
 
+def precise_pitching_rates(stat: dict) -> dict:
+    """Derive rates from outs; retain API rates only when inputs are missing."""
+    innings = re.fullmatch(r"(\d+)(?:\.([012]))?", str(stat.get("inningsPitched", "")))
+    if not innings:
+        return {}
+    outs = int(innings[1]) * 3 + int(innings[2] or 0)
+    if not outs:
+        return {"era": "", "whip": ""}
+    rates = {}
+    if stat.get("earnedRuns") not in (None, ""):
+        rates["era"] = int(stat["earnedRuns"]) * 27 / outs
+    if all(stat.get(key) not in (None, "") for key in ("hits", "baseOnBalls")):
+        rates["whip"] = (int(stat["hits"]) + int(stat["baseOnBalls"])) * 3 / outs
+    return rates
+
+
 def build_rows(splits: list[dict], field_map: dict[str, str], affiliations: dict[int, dict],
                people: dict[int, dict], group: str = "") -> list[dict]:
     rows = []
@@ -167,6 +184,8 @@ def build_rows(splits: list[dict], field_map: dict[str, str], affiliations: dict
         if player_id not in affiliations or player_id not in people:
             continue
         stat = split.get("stat", {})
+        if group == "pitching":
+            stat = stat | precise_pitching_rates(stat)
         if int(stat.get("gamesPlayed", 0) or 0) < 1:
             continue
         if group == "hitting" and not (

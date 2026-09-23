@@ -37,7 +37,7 @@ function eligibleForStatsView(player,view){
     case "if":return ["C","1B","2B","3B","SS"].includes(position);
     case "of":return ["LF","CF","RF","OF"].includes(position);
     case "sp":return starts>1;
-    case "rp":return Number(player.stats?.SV)>1||(Number.isFinite(starts)&&starts<=1);
+    case "rp":return ["P","SP","RP","TWP"].includes(position)&&(Number(player.stats?.SV)>1||(Number.isFinite(starts)&&starts<=1));
     default:return view==="batters"||view==="pitchers";
   }
 }
