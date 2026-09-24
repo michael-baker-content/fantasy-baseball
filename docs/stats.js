@@ -6,6 +6,7 @@ const states=Object.fromEntries(Object.entries(statsViews).map(([view,details])=
 let ranges=[],group="batters";
 let ownership=new Map();
 let sheetPlayers=new Set();
+let sheetPositions={};
 const pageSize=25;
 let visibleLimit=pageSize;
 let qualificationMinimums=[0,0];
@@ -57,7 +58,7 @@ function render(keepPage=false){
   const [minAB,minIP]=qualificationMinimums;
   const state=states[group],query=normalize(el("stats-search").value.trim()),team=el("stats-team").value;
   const ownerStatus=el("stats-owner").value;
-  const view=statsViews[group],source=range[view.source].map(player=>({...playerForStatsSource(player,view.source),owners:ownership.get(String(player.id))||[],owner:(ownership.get(String(player.id))||[]).join(", ")}));
+  const view=statsViews[group],source=range[view.source].map(player=>({...playerForStatsSource(player,view.source,sheetPositions),owners:ownership.get(String(player.id))||[],owner:(ownership.get(String(player.id))||[]).join(", ")}));
   Object.assign(state,visibleStatsSort(state,view.source,narrowStats.matches,Boolean(team)));
   const sheetOnly=el("stats-sheet").checked;
   const eligible=source.filter(player=>eligibleForStatsView(player,group)&&matchesOwnerStatus(player.owners,ownerStatus)&&matchesSheet(player,sheetOnly,sheetPlayers));
@@ -72,7 +73,7 @@ function render(keepPage=false){
   });
   const keys=["name","position",...(!team?["team"]:[]),"owner",...columns[view.source]];
   el("player-stats-table").querySelector("caption").textContent=`${view.label} statistics, ${range.start} through ${range.through}`;
-  el("player-stats-table").querySelector("thead").innerHTML=`<tr>${keys.map(key=>`<th scope="col" class="${key==="owner"?"stats-owner-cell":supportingColumns.has(key)?"stats-supporting":""}" aria-sort="${state.key===key?(state.dir===1?"ascending":"descending"):"none"}"><button type="button" data-sort="${key}"${key==="position"?' aria-label="Primary position"':""}>${key==="name"?"Player":key==="team"?"Team":key==="owner"?"Owner":key==="position"?"Pos.":key}${state.key===key?(state.dir===1?" ▲":" ▼"):""}</button></th>`).join("")}</tr>`;
+el("player-stats-table").querySelector("thead").innerHTML=`<tr>${keys.map(key=>`<th scope="col" class="${key==="owner"?"stats-owner-cell":supportingColumns.has(key)?"stats-supporting":""}" aria-sort="${state.key===key?(state.dir===1?"ascending":"descending"):"none"}"><button type="button" data-sort="${key}"${key==="position"?' aria-label="Eligible positions"':""}>${key==="name"?"Player":key==="team"?"Team":key==="owner"?"Owner":key==="position"?"Pos.":key}${state.key===key?(state.dir===1?" ▲":" ▼"):""}</button></th>`).join("")}</tr>`;
   el("player-stats-table").querySelector("tbody").innerHTML=rows.slice(0,visibleLimit).map(player=>`<tr><td title="${escapeHtml(player.name)}">${playerNameCell(player,range.roster_date)}</td><td class="stats-position-cell">${escapeHtml(player.position||"—")}</td>${!team?`<td class="stats-team-cell" title="${escapeHtml(player.team)}">${escapeHtml(teamLabel(player))}</td>`:""}<td class="stats-owner-cell">${escapeHtml(player.owner||"Unrostered")}</td>${columns[view.source].map(key=>`<td class="${supportingColumns.has(key)?"stats-supporting":""}">${format(key,player.stats[key])}</td>`).join("")}</tr>`).join("");
   el("stats-dates").textContent=`Statistics: ${range.start} through ${range.through} (inclusive). Current organizations as of ${range.roster_date}.`;
   const qualification=view.source==="batters"?(minAB?` · Minimum ${minAB} AB`:""):(minIP?` · Minimum ${minIP} IP`:"");
@@ -147,6 +148,7 @@ Promise.all([fetch("data/player-stats.json",{cache:"no-store"}).then(response=>{
 })]).then(([payload,league,sheet])=>{
   if(!Array.isArray(sheet.player_ids))throw new Error("Sheet selections are invalid.");
   sheetPlayers=new Set(sheet.player_ids.map(String));
+  sheetPositions=sheet.positions||{};
   if(!Array.isArray(payload.ranges)||!payload.ranges.length)throw new Error("Player statistics have not been published yet.");
   ranges=payload.ranges;
   ownership=statsOwnership(league);

@@ -23,13 +23,29 @@ exporter's 14-team pool, which remains unchanged.
 
 Run `.\sheet.cmd` to generate `config/sheet-players.csv` from the saved YTD
 player pool without downloading data. Columns are League, Team, Last Name,
-First Name, MLB ID, and Sheet, sorted by the first four columns (ignoring accents
+First Name, MLB ID, Sheet, and Positions, sorted by the first four columns (ignoring accents
 and case). Players appearing in both batting and pitching data have one row.
 Display names are split after the first word, retaining compound surnames and
 suffixes. Sheet defaults to No; edit it to Yes for likely draft picks and save
 as CSV UTF-8. Keep MLB IDs unchanged.
 
-Close the CSV in Excel before rerunning. Existing Yes/No selections are retained
+Positions contains a JSON array, initially seeded from the saved primary position
+(for example `["CF"]`, `["P"]`, or `["TWP"]`). Edit the cell to an array such as
+`["1B","OF"]` in Google Sheets, then use File → Download → Comma-separated
+values (.csv) to replace `config/sheet-players.csv`. Google Sheets handles CSV
+quote escaping. Use `[]` for no
+positions. Rerunning the generator preserves existing arrays, including empty
+arrays, and seeds only new entries. Publishing applies these arrays to the Pos.
+column, position filters, and IF/OF/SP/RP eligibility for all players, including
+Sheet=No. Every assigned position is displayed in saved order in every view.
+Explicit SP/RP entries grant eligibility directly; P/TWP retains the statistical
+starts/saves rules. An empty array grants no position-tab eligibility. Players
+without a sheet entry retain the original primary-position/statistical fallback.
+The complete Batters/Pitchers lists still require stats in that source and range.
+Ohtani's manual `["DH","SP"]` now displays both positions in both lists.
+
+Download your latest Google Sheets edits before rerunning the generator so it
+reads the current local CSV. Existing Yes/No selections are retained
 for current players, new players default to No, and a `.csv.bak` copy preserves
 the previous review, including players who left the pool. The daily update does
 not edit this CSV. It publishes its Yes selections to `docs/data/sheet-players.json`.
@@ -230,6 +246,7 @@ categories; pitchers show G, IP and the six pitching categories. Qualification
 filters default to zero (no minimum). This page uses the exporter's 14-team pool, not
 the fantasy owners' rosters or the homepage's test league dates.
 
+Sheet position arrays take precedence. For players without a Sheet assignment,
 IF and OF use the exported MLB primary position: IF includes C, 1B, 2B, 3B,
 and SS; OF includes LF, CF, RF, and OF. Primary DHs and unknown positions are
 excluded from IF and OF. SP includes players with at least two starts in the
@@ -296,9 +313,10 @@ These are the same test rosters used on Standings, but this page still limits
 results to the postseason organization pool. An owner's full roster may therefore
 not appear here. Sheet and owner filtering combine with all other filters.
 
-The **Position** dropdown narrows a tab by primary MLB position (for example,
-C within IF or CF within OF); SP/RP filters use the same starts/saves rules as
-their tabs. Options follow C, 1B, 2B, 3B, SS, LF, CF, RF, DH, SP, RP order, with
+The **Position** dropdown narrows a tab by assigned position (for example,
+C within IF or CF within OF); SP/RP filters use the same explicit assignments
+and generic-P starts/saves rules as their tabs. OF grants the OF tab without
+inventing eligibility at a specific LF/CF/RF position. Options follow C, 1B, 2B, 3B, SS, LF, CF, RF, DH, SP, RP order, with
 only positions relevant to the selected tab included. TWP, P, and generic OF
 are not filter options; those players remain eligible for the broader lists. A
 selection is retained when available after switching tabs or ranges; otherwise
@@ -313,7 +331,7 @@ case and accents; suffixes break ties after the given name. It also breaks ties
 for other sorted columns. Display names remain first-name-first. Compound
 surnames are retained using the saved display name's first word as the given name.
 
-The Pos. column normally displays the source's primary MLB designation. Generic
+Without a Sheet assignment, Pos. displays the source's primary MLB designation. Generic
 P becomes SP or RP when eligible for only that group in the selected range;
 players eligible for both retain P. Ohtani displays DH in batting views (including
 the DH filter) and SP in pitching views; his tab eligibility still follows the

@@ -10,6 +10,28 @@ const matches = vm.runInNewContext(source + '\nmatchesPositionFilter;');
 const forSource = vm.runInNewContext(source + '\nplayerForStatsSource;');
 const player = (position, saves = 0, starts = 0) => ({position, stats: {SV: saves, GS: starts}});
 
+test('manual arrays override primary positions and display every position in order', () => {
+  const row = forSource({id: 1, ...player('DH')}, 'batters', {'1':['CF','2B']});
+  assert.equal(row.position, 'CF, 2B');
+  assert.equal(eligible(row, 'if'), true);
+  assert.equal(eligible(row, 'of'), true);
+  assert.equal(matches(row, 'CF'), true);
+  assert.equal(matches(row, 'DH'), false);
+  assert.equal(eligible(forSource({id:1, ...player('P',0,4)}, 'pitchers', {'1':['RP']}), 'sp'), false);
+  const both = forSource({id:1, ...player('P')}, 'pitchers', {'1':['SP','RP']});
+  assert.equal(eligible(both, 'sp'), true);
+  assert.equal(eligible(both, 'rp'), true);
+  const generic = forSource({id:1, ...player('P',0,4)}, 'pitchers', {'1':['P']});
+  assert.equal(eligible(generic, 'sp'), true);
+  assert.equal(eligible(generic, 'rp'), false);
+  const empty = forSource({id:1, ...player('CF')}, 'batters', {'1':[]});
+  assert.equal(eligible(empty, 'of'), false);
+  const ohtani = forSource({id:660271, ...player('TWP')}, 'pitchers', {'660271':['DH','SP']});
+  assert.equal(ohtani.position, 'DH, SP');
+  assert.equal(eligible(ohtani, 'sp'), true);
+  assert.equal(eligible(ohtani, 'rp'), false);
+});
+
 test('Ohtani displays by statistics source without changing saved data or pitching eligibility', () => {
   const original = {id: 660271, ...player('TWP', 0, 3)};
   const batter = forSource(original, 'batters');

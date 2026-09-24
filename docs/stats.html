@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f172a">
   <title>Player Stats · BABBD Fantasy Baseball</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260924-header-meta">
   <link rel="stylesheet" href="stats.css?v=20260923-minimum-sheet-top">
   <script src="theme.js"></script>
 </head>
@@ -39,11 +39,11 @@
       <p id="stats-info-description" class="stats-intro">Regular-season stats for the selected organizations’ current players, including stats earned with previous teams.</p>
       <p id="stats-dates" class="stats-meta">Statistics dates will appear when player data loads.</p>
       <h3 class="stats-info-subheading">Tabs</h3>
-      <p>Batters and Pitchers show the complete lists. IF and OF use primary MLB position; SP and RP use stats in the selected range:</p>
+      <p>Batters and Pitchers show the complete statistical lists. Saved Sheet positions control position tabs and filters, whether or not Sheet Players Only is checked.</p>
       <ul class="stats-info-rules">
         <li><strong>IF:</strong> C, 1B, 2B, 3B, SS. <strong>OF:</strong> LF, CF, RF, OF.</li>
-        <li><strong>SP:</strong> 2+ starts. <strong>RP:</strong> pitchers and designated two-way players with 2+ saves or fewer than 2 starts. Pitchers meeting both thresholds appear in both tabs. Incidental pitching by position players is excluded from RP.</li>
-        <li>Primary DHs and players without a listed position are excluded from IF and OF. Ohtani is displayed as DH for batting and SP for pitching.</li>
+        <li>Explicit SP and RP assignments grant those positions. Generic P or TWP uses 2+ starts for SP, and 2+ saves or fewer than 2 starts for RP.</li>
+        <li>Pos. shows all assigned positions in their saved order. DH alone does not qualify for IF or OF; position players without a pitching assignment are excluded from RP.</li>
       </ul>
       <h3 class="stats-info-subheading">Eligibility</h3>
       <p>Owner Status uses the same test rosters as Standings. Ownership applies across statistics ranges; filters only include players in this page’s postseason player pool.</p>
@@ -105,11 +105,11 @@
   </main>
   <footer class="site-footer"><div class="site-footer-inner"><span>Regular-season MLB statistics</span><a href="./">Back to standings</a></div></footer>
   <script src="header.js" defer></script>
-  <script src="stats-positions.js?v=20260923-relief-eligibility" defer></script>
+  <script src="stats-positions.js?v=20260924-sheet-positions" defer></script>
   <script src="stats-sort.js?v=20260923-player-names" defer></script>
   <script src="stats-owners.js?v=20260922-owners" defer></script>
   <script src="stats-filters.js?v=20260923-sheet" defer></script>
   <script src="stats-status.js" defer></script>
-  <script src="stats.js?v=20260923-player-names" defer></script>
+  <script src="stats.js?v=20260924-sheet-positions" defer></script>
 </body>
 </html>

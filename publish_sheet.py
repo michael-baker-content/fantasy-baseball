@@ -2,12 +2,14 @@
 import csv
 import json
 from pathlib import Path
+from build_sheet import parse_positions
 
 ROOT = Path(__file__).resolve().parent
 
 
-def sheet_ids(path):
+def sheet_payload(path):
     selected, seen = [], set()
+    positions = {}
     with path.open(encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         if not {"MLB ID", "Sheet"}.issubset(reader.fieldnames or []):
@@ -20,19 +22,25 @@ def sheet_ids(path):
             if player_id <= 0 or player_id in seen or choice not in {"yes", "no"}:
                 raise ValueError(f"Invalid or duplicate Sheet entry: {player_id}")
             seen.add(player_id)
+            if "Positions" in row:
+                positions[str(player_id)] = parse_positions(row["Positions"])
             if choice == "yes":
                 selected.append(player_id)
-    return sorted(selected)
+    return {"player_ids": sorted(selected), "positions": positions}
+
+
+def sheet_ids(path):
+    return sheet_payload(path)["player_ids"]
 
 
 def main():
-    ids = sheet_ids(ROOT / "config/sheet-players.csv")
+    payload = sheet_payload(ROOT / "config/sheet-players.csv")
     output = ROOT / "docs/data/sheet-players.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(".json.tmp")
-    temporary.write_text(json.dumps({"player_ids": ids}, indent=2) + "\n", encoding="utf-8")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     temporary.replace(output)
-    print(f"Published {len(ids)} Sheet players.")
+    print(f"Published {len(payload['player_ids'])} Sheet players and {len(payload['positions'])} position assignments.")
 
 
 if __name__ == "__main__":

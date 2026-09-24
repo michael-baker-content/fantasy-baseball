@@ -34,6 +34,7 @@ input::placeholder{color:var(--muted);opacity:1}
 .mobile-menu-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .mobile-menu-toggle:focus-visible,#header-menu a:focus-visible,#header-menu button:focus-visible{outline:2px solid #f59e0b;outline-offset:3px}
 @media(max-width:780px){
+  .header-meta{display:none}
   header{position:relative;z-index:10}
   .header-inner{flex-wrap:wrap}
   .header-right{gap:14px}
