@@ -3,9 +3,9 @@ import json
 from datetime import date
 
 import pytest
-import export_mlb_ytd as exporter
+from scripts import export_mlb_ytd as exporter
 
-from export_mlb_ytd import (
+from scripts.export_mlb_ytd import (
     BIO_FIELDS, HITTING_FIELDS, PITCHING_FIELDS, PLAYOFF_TEAMS, build_rows,
     is_injured, is_optioned, write_excel,
 )

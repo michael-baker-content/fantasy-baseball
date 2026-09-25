@@ -1,6 +1,6 @@
 import pytest
 
-from seed_sheet import draft_score, select_players
+from scripts.seed_sheet import draft_score, select_players
 
 
 def test_innings_are_baseball_outs_and_saves_boost_relief_pitchers():

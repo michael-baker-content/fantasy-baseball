@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def refresh_site(through: date) -> None:
@@ -23,7 +23,7 @@ def refresh_site(through: date) -> None:
     try:
         for label, arguments in steps:
             print(f"\nUpdating {label} through {through}...", flush=True)
-            subprocess.run([sys.executable, str(ROOT / arguments[0]), *arguments[1:]],
+            subprocess.run([sys.executable, "-m", f"scripts.{Path(arguments[0]).stem}", *arguments[1:]],
                            cwd=ROOT, check=True)
     except (subprocess.CalledProcessError, OSError, KeyboardInterrupt):
         for path, content in previous.items():

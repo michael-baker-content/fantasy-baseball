@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import unicodedata
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 FIELDS = ["League", "Team", "Last Name", "First Name", "MLB ID", "Sheet", "Positions"]
 AL_TEAMS = {"Boston Red Sox", "Chicago White Sox", "Cleveland Guardians",
             "Houston Astros", "New York Yankees", "Tampa Bay Rays", "Texas Rangers"}

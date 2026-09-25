@@ -3,19 +3,19 @@ from pathlib import Path
 
 import pytest
 
-from refresh import build_roster_rows, completed_games, load_config, public_payload, recalculate_payload
+from scripts.refresh import build_roster_rows, completed_games, load_config, public_payload, recalculate_payload
 from mlb.scoring import scoring_categories
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_config_has_seven_complete_owners_and_119_players():
+def test_config_has_complete_owners_and_rosters():
     league, roster = load_config()
     assert league["start_date"] == "2026-09-01"
     assert league["end_date"] == "2026-09-27"
-    assert len(league["owners"]) == 7
-    assert len(roster) == 119
+    assert len(league["owners"]) == len(set(league["owners"]))
+    assert len(roster) == 17 * len(league["owners"])
     assert {row["owner"] for row in roster} == set(league["owners"])
     assert league["categories"] == {
         "hitting": ["R", "HR", "RBI", "SB", "BB", "AVG"],
@@ -27,11 +27,11 @@ def test_empty_opening_snapshot_still_has_every_roster_entry():
     league, roster = load_config()
     rows = build_roster_rows(roster, {})
     payload = public_payload(league, [], rows)
-    assert len(payload["standings"]) == 7
-    assert sum(len(owner["players"]) for owner in payload["owners"]) == 119
+    assert len(payload["standings"]) == len(league["owners"])
+    assert sum(len(owner["players"]) for owner in payload["owners"]) == len(roster)
     assert payload["games_counted"] == 0
     assert all(len(row["category_points"]) == 12 for row in payload["standings"])
-    assert all(row["total_score"] == 48 for row in payload["standings"])
+    assert all(row["total_score"] == 12 * (len(league["owners"]) + 1) / 2 for row in payload["standings"])
 
 
 def test_only_completed_games_are_counted():
@@ -46,8 +46,10 @@ def test_only_completed_games_are_counted():
 def test_generated_site_payload_is_valid():
     payload = json.loads((ROOT / "docs/data/league.json").read_text(encoding="utf-8"))
     assert payload["league"]["name"] == "BABBD Roto"
-    assert len(payload["standings"]) == 7
-    assert len(payload["owners"]) == 7
+    expected = set(payload["league"]["owners"])
+    assert {row["owner"] for row in payload["standings"]} == expected
+    assert {row["name"] for row in payload["owners"]} == expected
+    assert len(payload["standings"]) == len(payload["owners"]) == len(expected)
 
 
 def test_offline_recalculation_preserves_snapshot_and_adds_categories():
@@ -62,7 +64,8 @@ def test_offline_recalculation_preserves_snapshot_and_adds_categories():
     for standing in recalculated["standings"]:
         assert len(standing["category_points"]) == 12
         assert standing["total_score"] == sum(standing["category_points"].values())
-    assert sum(row["total_score"] for row in recalculated["standings"]) == 12 * sum(range(1, 8))
+    owner_count = len(original["league"]["owners"])
+    assert sum(row["total_score"] for row in recalculated["standings"]) == 12 * sum(range(1, owner_count + 1))
 
 
 def test_refresh_and_recalculation_use_configured_categories():
@@ -75,7 +78,9 @@ def test_refresh_and_recalculation_use_configured_categories():
     for payload in (refreshed, recalculated):
         assert payload["league"]["categories"] == categories
         assert all(list(row["category_points"]) == ["BB", "L"] for row in payload["standings"])
-        assert all(row["total_score"] == 8 for row in payload["standings"])
+        # Two tied categories each award the mean of points 1 through N.
+        expected_tied_score = len(league["owners"]) + 1
+        assert all(row["total_score"] == expected_tied_score for row in payload["standings"])
     assert original["league"]["categories"] == league["categories"]
     assert scoring_categories(categories) == (("BB", False), ("L", True))
 

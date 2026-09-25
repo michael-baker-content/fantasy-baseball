@@ -2,9 +2,9 @@
 import csv
 import json
 from pathlib import Path
-from build_sheet import parse_positions
+from scripts.build_sheet import parse_positions
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def sheet_payload(path):

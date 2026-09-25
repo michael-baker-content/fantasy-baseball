@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from build_sheet import build_rows, parse_positions
+from scripts.build_sheet import build_rows, parse_positions
 
 
 def test_positions_default_to_primary_and_preserve_manual_arrays():

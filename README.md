@@ -19,6 +19,13 @@ exporter's 14-team pool, which remains unchanged.
 
 ## Update all site statistics
 
+Python entry points live in `scripts/`; shared MLB code remains in `mlb/`.
+The root shortcuts `update.cmd`, `sheet.cmd`, and `seed-sheet.cmd` are unchanged
+for daily use. Direct Python commands should be run from the repository root
+using module syntax, such as `.\.venv\Scripts\python.exe -m scripts.publish_sheet`.
+Do not use the old root-level `.py` paths. Config, exports, and published site
+data remain in their existing directories.
+
 ### Draft sheet review CSV
 
 Run `.\sheet.cmd` to generate `config/sheet-players.csv` from the saved YTD
@@ -54,7 +61,7 @@ all tabs by those IDs, together with the other filters. Missing IDs default to N
 To publish CSV edits locally without downloading statistics, run:
 
 ```powershell
-.\.venv\Scripts\python.exe publish_sheet.py
+.\.venv\Scripts\python.exe -m scripts.publish_sheet
 ```
 
 Commit the updated site JSON when ready to make the selections live.
@@ -62,7 +69,7 @@ Commit the updated site JSON when ready to make the selections live.
 ### Optional first-pass selections
 
 For an optional one-time first pass before manual review, run `.\seed-sheet.cmd`.
-This separate tool leaves `build_sheet.py` unchanged and creates the same review
+This separate tool leaves `scripts/build_sheet.py` unchanged and creates the same review
 CSV with up to 11 hitters and 8 pitchers per organization marked Yes. Existing
 files are never overwritten; use `.\seed-sheet.cmd --output config/sheet-suggestions.csv`
 if you already have a review file. It reads saved YTD data without network access.
@@ -109,7 +116,7 @@ the results before committing and pushing yourself; the shortcut does neither.
 ## Refresh standings
 
 ```powershell
-.venv\Scripts\python.exe refresh.py
+.venv\Scripts\python.exe -m scripts.refresh
 ```
 
 Use `--through YYYY-MM-DD` to reproduce a particular day. Completed raw MLB
@@ -119,7 +126,7 @@ To populate the test league with completed games from September 1 through
 September 21, 2026, run:
 
 ```powershell
-.venv\Scripts\python.exe refresh.py --through 2026-09-21
+.venv\Scripts\python.exe -m scripts.refresh --through 2026-09-21
 ```
 
 This fetches the schedule and any uncached completed game feeds. In-progress
@@ -136,7 +143,7 @@ To apply scoring changes to the already saved player statistics without
 downloading MLB data, run:
 
 ```powershell
-.venv\Scripts\python.exe refresh.py --recalculate
+.venv\Scripts\python.exe -m scripts.refresh --recalculate
 ```
 
 This updates category points and rankings while preserving the snapshot's
@@ -178,7 +185,7 @@ GitHub Pages can serve the latest standings.
 ## Historical validation
 
 ```powershell
-.venv\Scripts\python.exe reproduce_2025.py
+.venv\Scripts\python.exe -m scripts.reproduce_2025
 ```
 
 This rebuilds the 2025 postseason from MLB box scores. It resolves 119 drafted
@@ -187,7 +194,7 @@ The historical reproduction retains its original 5×5 standings calculation.
 
 ## Export likely playoff-team player statistics
 
-`export_mlb_ytd.py` exports combined regular-season totals for players currently
+`scripts/export_mlb_ytd.py` exports combined regular-season totals for players currently
 affiliated with the likely playoff teams listed in its `PLAYOFF_TEAMS` setting.
 Released players and free agents are omitted; optioned and injured-list players
 remain. Organization membership and roster status are checked as of the day the
@@ -204,9 +211,9 @@ worksheets, or both. The through-date controls the final day included. Without
 `--start`, the range begins January 1 of the selected season (year-to-date):
 
 ```powershell
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-29 --format csv
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-29 --format xlsx
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-29 --format both
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format csv
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format xlsx
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format both
 ```
 
 For a custom range, supply `--start` and `--through` in `YYYY-MM-DD` format.
@@ -214,7 +221,7 @@ Both dates are inclusive, must fall within `--season`, and the start must not
 follow the end. For example, May 1 through May 30, 2026:
 
 ```powershell
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --start 2026-05-01 --through 2026-05-30 --format both
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --start 2026-05-01 --through 2026-05-30 --format both
 ```
 
 These are totals for the selected range, not full-season year-to-date totals.
@@ -269,7 +276,7 @@ to add starts data to older snapshots. Position-rule tests can be run with
 Publish regular-season year-to-date data through your chosen date:
 
 ```powershell
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-21 --format csv --site
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-21 --format csv --site
 ```
 
 This downloads MLB data and writes two local CSV files plus
@@ -287,7 +294,7 @@ Visitors choose among these published ranges; their browsers never call MLB.
 To publish the last 30 calendar days alongside YTD, run a separate export:
 
 ```powershell
-.venv\Scripts\python.exe export_mlb_ytd.py --season 2026 --through 2026-09-21 --last-30-days --format csv --site
+.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-21 --last-30-days --format csv --site
 ```
 
 This covers August 23 through September 21 inclusive. `--last-30-days` ends on

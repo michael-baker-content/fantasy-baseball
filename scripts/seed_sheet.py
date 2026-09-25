@@ -6,7 +6,7 @@ import csv
 import json
 from pathlib import Path
 
-from build_sheet import FIELDS, ROOT, build_rows
+from scripts.build_sheet import FIELDS, ROOT, build_rows
 
 
 def value(stats, key):

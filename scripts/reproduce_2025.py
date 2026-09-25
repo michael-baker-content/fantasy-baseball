@@ -1,4 +1,4 @@
-"""Rebuild the 2025 BABBD postseason results from official MLB box scores."""
+"""Rebuild the 2025 BABBD postseason results; run with -m scripts.reproduce_2025."""
 
 from __future__ import annotations
 

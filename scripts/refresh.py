@@ -14,7 +14,7 @@ from mlb.postseason import aggregate_feeds, player_output
 from mlb.scoring import owner_totals, roto_standings, scoring_categories
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def load_config() -> tuple[dict, list[dict]]:

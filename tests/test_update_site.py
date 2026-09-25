@@ -3,7 +3,7 @@ import subprocess
 
 import pytest
 
-import update_site
+from scripts import update_site
 
 
 def test_refreshes_all_views_with_shared_cutoff(tmp_path, monkeypatch):
@@ -12,7 +12,7 @@ def test_refreshes_all_views_with_shared_cutoff(tmp_path, monkeypatch):
     monkeypatch.setattr(update_site.subprocess, "run", lambda args, **kwargs: calls.append((args, kwargs)))
     update_site.refresh_site(date(2026, 9, 21))
     assert len(calls) == 4
-    assert calls[0][0][1].endswith("publish_sheet.py")
+    assert calls[0][0][1:3] == ["-m", "scripts.publish_sheet"]
     for args, kwargs in calls[1:]:
         assert args[args.index("--through") + 1] == "2026-09-21"
         assert kwargs == {"cwd": tmp_path, "check": True}

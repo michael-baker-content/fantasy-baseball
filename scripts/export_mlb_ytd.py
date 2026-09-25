@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 
 
 BASE_URL = "https://statsapi.mlb.com/api/v1"
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 PLAYOFF_TEAMS = {
     "Arizona Diamondbacks", "Atlanta Braves", "Boston Red Sox", "Chicago Cubs",

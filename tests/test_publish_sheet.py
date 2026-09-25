@@ -1,5 +1,5 @@
 import pytest
-from publish_sheet import sheet_ids, sheet_payload
+from scripts.publish_sheet import sheet_ids, sheet_payload
 import csv
 
 

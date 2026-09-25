@@ -1,3 +1,7 @@
 @echo off
-"%~dp0.venv\Scripts\python.exe" "%~dp0seed_sheet.py" %*
-exit /b %errorlevel%
+setlocal
+pushd "%~dp0" || exit /b 1
+"%~dp0.venv\Scripts\python.exe" -m scripts.seed_sheet %*
+set "babbdExit=%errorlevel%"
+popd
+exit /b %babbdExit%
