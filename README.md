@@ -1,17 +1,17 @@
 # BABBD Roto
 
-A static fantasy baseball tracker for a seven-owner rotisserie league. The site
+A static fantasy baseball tracker for an eight-owner rotisserie league. The site
 runs on GitHub Pages; a local Python command downloads completed MLB games and
 regenerates the public standings data.
 
 ## League setup
 
 - Test league dates: September 1 through September 27, 2026 (inclusive)
-- Owners and rosters: copied from the 2025 BABBD playoff workbook for website testing; upcoming fantasy-season rosters have not yet been selected
+- Owners and rosters: test rosters based on the 2025 BABBD playoff workbook, expanded to include Steve; eight owners with 17 roster entries each (136 total). Upcoming fantasy-season rosters have not yet been selected.
 - Hitting: R, HR, RBI, SB, BB, AVG
 - Pitching: W, L, SV, K, ERA, WHIP
 - Scoring format: cumulative 6×6; lower L, ERA, and WHIP are better
-- Scoring: 7 points for first through 1 point for last; ties split points
+- Scoring: 8 points for first through 1 point for last; ties split points. The scoring scale adjusts automatically to the number of owners with roster totals.
 
 League standings count each drafted player's statistics regardless of their
 current MLB organization. These rosters are independent of the separate player
@@ -154,6 +154,11 @@ Then open `http://localhost:8000` and press `Ctrl+C` when finished.
 
 - `config/league.json`: dates, categories, name, and owners
 - `config/roster.csv`: owner, section, roster slot, MLB ID, and player name
+
+After adding an owner or changing rosters, run `.\update.cmd` to regenerate the
+published standings, owner pages, and Player Stats ownership data. Editing config
+files alone does not update the site. Do not use `--recalculate` for roster changes;
+it only re-scores the previously published roster entries.
 
 The configured category lists determine scoring and homepage column order.
 Both normal refreshes and offline recalculation use those lists; unsupported or
@@ -306,7 +311,7 @@ the other player type. Filters use one column below 500px and two at 500px and
 above. At 500px and above, Sheet Players Only sits beside the visible minimum,
 aligned to the top; below 500px it has its own row.
 
-**Owner Status** offers All Players, Rostered Players, and each of the seven
+**Owner Status** offers All Players, Rostered Players, and each of the eight
 owners, matched by MLB ID against `docs/data/league.json`. The sortable Owner
 column shows Unrostered when there is no match and is hidden at 640px and below.
 These are the same test rosters used on Standings, but this page still limits
