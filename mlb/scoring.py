@@ -41,14 +41,14 @@ def owner_totals(rows: list[dict], owner_names=None) -> dict[str, dict]:
         stats = row["stats"]
         if row["section"] == "hitting":
             for key in COUNTING_HITTING:
-                total[key] += stats[key]
-            total["H"] = total.get("H", 0) + stats["H"]
-            total["AB"] = total.get("AB", 0) + stats["AB"]
+                total[key] += stats[key] or 0
+            total["H"] = total.get("H", 0) + (stats["H"] or 0)
+            total["AB"] = total.get("AB", 0) + (stats["AB"] or 0)
         else:
             for key in COUNTING_PITCHING:
-                total[key] += stats[key]
+                total[key] += stats[key] or 0
             for key in ("H", "BB", "ER", "OUTS"):
-                total[f"P_{key}"] = total.get(f"P_{key}", 0) + stats[key]
+                total[f"P_{key}"] = total.get(f"P_{key}", 0) + (stats[key] or 0)
     for total in owners.values():
         total["AVG"] = total["H"] / total["AB"] if total["AB"] else 0
         innings = total["P_OUTS"] / 3

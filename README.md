@@ -1,445 +1,443 @@
-# BABBD Roto
+# Fantasy Baseball League Tracker
 
-A static fantasy baseball tracker for a configurable rotisserie league. The site
-runs on GitHub Pages; a local Python command downloads completed MLB games and
-regenerates the public standings data.
+Create a postseason fantasy baseball website for your league. The site shows
+standings, owner rosters, and searchable player statistics. Download MLB
+statistics on your computer, preview the results, and publish them to GitHub
+Pages. Visitors do not need Python or a login.
 
-## League setup
+## Set up your own league
 
-- Test league dates: September 1 through September 27, 2026 (inclusive)
-- Owners and rosters: test rosters based on the 2025 BABBD playoff workbook, expanded to include Steve; eight owners with 17 roster entries each (136 total). Upcoming fantasy-season rosters have not yet been selected.
-- Hitting: R, HR, RBI, SB, BB, AVG
-- Pitching: W, L, SV, K, ERA, WHIP
-- Scoring format: cumulative 6×6; lower L, ERA, and WHIP are better
-- Scoring: N points for first through 1 point for last, where N is the configured owner count; ties split points. All configured owners are included, even with an empty roster.
+### 1. Make your own copy
 
-League standings count each drafted player's statistics regardless of their
-current MLB organization. These rosters are independent of the separate player
-exporter's 14-team pool, which remains unchanged.
+Fork this repository into your GitHub account and download or clone your copy
+to your computer. The included settings and published data are examples;
+replace them with your league's information before publishing.
 
-## Update all site statistics
-
-Python entry points live in `scripts/`; shared MLB code remains in `mlb/`.
-The root shortcuts `update.cmd`, `sheet.cmd`, and `seed-sheet.cmd` are unchanged
-for daily use. Direct Python commands should be run from the repository root
-using module syntax, such as `.\.venv\Scripts\python.exe -m scripts.publish_sheet`.
-Do not use the old root-level `.py` paths. Config, exports, and published site
-data remain in their existing directories.
-
-### Draft sheet review CSV
-
-Run `.\sheet.cmd` to generate `config/sheet-players.csv` from the saved YTD
-player pool without downloading data. Columns are League, Team, Last Name,
-First Name, MLB ID, Sheet, and Positions, sorted by the first four columns (ignoring accents
-and case). Players appearing in both batting and pitching data have one row.
-Display names are split after the first word, retaining compound surnames and
-suffixes. Sheet defaults to No; edit it to Yes for likely draft picks and save
-as CSV UTF-8. Keep MLB IDs unchanged.
-
-Positions contains a JSON array, initially seeded from the saved primary position
-(for example `["CF"]`, `["P"]`, or `["TWP"]`). Edit the cell to an array such as
-`["1B","OF"]` in Google Sheets, then use File → Download → Comma-separated
-values (.csv) to replace `config/sheet-players.csv`. Google Sheets handles CSV
-quote escaping. Use `[]` for no
-positions. Rerunning the generator preserves existing arrays, including empty
-arrays, and seeds only new entries. Publishing applies these arrays to the Pos.
-column, position filters, and IF/OF/SP/RP eligibility for all players, including
-Sheet=No. Every assigned position is displayed in saved order in every view.
-Explicit SP/RP entries grant eligibility directly; P/TWP retains the statistical
-starts/saves rules. An empty array grants no position-tab eligibility. Players
-without a sheet entry retain the original primary-position/statistical fallback.
-The complete Batters/Pitchers lists still require stats in that source and range.
-Ohtani's manual `["DH","SP"]` now displays both positions in both lists.
-
-Download your latest Google Sheets edits before rerunning the generator so it
-reads the current local CSV. Existing Yes/No selections are retained
-for current players, new players default to No, and a `.csv.bak` copy preserves
-the previous review, including players who left the pool. The daily update does
-not edit this CSV. It publishes its Yes selections to `docs/data/sheet-players.json`.
-The unchecked-by-default **Sheet Players Only** checkbox in Player Stats filters
-all tabs by those IDs, together with the other filters. Missing IDs default to No.
-To publish CSV edits locally without downloading statistics, run:
+The commands below use Windows PowerShell. Run each command separately from
+the project folder. You will need Python; this project is developed with Python
+3.14. Create a local Python environment:
 
 ```powershell
-.\.venv\Scripts\python.exe -m scripts.publish_sheet
+py -3.14 -m venv .venv
 ```
 
-Commit the updated site JSON when ready to make the selections live.
+Normal website updates and CSV exports use Python's standard library. They do
+not require Excel, Skylos, or extra Python packages. Optional test and Excel
+dependencies are explained below. On other operating systems, use your
+environment's Python executable with the `-m scripts.NAME` commands;
+the `.cmd` shortcuts are for Windows.
 
-### Optional first-pass selections
+### 2. Name your league and choose its dates
 
-For an optional one-time first pass before manual review, run `.\seed-sheet.cmd`.
-This separate tool leaves `scripts/build_sheet.py` unchanged and creates the same review
-CSV with up to 11 hitters and 8 pitchers per organization marked Yes. Existing
-files are never overwritten; use `.\seed-sheet.cmd --output config/sheet-suggestions.csv`
-if you already have a review file. It reads saved YTD data without network access.
-Hitter score: AB + 8×HR + 12×SB + R + RBI + BB. Pitcher score:
-IP (true innings) + 0.5×K + 12×SV + 5×W. These are rough playing-time and
-fantasy-contribution estimates, not projections. Position players' incidental
-pitching appearances are excluded from pitcher selection. A two-way player can
-fill a slot in both groups but still has only one Yes/No row. Injured players
-remain candidates; review health and expected roles manually.
+Open `config/league.json` in a text editor. Keep the JSON punctuation intact
+and change these settings:
 
-### Daily refresh
+| Setting | What to enter |
+| --- | --- |
+| `name` | Your league's name, used in the website header and browser-tab titles. |
+| `season` | The MLB season year. |
+| `start_date` | The first day your league counts, in `YYYY-MM-DD` format. |
+| `end_date` | The last day your league counts, inclusive. |
+| `owners` | Your fantasy team owners' names. Replace the example list. |
+| `regular_season_end` | The final day of that year's MLB regular season. |
+| `phase` | Start with `regular` to collect regular-season player statistics. Switch to `postseason` after saving the final regular-season totals. |
+| `game_types` | Keep `F,D,L,W` to count postseason games for standings. |
 
-The daily refresh publishes only your current CSV Yes/No choices. It never runs
-the heuristic, changes those choices, or regenerates the review CSV.
+The phase controls which statistics are refreshed and the default cutoff date.
+It does not change the league's dates or game types. While the phase is
+`regular`, postseason standings can still be empty and regular-season Player
+Stats can still be available.
 
-From the repository root, run this each morning to update through yesterday:
+The default scoring is cumulative 6×6:
 
-```powershell
-.\update.cmd
-```
+- Hitters: R, HR, RBI, SB, BB, AVG.
+- Pitchers: W, L, SV, K, ERA, WHIP.
 
-To update again after games finish today:
+Lower L, ERA, and WHIP are better; higher values are better for the others.
+You can select a subset of these supported categories in the `categories` lists
+to change scoring and the standings columns. Player Stats and owner tables
+still display their built-in statistics. Adding new categories requires code changes.
 
-```powershell
-.\update.cmd --today
-```
+### 3. Add your owners' players
 
-For a specific cutoff, use `.\update.cmd --through 2026-09-21`.
-The shortcut uses the repository's `.venv` Python and refreshes standings,
-owner pages, YTD Player Stats, and Last 30 Days. It also refreshes player roster
-status/IL badges as of the run date. Fixed custom ranges are preserved by the
-exporter. CSV exports are generated locally; Excel is not required.
+Edit `config/roster.csv` in a spreadsheet or text editor. Keep the header row
+and replace the example players. Each row contains:
 
-Standings retain the configured league dates and game types and count only final
-games. Player Stats retain their separate organization pool and regular-season
-scope; `--today` uses whatever statistics the API has published for today, which
-may lag completed games. This shortcut does not switch the league to postseason
-dates, rosters, or game types; configure those before postseason play.
+| Column | What to enter |
+| --- | --- |
+| `owner` | An exact match for a name in `config/league.json`. |
+| `section` | `hitting` or `pitching`. |
+| `slot` | The roster-slot label you want to display. |
+| `player_id` | The player's numeric MLB ID, found at the end of their MLB player-page URL. |
+| `player_name` | The player's display name. |
 
-On a failed step, the shortcut restores all three previous site JSON files. Downloaded
-cache files and CSV exports may remain. Run only one update at a time. Preview
-the results before committing and pushing yourself; the shortcut does neither.
+Save as CSV UTF-8. There is no fixed owner count or roster size. An owner may
+have an empty roster or only hitters or pitchers. A two-way player can have a
+separate row in each section. Duplicate players within the same owner's section
+are rejected.
 
-## Refresh standings
-
-```powershell
-.venv\Scripts\python.exe -m scripts.refresh
-```
-
-Use `--through YYYY-MM-DD` to reproduce a particular day. Completed raw MLB
-game feeds are cached in `data/mlb_cache`. Add `--refresh` to redownload them.
-
-To populate the test league with completed games from September 1 through
-September 21, 2026, run:
-
-```powershell
-.venv\Scripts\python.exe -m scripts.refresh --through 2026-09-21
-```
-
-This fetches the schedule and any uncached completed game feeds. In-progress
-games are excluded; rerun after they finish to include them. The website displays
-the September 1–27 league window and the latest completed game date included.
-Changing the league window requires this normal refresh, not `--recalculate`,
-which only re-scores the statistics already saved in the snapshot.
-
-The command writes `docs/data/league.json`, which the static site reads. Preview
-the `docs` folder with any local static web server, then commit and push the
-updated JSON when it is ready to publish.
-
-To apply scoring changes to the already saved player statistics without
-downloading MLB data, run:
-
-```powershell
-.venv\Scripts\python.exe -m scripts.refresh --recalculate
-```
-
-This updates category points and rankings while preserving the snapshot's
-original game dates and data timestamp. Run it before publishing scoring changes.
-
-Preview locally from the repository root:
-
-```powershell
-.venv\Scripts\python.exe -m http.server 8000 --directory docs
-```
-
-Then open `http://localhost:8000` and press `Ctrl+C` when finished.
-
-## League configuration
-
-### Adapting the owner pool
-
-1. Add, remove, or rename owners in the `owners` list in `config/league.json`.
-2. Update the matching `owner` values and players in `config/roster.csv`.
-   Names must match exactly. Each row needs owner, section (`hitting` or
-   `pitching`), slot, a positive MLB player_id, and player_name.
-3. Check the configuration without network access or file changes:
+Check your configuration without downloading data:
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.refresh --check-config
 ```
 
-4. Run `.\update.cmd`, preview the results, then commit and push.
+Standings count rostered players regardless of their current MLB organization.
 
-No code edits are required to change owner count or roster size. Standings,
-points, owner pages, and the Owner Status filter follow the published owner list.
-Empty rosters and rosters with only hitters or only pitchers are supported;
-unfilled statistics are zero, and zero-out pitching rates rank below rates with
-recorded outs. Empty owners still count toward the scoring scale. There is no
-enforced 17-player roster limit. Owner names must be nonempty and unique ignoring
-case. Unknown roster owners, invalid sections/IDs, and duplicate entries within
-one owner's hitting or pitching section are rejected before MLB downloads.
-Cross-owner sharing and separate hitting/pitching entries for a two-way player
-remain allowed. Historical 2025 fixtures keep their original league size.
+### 4. Choose the Player Stats pool
 
-- `config/league.json`: dates, categories, name, and owners
-- `config/roster.csv`: owner, section, roster slot, MLB ID, and player name
+Player Stats uses a separate list of MLB organizations, not the fantasy rosters.
+Edit `PLAYOFF_TEAMS` near the top of `scripts/export_mlb_ytd.py` to choose those
+organizations. Use the full MLB team names, following the existing format. This is
+currently a setting in the script, rather than a separate configuration file.
 
-After adding an owner or changing rosters, run `.\update.cmd` to regenerate the
-published standings, owner pages, and Player Stats ownership data. Editing config
-files alone does not update the site. Do not use `--recalculate` for roster changes;
-it only re-scores the previously published roster entries.
-
-The configured category lists determine scoring and homepage column order.
-Both normal refreshes and offline recalculation use those lists; unsupported or
-duplicate categories are rejected. The historical 2025 reproduction continues
-to select its original 5×5 rules explicitly.
-
-## GitHub Pages
-
-In the repository settings, choose **Deploy from a branch**, select the default
-branch, and use the `/docs` folder. No Python process or database is required on
-the hosting side.
-
-The `reference/` folder and downloaded `data/mlb_cache/` feeds are intentionally
-excluded from Git. The generated public JSON in `docs/data/` is committed so
-GitHub Pages can serve the latest standings.
-
-## Historical validation
+For a fresh setup, remove the included `docs/data/player-stats.json` before
+your first export so example date ranges are not carried into your league.
+Create a regular-season snapshot for your season. This example uses 2026 and
+September 27; replace both with your year and desired completed date:
 
 ```powershell
-.venv\Scripts\python.exe -m scripts.reproduce_2025
+.\.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-27 --format csv --site
 ```
 
-This rebuilds the 2025 postseason from MLB box scores. It resolves 119 drafted
-entries and reconciles all 84 owner/category totals in the reference workbook.
-The historical reproduction retains its original 5×5 standings calculation.
+This downloads MLB data. It includes eligible players currently affiliated with
+the selected organizations, including optioned and injured-list players.
+Released players and free agents are excluded. Statistics include games played
+for previous teams, even teams outside the chosen pool.
 
-## Export likely playoff-team player statistics
+### 5. Prepare your player review sheet
 
-`scripts/export_mlb_ytd.py` exports combined regular-season totals for players currently
-affiliated with the likely playoff teams listed in its `PLAYOFF_TEAMS` setting.
-Released players and free agents are omitted; optioned and injured-list players
-remain. Organization membership and roster status are checked as of the day the
-script runs, independently of the requested statistics dates.
-
-Install the optional Excel dependency once:
+`config/sheet-players.csv` holds optional draft-sheet selections and manual
+position eligibility. For a new league, remove the included example sheet or
+move it outside the project before generating your own. Otherwise, the generator
+preserves the example selections for matching players.
 
 ```powershell
-.venv\Scripts\python.exe -m pip install -r requirements-export.txt
+.\sheet.cmd
 ```
 
-Choose two CSV files, one Excel workbook with `Batters` and `Pitchers`
-worksheets, or both. The through-date controls the final day included. Without
-`--start`, the range begins January 1 of the selected season (year-to-date):
+This reads the snapshot you just created without downloading more data. Players
+start with `Sheet` set to `No` and their primary position. Leave those defaults
+or edit them as described under **Review Sheet players and positions** below.
+The update process expects this file to exist.
+
+### 6. Generate and preview your website
+
+With `phase` set to `regular`, run:
 
 ```powershell
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format csv
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format xlsx
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-29 --format both
+.\update.cmd
 ```
 
-For a custom range, supply `--start` and `--through` in `YYYY-MM-DD` format.
-Both dates are inclusive, must fall within `--season`, and the start must not
-follow the end. For example, May 1 through May 30, 2026:
+This publishes Sheet settings, standings, owner pages, regular-season Player
+Stats ranges, and the postseason range. After the regular season, regular-season
+statistics are capped at `regular_season_end`. Once those totals are final,
+follow the phase-switch instructions below.
+
+Start a local preview:
 
 ```powershell
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --start 2026-05-01 --through 2026-05-30 --format both
+.\.venv\Scripts\python.exe -m http.server 8000 --directory docs
 ```
 
-These are totals for the selected range, not full-season year-to-date totals.
-All MLB teams a player appeared for during that range contribute to the totals,
-including teams outside the configured pool. The organization column shows the
-player's current organization, not the team they played for during the range.
-Players without qualifying MLB statistics in the range have no output row.
+Open `http://localhost:8000` in your browser. Check the league name, dates,
+owners, rosters, and Player Stats. Press `Ctrl+C` in PowerShell to stop the
+server. Refresh the browser after changes; use `Ctrl+F5` if old scripts or styles
+appear to be cached.
 
-The exporter writes files under `data/<season>/`. Custom ranges produce
-`mlb_hitters_2026-05-01_through_2026-05-30.csv`,
-`mlb_pitchers_2026-05-01_through_2026-05-30.csv`, and/or
-`mlb_players_2026-05-01_through_2026-05-30.xlsx`. Without `--start`, existing
-`*_ytd_<through>` filenames are preserved. The workbook metadata records the
-statistics range and roster date; the command also prints both.
+### 7. Publish to GitHub Pages
 
-If MLB supplies multiple team rows for a player, the exporter uses an explicit
-combined total or requests the player's all-team totals. It stops before writing
-output if those totals remain ambiguous, rather than duplicating a player or
-adding rate statistics. Existing automated tests use mocked API responses;
-they do not download MLB data.
+Commit and push your configuration and generated website files to your own
+repository. In its GitHub Pages settings, choose **Deploy from a branch**,
+select your default branch, and select the `/docs` folder.
 
-## Website Player Stats page
+The site reads committed JSON files in `docs/data/`. GitHub Pages does not run
+the Python scripts or refresh statistics for you. After each local update,
+preview, commit, and push to publish the new results.
 
-Pitching exports calculate ERA and WHIP from earned runs, hits, walks, and
-recorded outs, preserving precision for sorting. The site displays three decimal
-places. Zero innings produces an unavailable rate; if calculation inputs are
-missing, the exporter retains the API's rate. Re-export existing ranges to apply
-this precision to previously saved data.
+## Update statistics during the season
 
-The header's **Player Stats** link opens `docs/stats.html`. Its Batters, Pitchers,
-IF, OF, SP, and RP tabs support name search, current-team filtering, sortable columns,
-and selecting published date ranges. Batters show G, AB, H and the six hitting
-categories; pitchers show G, IP and the six pitching categories. Qualification
-filters default to zero (no minimum). This page uses the exporter's 14-team pool, not
-the fantasy owners' rosters or the homepage's test league dates.
-
-Sheet position arrays take precedence. For players without a Sheet assignment,
-IF and OF use the exported MLB primary position: IF includes C, 1B, 2B, 3B,
-and SS; OF includes LF, CF, RF, and OF. Primary DHs and unknown positions are
-excluded from IF and OF. SP includes players with at least two starts in the
-selected range; RP includes players with at least two saves or fewer than two
-starts, so players meeting neither original threshold fall into RP. A player
-with at least two starts and two saves appears in both if designated P, SP, RP,
-or TWP. RP excludes position players' incidental pitching appearances and
-unknown positions; the complete Pitchers tab retains those records.
-Missing starts data must be refreshed before assigning the fallback
-RP group. Games started (GS) is published for filtering without adding a visible
-table column. Re-export each published range
-to add starts data to older snapshots. Position-rule tests can be run with
-`node --test tests/test_stats_positions.cjs`.
-
-Publish regular-season year-to-date data through your chosen date:
+Run this from the project folder:
 
 ```powershell
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-21 --format csv --site
+.\update.cmd
 ```
 
-This downloads MLB data and writes two local CSV files plus
-`docs/data/player-stats.json`. The site's JSON is included by the existing Git
-ignore exceptions and must be committed with the page. CSV exports remain
-ignored. The page displays a not-yet-published message until its data exists.
+- With `phase: "regular"`, the default cutoff is yesterday. Regular-season
+  totals and Last 30 Days are updated, capped at `regular_season_end`.
+- With `phase: "postseason"`, the default cutoff is today. Completed postseason
+  games are updated and regular-season snapshots are left unchanged.
+- Both modes publish saved Sheet selections and refresh league standings using
+  the configured dates and game types.
 
-To add another selectable range, export it with `--start`, `--through`, and
-`--site`. Existing ranges from the same season are retained; rerunning an exact
-range replaces it. Year-to-date exports always replace the previous YTD entry.
-Exporting a different season starts a new set of ranges. Each range records its
-own organization snapshot date, so rerun older ranges if membership needs updating.
-Visitors choose among these published ranges; their browsers never call MLB.
-
-To publish the last 30 calendar days alongside YTD, run a separate export:
+Use `--today` to include today's available statistics in regular mode. Use
+`--through YYYY-MM-DD` for a specific cutoff. For example:
 
 ```powershell
-.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-21 --last-30-days --format csv --site
+.\update.cmd --through 2026-09-27
 ```
 
-This covers August 23 through September 21 inclusive. `--last-30-days` ends on
-`--through`, not the visitor's current date, and cannot be combined with
-`--start`. It is bounded to January 1 of the selected season when necessary.
-Each run replaces the published `last30` entry while preserving YTD and custom
-ranges from that season. Refresh YTD and last-30-days exports with the same
-through-date when updating the site; the browser does not advance either range.
+Standings and postseason Player Stats count completed games only. Regular-season
+exports use the API's published daily totals. Run again after games finish to
+pick up newly completed postseason games.
 
-Under **Filters**, minimum AB is shown only for Batters/IF/OF, and minimum
-IP is shown only for Pitchers/SP/RP. Each applies regardless of the sorted column. Both
-accept nonnegative whole numbers, use statistics from the selected range, and
-persist while switching tabs and ranges. IP comparisons use outs, so 9.2 IP does
-not meet a 10-IP minimum. Zero disables the minimum; missing statistics fail an
-active minimum. The result count displays the active minimum even when Filters
-is closed. Filters run before sorting and pagination; they do not alter exports.
+Run only one update at a time. If a step fails, the shortcut restores the three
+previous website JSON files. Downloaded cache files and CSV exports may remain.
+The shortcut never commits or pushes.
 
-Info buttons beside the minimum labels explain their behavior in a shared dialog.
-Only the visible minimum is validated, so an invalid hidden field cannot block
-the other player type. Filters use one column below 500px and two at 500px and
-above. At 500px and above, Sheet Players Only sits beside the visible minimum,
-aligned to the top; below 500px it has its own row.
+### Switch to postseason updates
 
-**Owner Status** offers All Players, Rostered Players, and each of the configured
-owners, matched by MLB ID against `docs/data/league.json`. The sortable Owner
-column shows Unrostered when there is no match and is hidden at 640px and below.
-These are the same test rosters used on Standings, but this page still limits
-results to the postseason organization pool. An owner's full roster may therefore
-not appear here. Sheet and owner filtering combine with all other filters.
+1. Leave `phase` set to `regular` until the final regular-season games finish.
+2. Run `.\update.cmd --through YYYY-MM-DD`, replacing the date with your
+   `regular_season_end`, to save final totals and the last 30 calendar days.
+3. Change `phase` to `postseason` in `config/league.json`.
+4. Use `.\update.cmd` after postseason games finish.
 
-The **Position** dropdown narrows a tab by assigned position (for example,
-C within IF or CF within OF); SP/RP filters use the same explicit assignments
-and generic-P starts/saves rules as their tabs. OF grants the OF tab without
-inventing eligibility at a specific LF/CF/RF position. Options follow C, 1B, 2B, 3B, SS, LF, CF, RF, DH, SP, RP order, with
-only positions relevant to the selected tab included. TWP, P, and generic OF
-are not filter options; those players remain eligible for the broader lists. A
-selection is retained when available after switching tabs or ranges; otherwise
-it resets to All positions. It combines with team, search, and qualification
-filters, and the result count shows the selected position when Filters is closed.
+The saved ranges are labeled **Regular Season** with the year and **Last 30
+Days - Regular Season**. Last 30 Days means calendar days, not games.
+**Postseason** is the default range. A visitor's range choice persists during
+their browser-tab session; other filters are not saved between visits.
 
-Each view initially displays 25 matching players. **Show more** reveals the next
-25; changing a tab, range, filter, or sort resets the visible list to 25. The
-browser downloads the complete static snapshot once, then filters and paginates
-locally. Player alphabetical sorting uses last name, then first name, ignoring
-case and accents; suffixes break ties after the given name. It also breaks ties
-for other sorted columns. Display names remain first-name-first. Compound
-surnames are retained using the saved display name's first word as the given name.
+Postseason Player Stats uses the saved regular-season YTD player pool, including
+players without postseason appearances. Organization and injury information
+also retains that snapshot's date. Eliminated teams are not automatically
+removed. Changing the exporter team list alone does not change an existing
+snapshot. Rebuilding YTD changes the pool used by the next postseason update
+and replaces the saved regular-season data.
 
-Without a Sheet assignment, Pos. displays the source's primary MLB designation. Generic
-P becomes SP or RP when eligible for only that group in the selected range;
-players eligible for both retain P. Ohtani displays DH in batting views (including
-the DH filter) and SP in pitching views; his tab eligibility still follows the
-starts/saves rules. Other TWP labels can remain in the complete lists.
-
-Alert-colored IL badges beside names show roster injury status, such as IL-10.
-The accessible description includes the roster snapshot date. When the duration
-is unavailable, the badge reads IL without inventing a duration. Status is not
-an expected return date and updates only on export. Re-export each published
-range to add injury fields to older website data; snapshots lacking those fields
-display no badge.
-
-Narrow layouts (640px and below) hide supporting statistics (G, AB, H, IP) and Owner. If the selected sort
-column becomes hidden, sorting resets to HR for batting views or K for pitching
-views. Selecting a team similarly resets an active Team sort. Long player names
-wrap on mobile rather than requiring a hover tooltip. Both pages share saved
-theme handling, including when browser storage is unavailable.
-
-## Tests
-
-Run these separately; a unique temporary directory avoids the Windows temp-folder
-permissions issue encountered during development:
+Before your configured opening day, initialize empty postseason displays without
+MLB downloads using the command below. The YTD snapshot and Sheet CSV must
+already exist:
 
 ```powershell
-$testTemp = Join-Path $env:TEMP ("babbd-pytest-" + [guid]::NewGuid().ToString())
+.\update.cmd --prepare
+```
+
+### How empty statistics and standings work
+
+Players without an appearance show dashes. An owner's hitting and pitching
+totals activate separately: once a hitter appears, hitting counts can show
+zeros; pitching still shows dashes until a pitcher appears. Rates with no
+denominator remain unavailable.
+
+Owners with appearances rank above owners without appearances. Inactive owners
+have no points and tie at the bottom. With N owners, available category results
+receive the highest available points on the N-to-1 scale, averaging ties.
+Unavailable categories receive no points. Equal total scores share a rank.
+Empty owners still count toward N. These appearance rules apply to the
+postseason configuration; historical regular-season scoring is unchanged.
+
+## Change your league later
+
+Edit the league name, dates, categories, or owner list in `config/league.json`.
+Keep owner names in `config/roster.csv` consistent with that list. Then run the
+configuration check and `.\update.cmd`. Configuration edits alone do not change
+the published site.
+
+Owner count and roster size do not require code changes. Names must be nonempty
+and unique, ignoring case. The check rejects unknown owners, invalid sections
+or player IDs, and duplicate entries within an owner's section.
+
+To re-score saved statistics after a category change without downloading data:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.refresh --recalculate
+```
+
+This preserves saved dates and player statistics. Roster or league-window
+changes require a normal refresh instead.
+
+To refresh only standings and owner pages:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.refresh
+```
+
+This defaults to today. Add `--through YYYY-MM-DD` for a cutoff or `--refresh`
+to download completed game feeds again instead of using the local cache.
+
+## Review Sheet players and positions
+
+Run `.\sheet.cmd` to generate or update `config/sheet-players.csv` from saved
+YTD data. Rows are sorted by league, team, last name, and first name. Two-way
+players have one row. Keep MLB IDs unchanged.
+
+- **Sheet:** enter `Yes` or `No`. The site's **Sheet Players Only** checkbox
+  limits results to Yes players.
+- **Positions:** enter a JSON array such as `["CF","RF"]` or `["DH","SP"]`.
+  Use `[]` for no assigned positions. All assigned positions appear under Pos.
+  and control filters and tab eligibility, even for Sheet=No players.
+
+In Google Sheets, edit the array as normal cell text, then use **File → Download
+→ Comma-separated values (.csv)** and replace the local CSV. Sheets handles CSV
+quotation marks. Download changes before rerunning the generator so it reads
+your latest edits.
+
+The generator preserves existing choices and position arrays, seeds new
+players, and saves a `.csv.bak` backup. Daily updates never regenerate this CSV,
+run selection estimates, or overwrite manual eligibility. They only publish its
+current contents.
+
+Publish Sheet edits without downloading statistics:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.publish_sheet
+```
+
+Commit both `config/sheet-players.csv` and `docs/data/sheet-players.json` to keep
+your review and website in sync.
+
+### Optional selection suggestions
+
+`.\seed-sheet.cmd` creates an initial review with up to 11 hitters and 8 pitchers
+per organization marked Yes. It uses saved YTD data and never overwrites an
+existing file. To keep suggestions separate:
+
+```powershell
+.\seed-sheet.cmd --output config/sheet-suggestions.csv
+```
+
+The estimates favor playing time and fantasy contributions:
+
+- Hitters: AB + 8×HR + 12×SB + R + RBI + BB.
+- Pitchers: true innings + 0.5×K + 12×SV + 5×W.
+
+These are rough suggestions, not projections. Incidental pitching by position
+players is excluded; injured players remain candidates. Review roles and health
+yourself. This step is separate from normal generation and daily updates.
+
+## Player Stats behavior
+
+Batters, Pitchers, IF, OF, SP, and RP tabs support search, sorting, team,
+owner, position, minimum AB/IP, and Sheet filters. Each view initially shows 25
+players; **Show more** reveals another 25. Filtering uses downloaded static
+data, with no visitor requests to MLB.
+
+Owner matching uses MLB IDs from the league rosters. An owner's players outside
+the selected organization pool will not appear here, even if they appear on
+that owner's roster page.
+
+Manual Sheet positions take precedence. Explicit SP/RP assignments grant those
+tabs directly. Generic P/TWP assignments use starts and saves in the selected
+range: SP requires at least two starts; RP includes pitchers with at least two
+saves or fewer than two starts. The same thresholds apply to the original
+pitching fallback. Pitchers can qualify for both. Missing starts data does not
+imply zero starts. Incidental pitching by position players is excluded from RP
+but remains in the complete Pitchers list.
+
+IF includes C, 1B, 2B, 3B, and SS. OF includes LF, CF, RF, and generic OF;
+generic OF does not grant a specific outfield position. Primary DH-only players
+remain in Batters. An empty manual array grants no position-tab eligibility.
+Players without a Sheet entry use source positions and the existing fallback
+rules. Source lists determine who appears under Batters or Pitchers.
+
+Minimum AB applies to batting views and minimum IP to pitching views, regardless
+of the sorted column. Zero disables the minimum. Missing statistics fail an
+active minimum. Innings are measured in outs, so 9.2 IP does not meet a 10-IP
+minimum. ERA and WHIP use underlying totals when available and display three
+decimal places.
+
+IL badges show recorded roster status, not an expected return date. Check the
+information popup for snapshot dates. Narrow screens hide supporting statistics
+and the Owner column. Both pages share the saved light/dark theme.
+
+## Export statistics for other uses
+
+The standalone exporter always retrieves regular-season statistics. Choose
+`--format csv` for separate hitter and pitcher files, `xlsx` for a workbook with
+Batters and Pitchers worksheets, or `both`.
+
+Excel output needs this optional dependency:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-export.txt
+```
+
+Example season-total CSV export; substitute your season and cutoff:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --through 2026-09-27 --format csv
+```
+
+Example custom range:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.export_mlb_ytd --season 2026 --start 2026-05-01 --through 2026-05-30 --format both
+```
+
+Dates are inclusive and must be within the selected year. Without `--start`,
+statistics begin January 1. Files are saved under `data/<season>/`. Statistics
+include all teams a player appeared for in the range; the organization column
+reflects affiliation when the export runs. Players without qualifying MLB
+statistics in that range have no row.
+
+Add `--site` to publish a selectable website range. Existing ranges in the same
+season are retained; an exact range is replaced when exported again. A new
+season starts a new set of ranges. Each range has its own roster snapshot date.
+
+Use `--last-30-days` instead of `--start` to cover the 30 calendar days ending
+on `--through`, bounded to January 1. Each run replaces the `last30` entry.
+After freezing regular-season data, avoid exporting those ranges again unless
+you intend to replace them.
+
+## Project layout
+
+| Location | Purpose |
+| --- | --- |
+| `config/` | League settings, fantasy rosters, and manual Sheet choices. |
+| `scripts/` | Commands for refreshing, exporting, and publishing data. |
+| `mlb/` | Shared API, statistics, and scoring code. |
+| `docs/` | The static website served by GitHub Pages. |
+| `docs/data/` | Generated website JSON; commit these files to publish updates. |
+| `data/` | Local exports, cached MLB feeds, and historical fixtures. |
+| `tests/` | Automated Python and JavaScript checks. |
+
+Run Python entry points from the project folder with `-m scripts.NAME`.
+The Windows shortcuts use the project's `.venv` environment. Downloaded
+exports, MLB caches, spreadsheet references, virtual environments, and review
+backups are ignored by Git. The authoritative Sheet CSV and generated website
+JSON are tracked.
+
+## Tests and checks
+
+Install the Python test runner once:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install pytest
+```
+
+Run these separately. A unique temporary folder avoids shared Windows
+temporary-directory permission problems:
+
+```powershell
+$testTemp = Join-Path $env:TEMP ("fantasy-pytest-" + [guid]::NewGuid().ToString())
 ```
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q --basetemp="$testTemp"
 ```
 
-Run the JavaScript regression tests with Node.js (no additional packages needed):
+With Node.js installed, run the JavaScript tests; no npm packages are needed:
 
 ```powershell
 node --test tests/test_stats_positions.cjs tests/test_ui.cjs
 ```
 
-These cover position eligibility, hidden-column sorting, theme behavior, and
-selected text/focus contrast pairs. They are not a full browser accessibility
-audit. Before publishing, preview both themes at narrow and wide widths, use
-Tab/Enter/Space to sort the homepage, and check the menu and modal with Escape.
-On Player Stats, sort by AB and then narrow below 641px; verify the HR sort
-indicator appears. Sort by Team and select one team; verify the visible default
-sort is restored. Confirm long player names remain readable on mobile.
-Check 499px, 500px, and desktop filter layouts, both minimum info buttons and
-focus return, surname sorting, Sheet/Owner filter combinations, and RP exclusion
-of position players. Tests use saved fixtures or mocks and do not fetch MLB data.
+Tests use saved fixtures or mocked responses and do not download MLB data.
+They cover scoring, publication, filtering, and selected interface behavior;
+they are not a complete browser accessibility audit. Before publishing, preview
+both themes on narrow and wide screens, check owner pages and filters, and use
+the keyboard to operate sorting, menus, and dialogs.
 
-Before committing, include the new scripts, tests, `config/sheet-players.csv`,
-and `docs/data/sheet-players.json` alongside the website changes. The reviewed
-`sheet-players-updated.csv`, suggestions, CSV exports, and backups remain local
-and ignored. `sheet-players.csv` is the authoritative selection file.
+### Optional static analysis
 
-## Optional static analysis with Skylos
+Skylos is optional and is not needed to refresh data or run the website.
+See [Python-focused Skylos setup](SETUP_SKYLOS.md) for installation details and
+limitations. The customized `requirements-skylos.txt` is an environment snapshot,
+not the basic website dependency list or a verified fresh-install recipe.
 
-The local Windows / Python 3.14 development environment uses Skylos 4.37.0 for
-static analysis and dead-code detection. Skylos is not required to refresh MLB
-data, run the website, or deploy GitHub Pages.
-
-Run the scan from the repository root:
+After following that guide, run:
 
 ```powershell
 .\.venv\Scripts\skylos.exe scan . --no-grep-verify
 ```
-
-The initial user-run scan reported A+ (100/100) across 16 project files with no
-dead code detected. Grep verification was disabled. This describes that scan,
-not a guarantee of correctness or a replacement for tests and browser checks.
-
-See [Python-focused Skylos setup](SETUP_SKYLOS.md) for the isolated installation
-procedure, compatible MCP constraint, parser stubs, and validation steps.
-The procedure is not yet verified on a fresh environment; the existing
-`requirements-skylos.txt` remains a snapshot of the original customized setup.
-The guide explains its dependency gaps and how to validate a replacement.

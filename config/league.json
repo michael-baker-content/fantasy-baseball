@@ -1,9 +1,11 @@
 {
   "name": "BABBD Fantasy Baseball",
   "season": 2026,
-  "start_date": "2026-09-01",
-  "end_date": "2026-09-27",
-  "game_types": "R",
+  "start_date": "2026-09-29",
+  "end_date": "2026-10-31",
+  "game_types": "F,D,L,W",
+  "phase": "regular",
+  "regular_season_end": "2026-09-27",
   "categories": {
     "hitting": [
       "R",

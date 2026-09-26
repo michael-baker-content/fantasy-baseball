@@ -4,6 +4,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const read = name => fs.readFileSync(path.join(__dirname, '../docs', name), 'utf8');
+
+test('league title updates headings, page titles and accessible home links safely', () => {
+  const heading = {}, attributes = {};
+  const document = {querySelectorAll: selector => selector === '.header-title' ? [heading] : [{setAttribute:(key,value)=>{attributes[key]=value}}]};
+  const apply = vm.runInNewContext(read('league-title.js') + '\napplyLeagueTitle;', {document});
+  apply({name: 'Custom & <League>'}, 'Player Stats');
+  assert.equal(heading.textContent, 'Custom & <League>');
+  assert.equal(document.title, 'Player Stats · Custom & <League>');
+  assert.equal(attributes['aria-label'], 'Custom & <League> home');
+  apply({name: 'New League'}, 'Team Alex');
+  assert.equal(document.title, 'Team Alex · New League');
+  apply({name: 'New League'});
+  assert.equal(document.title, 'New League');
+  apply({name: ' '});
+  assert.equal(document.title, 'Fantasy Baseball');
+});
 const visibleSort = vm.runInNewContext(read('stats-sort.js') + '\nvisibleStatsSort;');
 const compareNames = vm.runInNewContext(read('stats-sort.js') + '\ncomparePlayerNames;');
 

@@ -45,6 +45,7 @@ def test_config_has_complete_owners_and_rosters():
 
 def test_empty_opening_snapshot_still_has_every_roster_entry():
     league, roster = load_config()
+    league = league | {"game_types": "R"}
     rows = build_roster_rows(roster, {})
     payload = public_payload(league, [], rows)
     assert len(payload["standings"]) == len(league["owners"])
@@ -76,6 +77,8 @@ def test_generated_site_payload_is_valid():
 def test_offline_recalculation_preserves_snapshot_and_adds_categories():
     league, _ = load_config()
     original = json.loads((ROOT / "docs/data/league.json").read_text(encoding="utf-8"))
+    # Exercise legacy all-owner point conservation independently of live appearance rules.
+    original["league"]["game_types"] = "R"
     recalculated = recalculate_payload(original, league["categories"])
     assert recalculated["league"]["categories"] == league["categories"]
     for field in ("updated_at", "through_date", "games_counted"):
@@ -120,6 +123,7 @@ def test_invalid_owner_configuration_has_actionable_error(owners, roster):
 
 def test_refresh_and_recalculation_use_configured_categories():
     league, roster = load_config()
+    league = league | {"game_types": "R"}
     categories = {"hitting": ["BB"], "pitching": ["L"]}
     rows = build_roster_rows(roster, {})
     refreshed = public_payload(league | {"categories": categories}, [], rows)

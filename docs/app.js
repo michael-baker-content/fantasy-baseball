@@ -2,27 +2,32 @@ let CATEGORIES=[];
 const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
 
-const fmt=(key,value)=>key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
+const fmt=(key,value)=>value===null||value===undefined?"—":key==="IP"?String(value):key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
+const scoreText=value=>value===null||value===undefined?"—":Number(value).toFixed(1);
 const placeClass=p=>p===1?"place place-1":p===2?"place place-2":p===3?"place place-3":"place place-n";
-const pointsClass=(pts,values)=>pts===Math.max(...values)?"pts-high":pts===Math.min(...values)?"pts-low":"pts-mid";
+const pointsClass=(pts,values)=>pts===null?"":pts===Math.max(...values.filter(v=>v!==null))?"pts-high":pts===Math.min(...values.filter(v=>v!==null))?"pts-low":"pts-mid";
 const ownerUrl=name=>`?owner=${encodeURIComponent(name)}`;
+function setHeaderSubtitle(label){
+  document.querySelector("#header-subtitle").textContent=`${label} · ${data.league.start_date} – ${data.league.end_date}`;
+}
 
-function statValue(row,key){return key==="total_score"?row.total_score:row.stats[key]??0}
+function statValue(row,key){return key==="total_score"?row.total_score:row.stats[key]}
 function sortedStandings(){return [...data.standings].sort((a,b)=>{
   const av=statValue(a,sort.key),bv=statValue(b,sort.key);
+  if(av==null||bv==null)return av==null&&bv==null?0:av==null?1:-1;
   return sort.dir==="asc"?av-bv:bv-av;
 })}
 
 function categoryCell(row,category){
   const all=data.standings.map(r=>r.category_points[category]);
   const pts=row.category_points[category];
-  return `<td class="${sort.key===category?'sort-active':''}"><div class="cat-cell"><span class="cat-val">${fmt(category,row.stats[category])}</span><span class="cat-pts ${pointsClass(pts,all)}">${pts.toFixed(1)}</span></div></td>`;
+  return `<td class="${sort.key===category?'sort-active':''}"><div class="cat-cell"><span class="cat-val">${fmt(category,row.stats[category])}</span><span class="cat-pts ${pointsClass(pts,all)}">${scoreText(pts)}</span></div></td>`;
 }
 
 function renderDesktop(){
   const heading=(key,label)=>`<th scope="col" class="sortable ${sort.key===key?'sort-active':''}" aria-sort="${sort.key===key?(sort.dir==='asc'?'ascending':'descending'):'none'}"><button type="button" data-sort="${key}">${label}<span class="sort-indicator" aria-hidden="true">${sort.key===key?(sort.dir==='asc'?'▲':'▼'):''}</span></button></th>`;
   const headers=CATEGORIES.map(c=>heading(c,c)).join("");
-  const rows=sortedStandings().map(row=>`<tr><td class="col-left"><span class="${placeClass(row.place)}">${row.place}</span></td><td class="col-left"><a class="owner-link" href="${ownerUrl(row.owner)}">${row.owner}</a></td><td class="${sort.key==='total_score'?'sort-active':''}"><span class="score">${row.total_score.toFixed(1)}</span></td>${CATEGORIES.map(c=>categoryCell(row,c)).join('')}</tr>`).join("");
+  const rows=sortedStandings().map(row=>`<tr><td class="col-left"><span class="${placeClass(row.place)}">${row.place}</span></td><td class="col-left"><a class="owner-link" href="${ownerUrl(row.owner)}">${row.owner}</a></td><td class="${sort.key==='total_score'?'sort-active':''}"><span class="score">${scoreText(row.total_score)}</span></td>${CATEGORIES.map(c=>categoryCell(row,c)).join('')}</tr>`).join("");
   document.querySelector("#standings-table").innerHTML=`<thead><tr><th scope="col" class="col-left">Rank</th><th scope="col" class="col-left">Owner</th>${heading('total_score','Score')}${headers}</tr></thead><tbody>${rows}</tbody>`;
   document.querySelectorAll("#standings-table button[data-sort]").forEach(button=>button.addEventListener("click",()=>{
     changeSort(button.dataset.sort);
@@ -34,8 +39,8 @@ function renderMobile(){
   document.querySelector("#mobile-sort").innerHTML=`<option value="total_score">Total score</option>${CATEGORIES.map(c=>`<option value="${c}">${c}</option>`).join('')}`;
   document.querySelector("#mobile-sort").value=sort.key;
   document.querySelector("#mobile-standings").innerHTML=sortedStandings().map((row,i)=>{
-    const cats=CATEGORIES.map(c=>`<div class="mob-cat"><label>${c}</label><strong>${fmt(c,row.stats[c])}</strong><span class="cat-pts ${pointsClass(row.category_points[c],data.standings.map(r=>r.category_points[c]))}">${row.category_points[c].toFixed(1)}</span></div>`).join('');
-    return `<article class="mob-card"><button class="mob-card-header" aria-expanded="false"><span class="${placeClass(row.place)}">${row.place}</span><span class="owner-link mob-owner">${row.owner}</span><span class="mob-score">${sort.key==='total_score'?row.total_score.toFixed(1):fmt(sort.key,row.stats[sort.key])}</span><svg class="mob-chevron" viewBox="0 0 20 20"><path fill="currentColor" d="m5.2 7.2 4.8 5 4.8-5 1.1 1-5.4 5.7a.75.75 0 0 1-1.1 0L4.1 8.2l1.1-1Z"/></svg></button><div class="mob-detail" hidden><div class="mob-cat-grid">${cats}</div><a class="mob-detail-link" href="${ownerUrl(row.owner)}">View full roster →</a></div></article>`;
+    const cats=CATEGORIES.map(c=>`<div class="mob-cat"><label>${c}</label><strong>${fmt(c,row.stats[c])}</strong><span class="cat-pts ${pointsClass(row.category_points[c],data.standings.map(r=>r.category_points[c]))}">${scoreText(row.category_points[c])}</span></div>`).join('');
+    return `<article class="mob-card"><button class="mob-card-header" aria-expanded="false"><span class="${placeClass(row.place)}">${row.place}</span><span class="owner-link mob-owner">${row.owner}</span><span class="mob-score">${sort.key==='total_score'?scoreText(row.total_score):fmt(sort.key,row.stats[sort.key])}</span><svg class="mob-chevron" viewBox="0 0 20 20"><path fill="currentColor" d="m5.2 7.2 4.8 5 4.8-5 1.1 1-5.4 5.7a.75.75 0 0 1-1.1 0L4.1 8.2l1.1-1Z"/></svg></button><div class="mob-detail" hidden><div class="mob-cat-grid">${cats}</div><a class="mob-detail-link" href="${ownerUrl(row.owner)}">View full roster →</a></div></article>`;
   }).join('');
   document.querySelectorAll(".mob-card-header").forEach(button=>button.addEventListener("click",()=>{const detail=button.nextElementSibling;detail.hidden=!detail.hidden;button.setAttribute("aria-expanded",String(!detail.hidden));button.querySelector("svg").style.transform=detail.hidden?"":"rotate(180deg)"}));
 }
@@ -48,28 +53,29 @@ function changeSort(key){
 document.querySelector("#mobile-sort").addEventListener("change",e=>changeSort(e.target.value));
 
 function totalsRow(section,totals,colspan){
-  if(section==="hitting")return `<tr class="totals-row"><td></td><td class="col-left">TEAM TOTAL</td><td>${totals.AB}</td><td>${totals.H}</td><td>${totals.R}</td><td>${totals.HR}</td><td>${totals.RBI}</td><td>${totals.BB}</td><td>${totals.SB}</td><td>${fmt('AVG',totals.AVG)}</td></tr>`;
-  return `<tr class="totals-row"><td></td><td class="col-left">TEAM TOTAL</td><td>${totals.IP}</td><td>${totals.W}</td><td>${totals.L}</td><td>${totals.SV}</td><td>${totals.K}</td><td>${totals.P_H}</td><td>${totals.P_BB}</td><td>${totals.P_ER}</td><td>${fmt('ERA',totals.ERA)}</td><td>${fmt('WHIP',totals.WHIP)}</td></tr>`;
+  if(section==="hitting")return `<tr class="totals-row"><td></td><td class="col-left">TEAM TOTAL</td><td>${fmt("AB",totals.AB)}</td><td>${fmt("H",totals.H)}</td><td>${fmt("R",totals.R)}</td><td>${fmt("HR",totals.HR)}</td><td>${fmt("RBI",totals.RBI)}</td><td>${fmt("BB",totals.BB)}</td><td>${fmt("SB",totals.SB)}</td><td>${fmt('AVG',totals.AVG)}</td></tr>`;
+  return `<tr class="totals-row"><td></td><td class="col-left">TEAM TOTAL</td><td>${fmt("IP",totals.IP)}</td><td>${fmt("W",totals.W)}</td><td>${fmt("L",totals.L)}</td><td>${fmt("SV",totals.SV)}</td><td>${fmt("K",totals.K)}</td><td>${fmt("P_H",totals.P_H)}</td><td>${fmt("P_BB",totals.P_BB)}</td><td>${fmt("P_ER",totals.P_ER)}</td><td>${fmt('ERA',totals.ERA)}</td><td>${fmt('WHIP',totals.WHIP)}</td></tr>`;
 }
 
 function renderOwner(name){
   const owner=data.owners.find(o=>o.name===name),standing=data.standings.find(r=>r.owner===name);
   if(!owner){history.replaceState(null,"","./");renderStandings();return}
+  applyLeagueTitle(data.league,`Team ${name}`);
+  setHeaderSubtitle(`${name}’s Roster`);
   document.querySelector("#standings-view").hidden=true;document.querySelector("#owner-view").hidden=false;
   document.querySelector("#owner-name").textContent=`Team ${name}`;document.querySelector("#owner-place").textContent=`${standing.place}${standing.place===1?'st':standing.place===2?'nd':standing.place===3?'rd':'th'} place`;
-  document.querySelector("#owner-score").textContent=`${standing.total_score.toFixed(1)} pts`;
-  const hitters=owner.players.filter(p=>p.section==="hitting").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${p.stats.AB}</td><td>${p.stats.H}</td><td>${p.stats.R}</td><td>${p.stats.HR}</td><td>${p.stats.RBI}</td><td>${p.stats.BB}</td><td>${p.stats.SB}</td><td>${fmt('AVG',p.stats.AVG)}</td></tr>`).join('');
+  document.querySelector("#owner-score").textContent=`${scoreText(standing.total_score)} pts`;
+  const hitters=owner.players.filter(p=>p.section==="hitting").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${fmt("AB",p.stats.AB)}</td><td>${fmt("H",p.stats.H)}</td><td>${fmt("R",p.stats.R)}</td><td>${fmt("HR",p.stats.HR)}</td><td>${fmt("RBI",p.stats.RBI)}</td><td>${fmt("BB",p.stats.BB)}</td><td>${fmt("SB",p.stats.SB)}</td><td>${fmt('AVG',p.stats.AVG)}</td></tr>`).join('');
   document.querySelector("#hitter-table").innerHTML=`<thead><tr><th class="col-left">Pos</th><th class="col-left">Player</th><th>AB</th><th>H</th><th>R</th><th>HR</th><th>RBI</th><th>BB</th><th>SB</th><th>AVG</th></tr></thead><tbody>${hitters}${totalsRow('hitting',owner.totals,10)}</tbody>`;
-  const pitchers=owner.players.filter(p=>p.section==="pitching").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${p.stats.IP}</td><td>${p.stats.W}</td><td>${p.stats.L}</td><td>${p.stats.SV}</td><td>${p.stats.K}</td><td>${p.stats.H}</td><td>${p.stats.BB}</td><td>${p.stats.ER}</td><td>${fmt('ERA',p.stats.ERA)}</td><td>${fmt('WHIP',p.stats.WHIP)}</td></tr>`).join('');
+  const pitchers=owner.players.filter(p=>p.section==="pitching").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${fmt("IP",p.stats.IP)}</td><td>${fmt("W",p.stats.W)}</td><td>${fmt("L",p.stats.L)}</td><td>${fmt("SV",p.stats.SV)}</td><td>${fmt("K",p.stats.K)}</td><td>${fmt("H",p.stats.H)}</td><td>${fmt("BB",p.stats.BB)}</td><td>${fmt("ER",p.stats.ER)}</td><td>${fmt('ERA',p.stats.ERA)}</td><td>${fmt('WHIP',p.stats.WHIP)}</td></tr>`).join('');
   document.querySelector("#pitcher-table").innerHTML=`<thead><tr><th class="col-left">Pos</th><th class="col-left">Player</th><th>IP</th><th>W</th><th>L</th><th>SV</th><th>K</th><th>H</th><th>BB</th><th>ER</th><th>ERA</th><th>WHIP</th></tr></thead><tbody>${pitchers}${totalsRow('pitching',owner.totals,12)}</tbody>`;
 }
 
-function renderStandings(){document.querySelector("#owner-view").hidden=true;document.querySelector("#standings-view").hidden=false;renderDesktop();renderMobile()}
+function renderStandings(){applyLeagueTitle(data.league);setHeaderSubtitle("Standings");document.querySelector("#owner-view").hidden=true;document.querySelector("#standings-view").hidden=false;renderDesktop();renderMobile()}
 function leagueMeta(){
   const start=new Date(data.league.start_date+'T00:00:00'),end=new Date(data.league.end_date+'T00:00:00'),today=new Date();
   const day=86400000,elapsed=Math.max(0,Math.min(Math.floor((today-start)/day),Math.round((end-start)/day)+1)),remaining=Math.max(0,Math.ceil((end-today)/day));
   document.querySelector("#days-elapsed").textContent=elapsed;document.querySelector("#days-remaining").textContent=remaining;
-  document.querySelector("#header-subtitle").textContent=`Standings · ${data.league.start_date} – ${data.league.end_date}`;
   document.querySelector("#as-of").textContent=data.through_date||"No completed games";
   document.querySelector("#status-msg").textContent=`${data.games_counted} MLB games counted${data.through_date?` through ${data.through_date}`:''}`;
 }

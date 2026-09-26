@@ -39,6 +39,11 @@ def aggregate_feeds(feeds: list[dict]) -> dict[int, dict]:
                 player = players.setdefault(player_id, _empty_player(player_id, person.get("fullName", "")))
                 batting = raw.get("stats", {}).get("batting", {})
                 pitching = raw.get("stats", {}).get("pitching", {})
+                # Box scores can omit gamesPlayed on nonempty appearance statistics.
+                batting = dict(batting)
+                pitching = dict(pitching)
+                batting["gamesPlayed"] = int(bool(batting)) if "gamesPlayed" not in batting else batting["gamesPlayed"]
+                pitching["gamesPlayed"] = int(bool(pitching)) if "gamesPlayed" not in pitching else pitching["gamesPlayed"]
                 for field in HITTING_FIELDS:
                     player["hitting"][field] += int(batting.get(field, 0) or 0)
                 for field in PITCHING_FIELDS:

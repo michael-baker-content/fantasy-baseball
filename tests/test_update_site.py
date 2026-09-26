@@ -21,6 +21,22 @@ def test_refreshes_all_views_with_shared_cutoff(tmp_path, monkeypatch):
     assert all("--site" in args and "csv" in args for args, _ in calls[2:])
 
 
+@pytest.mark.parametrize("phase,prepare,expected", [("regular", False, 5), ("postseason", False, 3), ("regular", True, 3)])
+def test_phase_freezes_regular_exports_and_keeps_postseason(tmp_path, monkeypatch, phase, prepare, expected):
+    monkeypatch.setattr(update_site, "ROOT", tmp_path)
+    calls = []
+    monkeypatch.setattr(update_site.subprocess, "run", lambda args, **kwargs: calls.append(args))
+    league = {"phase": phase, "season": 2026, "regular_season_end": "2026-09-27", "game_types": "F,D,L,W"}
+    update_site.refresh_site(date(2026, 10, 2), league, prepare=prepare)
+    assert len(calls) == expected
+    assert calls[-1][2] == "scripts.publish_postseason"
+    assert calls[-1][-1] == "2026-10-02"
+    exports = [call for call in calls if call[2] == "scripts.export_mlb_ytd"]
+    assert len(exports) == (2 if expected == 5 else 0)
+    for call in exports:
+        assert call[call.index("--through") + 1] == "2026-09-27"
+
+
 @pytest.mark.parametrize("existing", [True, False])
 def test_failed_refresh_restores_site_files(tmp_path, monkeypatch, existing):
     monkeypatch.setattr(update_site, "ROOT", tmp_path)

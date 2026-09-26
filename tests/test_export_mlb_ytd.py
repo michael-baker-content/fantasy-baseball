@@ -317,7 +317,7 @@ def test_last_30_cli_publishes_range_and_preserves_ytd(monkeypatch, tmp_path):
     assert [row["id"] for row in ranges] == ["ytd", "last30"]
     assert ranges[1]["start"] == "2026-08-23"
     assert ranges[1]["through"] == "2026-09-21"
-    assert ranges[1]["label"] == "Last 30 days"
+    assert ranges[1]["label"] == "Last 30 Days - Regular Season"
     assert (tmp_path / "data/2026/mlb_pitchers_last30_2026-08-23_through_2026-09-21.csv").exists()
 
 

@@ -12,6 +12,7 @@ from pathlib import Path
 from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds, player_output
 from mlb.scoring import owner_totals, roto_standings, scoring_categories
+from mlb.live_scoring import live_results, appearance_stats
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +27,8 @@ def validate_config(league: dict, roster: list[dict]) -> None:
     if len({name.casefold() for name in owners}) != len(owners):
         raise ValueError("config/league.json: owner names must be unique (ignoring case)")
     scoring_categories(league["categories"])
+    if league.get("phase", "regular") not in {"regular", "postseason"}:
+        raise ValueError("config/league.json: phase must be regular or postseason")
     seen = set()
     for line, row in enumerate(roster, 2):
         if row.get("owner") not in owners:
@@ -75,6 +78,9 @@ def build_roster_rows(roster: list[dict], pool: dict[int, dict]) -> list[dict]:
 def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
     totals = owner_totals(rows, league["owners"])
     standings = roto_standings(totals, scoring_categories(league["categories"]))
+    if league.get("game_types") == "F,D,L,W":
+        totals, standings = live_results(league, rows)
+        rows = [row | {"stats": appearance_stats(row["stats"], row["section"])} for row in rows]
     owners = []
     for owner in league["owners"]:
         owners.append({
@@ -97,9 +103,12 @@ def recalculate_payload(payload: dict, categories: dict) -> dict:
     """Re-score the saved player stats without fetching games or changing dates."""
     rows = [row for owner in payload["owners"] for row in owner["players"]]
     totals = owner_totals(rows, payload["league"]["owners"])
+    standings = roto_standings(totals, scoring_categories(categories))
+    if payload["league"].get("game_types") == "F,D,L,W":
+        totals, standings = live_results(payload["league"] | {"categories": categories}, rows)
     return payload | {
         "league": payload["league"] | {"categories": categories},
-        "standings": roto_standings(totals, scoring_categories(categories)),
+        "standings": standings,
         "owners": [owner | {"totals": totals[owner["name"]]} for owner in payload["owners"]],
     }
 
@@ -138,9 +147,9 @@ def main() -> int:
         print(f"Recalculated {output.relative_to(ROOT)} using saved stats; no MLB data downloaded.")
         return 0
     requested = args.through or date.today().isoformat()
-    through = min(max(requested, league["start_date"]), league["end_date"])
+    through = min(requested, league["end_date"])
     client = MlbStatsClient(ROOT / "data/mlb_cache")
-    schedule = client.schedule(league["start_date"], through, league["game_types"])
+    schedule = client.schedule(league["start_date"], through, league["game_types"]) if through >= league["start_date"] else {"dates": []}
     games = completed_games(schedule)
     print(f"Found {len(games)} completed game(s) from {league['start_date']} through {through}.")
     pool = aggregate_feeds([client.game_feed(game["gamePk"], refresh=args.refresh) for game in games])

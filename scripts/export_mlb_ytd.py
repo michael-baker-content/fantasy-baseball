@@ -334,13 +334,13 @@ def write_site_data(path: Path, hitter_rows: list[dict], pitcher_rows: list[dict
                 for row in rows]
     entry = {"id": range_id, "season": season, "start": start, "through": through,
              "roster_date": roster_date,
-             "label": "Last 30 days" if last_30_days else f"{season} year to date" if range_id == "ytd" else f"{start} – {through}",
+             "label": "Last 30 Days - Regular Season" if last_30_days else f"{season} Regular Season" if range_id == "ytd" else f"{start} – {through}",
              "teams": sorted(PLAYOFF_TEAMS),
              "batters": players(hitter_rows, "batters"), "pitchers": players(pitcher_rows, "pitchers")}
     ranges = [row for row in payload.get("ranges", [])
               if row["season"] == season and row["id"] != range_id]
     ranges.append(entry)
-    ranges.sort(key=lambda row: ({"ytd": 0, "last30": 1}.get(row["id"], 2), row["start"], row["through"]))
+    ranges.sort(key=lambda row: ({"postseason": -1, "ytd": 0, "last30": 1}.get(row["id"], 2), row["start"], row["through"]))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"ranges": ranges}, indent=2), encoding="utf-8")
 

@@ -4,6 +4,7 @@ const teamAbbreviations={"Arizona Diamondbacks":"AZ","Atlanta Braves":"ATL","Bos
 const teamLabel=player=>player.team_abbreviation||teamAbbreviations[player.team]||player.team;
 const states=Object.fromEntries(Object.entries(statsViews).map(([view,details])=>[view,{key:details.source==="batters"?"HR":"K",dir:-1}]));
 let ranges=[],group="batters";
+const rangeSessionKey="player-stats-range";
 let ownership=new Map();
 let sheetPlayers=new Set();
 let sheetPositions={};
@@ -75,7 +76,7 @@ function render(keepPage=false){
   el("player-stats-table").querySelector("caption").textContent=`${view.label} statistics, ${range.start} through ${range.through}`;
 el("player-stats-table").querySelector("thead").innerHTML=`<tr>${keys.map(key=>`<th scope="col" class="${key==="owner"?"stats-owner-cell":supportingColumns.has(key)?"stats-supporting":""}" aria-sort="${state.key===key?(state.dir===1?"ascending":"descending"):"none"}"><button type="button" data-sort="${key}"${key==="position"?' aria-label="Eligible positions"':""}>${key==="name"?"Player":key==="team"?"Team":key==="owner"?"Owner":key==="position"?"Pos.":key}${state.key===key?(state.dir===1?" ▲":" ▼"):""}</button></th>`).join("")}</tr>`;
   el("player-stats-table").querySelector("tbody").innerHTML=rows.slice(0,visibleLimit).map(player=>`<tr><td title="${escapeHtml(player.name)}">${playerNameCell(player,range.roster_date)}</td><td class="stats-position-cell">${escapeHtml(player.position||"—")}</td>${!team?`<td class="stats-team-cell" title="${escapeHtml(player.team)}">${escapeHtml(teamLabel(player))}</td>`:""}<td class="stats-owner-cell">${escapeHtml(player.owner||"Unrostered")}</td>${columns[view.source].map(key=>`<td class="${supportingColumns.has(key)?"stats-supporting":""}">${format(key,player.stats[key])}</td>`).join("")}</tr>`).join("");
-  el("stats-dates").textContent=`Statistics: ${range.start} through ${range.through} (inclusive). Current organizations as of ${range.roster_date}.`;
+  el("stats-dates").textContent=range.id==="postseason"?`Postseason starts ${range.start}. Completed games checked through ${range.through}. Player pool and roster status snapshot: ${range.roster_date}.`:`Statistics: ${range.start} through ${range.through} (inclusive). Current organizations as of ${range.roster_date}.`;
   const qualification=view.source==="batters"?(minAB?` · Minimum ${minAB} AB`:""):(minIP?` · Minimum ${minIP} IP`:"");
   el("stats-count").textContent=`Showing ${Math.min(visibleLimit,rows.length)} of ${rows.length} matching ${view.label} players${ownerStatus?` · ${el("stats-owner").selectedOptions[0].textContent}`:""}${position?` · Position: ${position}`:""}${qualification}`;
   el("stats-show-more").hidden=visibleLimit>=rows.length;
@@ -118,7 +119,11 @@ el("player-stats-table").addEventListener("click",event=>{
   state.dir=state.key===key?-state.dir:["name","team","position","owner","L","ERA","WHIP"].includes(key)?1:-1;
   state.key=key;render();el("player-stats-table").querySelector(`button[data-sort="${key}"]`).focus({preventScroll:true});
 });
-el("stats-range").addEventListener("change",selectRange);
+el("stats-range").addEventListener("change",()=>{
+  const range=ranges[Number(el("stats-range").value)];
+  try{sessionStorage.setItem(rangeSessionKey,range.id)}catch{}
+  selectRange();
+});
 el("stats-team").addEventListener("change",render);
 el("stats-owner").addEventListener("change",render);
 el("stats-sheet").addEventListener("change",render);
@@ -146,13 +151,20 @@ Promise.all([fetch("data/player-stats.json",{cache:"no-store"}).then(response=>{
   if(!response.ok)throw new Error("Sheet selections could not be loaded. Publish the Sheet data and reload.");
   return response.json();
 })]).then(([payload,league,sheet])=>{
+  applyLeagueTitle(league.league,"Player Stats");
   if(!Array.isArray(sheet.player_ids))throw new Error("Sheet selections are invalid.");
   sheetPlayers=new Set(sheet.player_ids.map(String));
   sheetPositions=sheet.positions||{};
   if(!Array.isArray(payload.ranges)||!payload.ranges.length)throw new Error("Player statistics have not been published yet.");
-  ranges=payload.ranges;
+  ranges=[...payload.ranges].sort((a,b)=>(a.id==="postseason"?-1:0)-(b.id==="postseason"?-1:0));
   ownership=statsOwnership(league);
   el("stats-owner").replaceChildren(new Option("All Players",""),new Option("Rostered Players","rostered"),...league.owners.map(owner=>new Option(owner.name,`owner:${owner.name}`)));
   el("stats-range").replaceChildren(...ranges.map((range,index)=>new Option(range.label,index)));
+  // Store the stable range ID so refreshes and reordered ranges preserve the choice.
+  try{
+    const saved=sessionStorage.getItem(rangeSessionKey);
+    const index=ranges.findIndex(range=>range.id===saved);
+    if(index>=0)el("stats-range").value=String(index);
+  }catch{}
   el("stats-status").textContent="";el("stats-content").hidden=false;selectRange();
 }).catch(error=>{el("stats-content").hidden=true;el("stats-status").textContent=error.message});
