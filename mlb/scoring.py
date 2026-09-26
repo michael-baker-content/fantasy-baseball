@@ -30,10 +30,14 @@ def scoring_categories(categories: dict) -> tuple[tuple[str, bool], ...]:
     return tuple((category, category in LOWER_IS_BETTER) for category in selected)
 
 
-def owner_totals(rows: list[dict]) -> dict[str, dict]:
-    owners: dict[str, dict] = {}
+def owner_totals(rows: list[dict], owner_names=None) -> dict[str, dict]:
+    def empty_totals():
+        return {key: 0 for key in (*COUNTING_HITTING, *COUNTING_PITCHING,
+                                  "H", "AB", "P_H", "P_BB", "P_ER", "P_OUTS")}
+
+    owners = {name: empty_totals() for name in (owner_names or [])}
     for row in rows:
-        total = owners.setdefault(row["owner"], {key: 0 for key in (*COUNTING_HITTING, *COUNTING_PITCHING)})
+        total = owners.setdefault(row["owner"], empty_totals())
         stats = row["stats"]
         if row["section"] == "hitting":
             for key in COUNTING_HITTING:

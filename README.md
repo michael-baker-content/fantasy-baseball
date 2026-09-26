@@ -1,6 +1,6 @@
 # BABBD Roto
 
-A static fantasy baseball tracker for an eight-owner rotisserie league. The site
+A static fantasy baseball tracker for a configurable rotisserie league. The site
 runs on GitHub Pages; a local Python command downloads completed MLB games and
 regenerates the public standings data.
 
@@ -11,7 +11,7 @@ regenerates the public standings data.
 - Hitting: R, HR, RBI, SB, BB, AVG
 - Pitching: W, L, SV, K, ERA, WHIP
 - Scoring format: cumulative 6×6; lower L, ERA, and WHIP are better
-- Scoring: 8 points for first through 1 point for last; ties split points. The scoring scale adjusts automatically to the number of owners with roster totals.
+- Scoring: N points for first through 1 point for last, where N is the configured owner count; ties split points. All configured owners are included, even with an empty roster.
 
 League standings count each drafted player's statistics regardless of their
 current MLB organization. These rosters are independent of the separate player
@@ -158,6 +158,31 @@ Preview locally from the repository root:
 Then open `http://localhost:8000` and press `Ctrl+C` when finished.
 
 ## League configuration
+
+### Adapting the owner pool
+
+1. Add, remove, or rename owners in the `owners` list in `config/league.json`.
+2. Update the matching `owner` values and players in `config/roster.csv`.
+   Names must match exactly. Each row needs owner, section (`hitting` or
+   `pitching`), slot, a positive MLB player_id, and player_name.
+3. Check the configuration without network access or file changes:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.refresh --check-config
+```
+
+4. Run `.\update.cmd`, preview the results, then commit and push.
+
+No code edits are required to change owner count or roster size. Standings,
+points, owner pages, and the Owner Status filter follow the published owner list.
+Empty rosters and rosters with only hitters or only pitchers are supported;
+unfilled statistics are zero, and zero-out pitching rates rank below rates with
+recorded outs. Empty owners still count toward the scoring scale. There is no
+enforced 17-player roster limit. Owner names must be nonempty and unique ignoring
+case. Unknown roster owners, invalid sections/IDs, and duplicate entries within
+one owner's hitting or pitching section are rejected before MLB downloads.
+Cross-owner sharing and separate hitting/pitching entries for a two-way player
+remain allowed. Historical 2025 fixtures keep their original league size.
 
 - `config/league.json`: dates, categories, name, and owners
 - `config/roster.csv`: owner, section, roster slot, MLB ID, and player name
@@ -318,7 +343,7 @@ the other player type. Filters use one column below 500px and two at 500px and
 above. At 500px and above, Sheet Players Only sits beside the visible minimum,
 aligned to the top; below 500px it has its own row.
 
-**Owner Status** offers All Players, Rostered Players, and each of the eight
+**Owner Status** offers All Players, Rostered Players, and each of the configured
 owners, matched by MLB ID against `docs/data/league.json`. The sortable Owner
 column shows Unrostered when there is no match and is hidden at 640px and below.
 These are the same test rosters used on Standings, but this page still limits
