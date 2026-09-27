@@ -6,8 +6,16 @@ __pycache__/
 *.xlsx
 *.csv
 *.json
-!data/2025/*.json
-!data/2025/*.csv
+# Personal league archive and its standalone reproduction tools.
+/data/2025/
+/config/mlb_roster_2025.py
+/scripts/reproduce_2025.py
+
+# Local assistant preferences and workspace settings.
+/AGENTS.md
+/.codex/
+/.agents/
+
 !config/league.json
 !config/roster.csv
 !config/sheet-players.csv

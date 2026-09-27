@@ -100,10 +100,10 @@ test('primary DH and missing positions are excluded from fielding tabs', () => {
     assert.equal(eligible(player(position), 'batters'), true);
     for (const view of ['if', 'of']) assert.equal(eligible(player(position), view), false);
   }
-  assert.equal(eligible(player(''), 'pitchers'), true);
+  assert.equal(eligible(player(''), 'pitchers'), false);
 });
-test('SP requires at least two starts regardless of position label', () => {
-  for (const position of ['P', 'SP', 'RP', 'TWP', '']) {
+test('SP requires at least two starts for a pitching position', () => {
+  for (const position of ['P', 'SP', 'RP', 'TWP']) {
     for (const starts of [0, 1, '1', '', undefined]) {
       assert.equal(eligible(player(position, 0, starts), 'sp'), false);
     }
@@ -143,15 +143,22 @@ test('missing starts are not silently treated as zero starts', () => {
   }
 });
 
-test('RP excludes incidental position-player pitching but retains designated two-way players', () => {
+test('all pitching views exclude incidental pitching but retain designated two-way players', () => {
   for (const position of ['C','1B','2B','3B','SS','LF','CF','RF','OF','DH','']) {
     for (const saves of [0, 2]) {
       const row = player(position, saves, 0);
       assert.equal(eligible(row, 'rp'), false);
       assert.equal(matches(row, 'RP'), false);
-      assert.equal(eligible(row, 'pitchers'), true);
+      assert.equal(eligible(row, 'pitchers'), false);
+      assert.equal(eligible({...row,stats:{GS:3,SV:saves}}, 'sp'), false);
     }
   }
   assert.equal(eligible(player('TWP', 0, 0), 'rp'), true);
   assert.equal(eligible(player('TWP', 0, 3), 'rp'), false);
+  assert.equal(eligible(player('TWP'), 'pitchers'), true);
+  const hitter = forSource({id:1,...player('P')}, 'pitchers', {'1':['1B','3B']});
+  for(const view of ['pitchers','sp','rp'])assert.equal(eligible(hitter,view),false);
+  const twoWay = forSource({id:660271,...player('TWP')}, 'pitchers', {'660271':['DH','SP']});
+  assert.equal(eligible(twoWay,'pitchers'),true);
+  assert.equal(eligible(twoWay,'sp'),true);
 });

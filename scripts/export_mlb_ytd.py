@@ -16,10 +16,10 @@ BASE_URL = "https://statsapi.mlb.com/api/v1"
 ROOT = Path(__file__).resolve().parents[1]
 
 PLAYOFF_TEAMS = {
-    "Arizona Diamondbacks", "Atlanta Braves", "Boston Red Sox", "Chicago Cubs",
+    "Atlanta Braves", "Boston Red Sox", "Chicago Cubs",
     "Chicago White Sox", "Cleveland Guardians", "Houston Astros",
     "Los Angeles Dodgers", "Milwaukee Brewers", "New York Yankees",
-    "Philadelphia Phillies", "San Diego Padres", "Tampa Bay Rays", "Texas Rangers",
+    "Philadelphia Phillies", "San Diego Padres", "Tampa Bay Rays",
 }
 
 BIO_FIELDS = [
@@ -83,33 +83,119 @@ def season_splits(group: str, season: int, through: str, start: str | None = Non
     return payload["stats"][0]["splits"]
 
 
+def excluded_status(status: dict) -> bool:
+    return status.get("code", "").upper() in {"RL", "FA"} or any(
+        word in status.get("description", "").lower()
+        for word in ("released", "free agent", "free agency")
+    )
+
+
+def current_team_roster_status(person: dict, as_of: str) -> dict | None:
+    """Use dated status for currentTeam, including a release left on the profile.
+
+    Do not reject a player for a release from a different club or an older stint.
+    isActive is not required: injured and optioned players remain eligible.
+    """
+    team_id = (person.get("currentTeam") or {}).get("id")
+    entries = [entry for entry in person.get("rosterEntries", [])
+               if team_id and entry.get("team", {}).get("id") == team_id
+               and (entry.get("startDate") or "")[:10] <= as_of
+               and (entry.get("statusDate") or "")[:10] <= as_of]
+    if not entries:
+        return None
+    latest = max(entries, key=lambda entry: (
+        max((entry.get("startDate") or "")[:10], (entry.get("statusDate") or "")[:10]),
+        (entry.get("startDate") or "")[:10],
+    ))
+    status = latest.get("status") or {}
+    if excluded_status(status):
+        return status
+    if latest.get("endDate") and latest["endDate"][:10] < as_of:
+        return None
+    return status or None
+
+
 def current_affiliations(as_of: str, season: int, selected_teams: set[str]) -> tuple[dict[int, dict], dict[int, dict]]:
     teams = api_get("/teams", {"sportId": 1, "season": season})["teams"]
     available = {team["name"] for team in teams}
     unknown = selected_teams - available
     if unknown:
         raise ValueError(f"Unknown MLB team name(s): {', '.join(sorted(unknown))}")
+    mlb_ids = {team["id"] for team in teams}
     teams = [team for team in teams if team["name"] in selected_teams]
     organizations = {team["id"]: team for team in teams}
-    affiliations: dict[int, dict] = {}
+    candidates: dict[int, dict[int, dict]] = {}
     for team in teams:
         roster = api_get(f"/teams/{team['id']}/roster", {
             "rosterType": "fullRoster", "date": as_of,
         }).get("roster", [])
         for entry in roster:
             player_id = entry.get("person", {}).get("id")
-            status_code = entry.get("status", {}).get("code", "")
-            status = entry.get("status", {}).get("description", "")
-            excluded = status_code.upper() in {"RL", "FA"} or any(
-                word in status.lower() for word in ("released", "free agent", "free agency")
-            )
-            if player_id and not excluded:
-                affiliations[player_id] = {
-                    "organization_id": team["id"],
-                    "organization_name": team["name"],
-                    "status_code": status_code,
-                    "status": status,
+            if player_id:
+                candidates.setdefault(player_id, {})[team["id"]] = entry.get("status", {})
+    # fullRoster is a candidate list, not proof of current affiliation. A traded
+    # player can remain on an old team's list with an Active status.
+    people = people_details(set(candidates))
+    affiliations: dict[int, dict] = {}
+    parent_ids = {}
+    current_rosters = {}
+    for player_id, roster_statuses in candidates.items():
+        if player_id not in people:
+            raise ValueError(f"Missing current affiliation response for MLB ID {player_id}")
+        person = people[player_id]
+        current = person.get("currentTeam") or {}
+        team_id = current.get("id")
+        dated_status = current_team_roster_status(person, as_of)
+        if excluded_status(dated_status or person.get("rosterStatus") or {}):
+            continue
+        if not team_id:
+            if all(excluded_status(status) for status in roster_statuses.values()):
+                continue
+            raise ValueError(f"Cannot verify current team for MLB ID {player_id}; no files published")
+        if team_id in mlb_ids:
+            organization_id = team_id
+        else:
+            # Optioned players may report a minor-league affiliate as currentTeam.
+            organization_id = current.get("parentOrgId")
+            if not organization_id:
+                if team_id not in parent_ids:
+                    details = api_get(f"/teams/{team_id}", {"season": season})["teams"]
+                    parent_ids[team_id] = next((row.get("parentOrgId") for row in details
+                                              if row["id"] == team_id), None)
+                organization_id = parent_ids[team_id]
+            if not organization_id:
+                raise ValueError(f"Cannot resolve parent organization for team {team_id}")
+        if organization_id not in organizations:
+            continue
+        status = dated_status or roster_statuses.get(organization_id)
+        if status is None:
+            # Organization-wide lists can lag an acquisition or omit affiliate
+            # assignments. Check the independently identified current team.
+            if team_id not in current_rosters:
+                entries = api_get(f"/teams/{team_id}/roster", {
+                    "rosterType": "40Man" if team_id in mlb_ids else "fullRoster",
+                    "date": as_of,
+                }).get("roster", [])
+                current_rosters[team_id] = {
+                    entry["person"]["id"]: entry.get("status", {}) for entry in entries
+                    if entry.get("person", {}).get("id")
                 }
+            status = current_rosters[team_id].get(player_id)
+            if status is None:
+                status = person.get("rosterStatus")
+            if not status:
+                raise ValueError(
+                    f"Cannot verify roster status for MLB ID {player_id} at current team {team_id} "
+                    f"(organization {organization_id}); full and current-team rosters disagree"
+                )
+        if excluded_status(status):
+            continue
+        affiliations[player_id] = {
+            "organization_id": organization_id,
+            "organization_name": organizations[organization_id]["name"],
+            "status_code": status.get("code", ""),
+            "status": status.get("description", ""),
+        }
     return affiliations, organizations
 
 
@@ -119,7 +205,7 @@ def people_details(player_ids: set[int]) -> dict[int, dict]:
     for start in range(0, len(ids), 50):
         payload = api_get("/people", {
             "personIds": ",".join(map(str, ids[start:start + 50])),
-            "hydrate": "education",
+            "hydrate": "education,currentTeam,rosterEntries",
         })
         people.update({person["id"]: person for person in payload.get("people", [])})
     return people

@@ -94,6 +94,7 @@ def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "through_date": latest_game_date,
         "games_counted": len(games),
+        "included_game_ids": sorted({game["gamePk"] for game in games}),
         "standings": standings,
         "owners": owners,
     }

@@ -34,6 +34,7 @@ def main():
     games = completed_games(client.schedule(league["start_date"], through, "F,D,L,W")) if through >= league["start_date"] else []
     pool = aggregate_feeds([client.game_feed(game["gamePk"]) for game in games])
     entry = postseason_range(payload, league, pool, through)
+    entry["included_game_ids"] = sorted({game["gamePk"] for game in games})
     payload["ranges"] = [entry] + [row for row in payload["ranges"] if row["id"] != "postseason"]
     for row in payload["ranges"]:
         if row["id"] == "last30":

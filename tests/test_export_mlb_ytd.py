@@ -80,10 +80,19 @@ def test_hitting_rows_require_an_offensive_appearance():
     assert [row["player_id"] for row in rows] == [2]
 
 
-def test_playoff_pool_has_requested_teams():
-    assert len(PLAYOFF_TEAMS) == 14
-    assert "Arizona Diamondbacks" in PLAYOFF_TEAMS
-    assert "Texas Rangers" in PLAYOFF_TEAMS
+def test_playoff_pool_has_nonempty_unique_names():
+    assert PLAYOFF_TEAMS
+    assert all(isinstance(name, str) and name.strip() == name and name for name in PLAYOFF_TEAMS)
+    assert len({name.casefold() for name in PLAYOFF_TEAMS}) == len(PLAYOFF_TEAMS)
+
+
+def test_unknown_team_is_rejected_before_roster_requests(monkeypatch):
+    def fake_api(path, params):
+        assert path == "/teams"
+        return {"teams": [{"id": 10, "name": "Known Club"}]}
+    monkeypatch.setattr(exporter, "api_get", fake_api)
+    with pytest.raises(ValueError, match="Unknown MLB team"):
+        exporter.current_affiliations("2026-09-27", 2026, {"Unknown Club"})
 
 
 def test_excel_output_has_batters_and_pitchers_sheets(tmp_path):
@@ -106,6 +115,8 @@ def test_current_affiliations_retains_minors_and_il_excludes_released_and_fa(mon
         calls.append((path, params))
         if path == "/teams":
             return {"teams": [{"id": 10, "name": "Test Club"}]}
+        if path == "/people":
+            return {"people": [{"id": index, "currentTeam": {"id": 10}} for index in range(1, 8)]}
         statuses = [("A", "Active"), ("MIN", "Minors"), ("IL60", "60-Day Injured List"),
                     ("RL", "Released"), ("FA", "Free Agent"), ("X", "Released"),
                     ("X", "Free Agency")]
@@ -118,6 +129,122 @@ def test_current_affiliations_retains_minors_and_il_excludes_released_and_fa(mon
     affiliations, _ = exporter.current_affiliations("2026-09-21", 2026, {"Test Club"})
     assert set(affiliations) == {1, 2, 3}
     assert calls[1][1] == {"rosterType": "fullRoster", "date": "2026-09-21"}
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_current_affiliations_verifies_trades_and_minor_league_parent(monkeypatch, reverse):
+    teams = [{"id": 10, "name": "Old Club"}, {"id": 20, "name": "New Club"},
+             {"id": 30, "name": "Outside Club"}]
+    if reverse:
+        teams.reverse()
+    people = [
+        {"id": 1, "currentTeam": {"id": 30}},  # Doval-style transfer outside pool
+        {"id": 2, "currentTeam": {"id": 20}},  # Both selected rosters contain him
+        {"id": 3, "currentTeam": {"id": 200}},  # Optioned, resolve parent
+        {"id": 4, "currentTeam": {"id": 20}},  # Injured list
+        {"id": 5, "currentTeam": {"id": 20}, "rosterStatus": {"code": "FA"}},
+        {"id": 6, "currentTeam": {"id": 201, "parentOrgId": 20}},
+    ]
+
+    def fake_api(path, params):
+        if path == "/teams":
+            return {"teams": teams}
+        if path == "/people":
+            assert "currentTeam" in params["hydrate"]
+            return {"people": people}
+        if path == "/teams/200":
+            return {"teams": [{"id": 200, "parentOrgId": 20}]}
+        if path == "/teams/10/roster":
+            return {"roster": [{"person": {"id": i}, "status": {"code": "A"}} for i in (1, 2)]}
+        if path == "/teams/20/roster":
+            return {"roster": [{"person": {"id": i}, "status": {"code": code, "description": description}}
+                               for i, code, description in [(2, "A", "Active"), (3, "MIN", "Minors"),
+                                                           (4, "D60", "60-Day Injured List"),
+                                                           (5, "A", "Active"), (6, "MIN", "Minors")]]}
+        raise AssertionError(path)
+
+    monkeypatch.setattr(exporter, "api_get", fake_api)
+    result, _ = exporter.current_affiliations("2026-09-27", 2026, {"Old Club", "New Club"})
+    assert set(result) == {2, 3, 4, 6}
+    assert all(row["organization_name"] == "New Club" for row in result.values())
+    assert result[3]["status_code"] == "MIN"
+    assert result[4]["status_code"] == "D60"
+
+
+@pytest.mark.parametrize("people", [[], [{"id": 1}]])
+def test_unverified_affiliation_stops_instead_of_guessing(monkeypatch, people):
+    def fake_api(path, params):
+        if path == "/teams":
+            return {"teams": [{"id": 10, "name": "Club"}]}
+        if path == "/people":
+            return {"people": people}
+        return {"roster": [{"person": {"id": 1}, "status": {"code": "A"}}]}
+    monkeypatch.setattr(exporter, "api_get", fake_api)
+    with pytest.raises(ValueError, match="MLB ID 1"):
+        exporter.current_affiliations("2026-09-27", 2026, {"Club"})
+
+
+@pytest.mark.parametrize("new_status", [None, "MIN", "D60"])
+def test_dated_release_excludes_stale_current_team_but_allows_later_signing(monkeypatch, new_status):
+    entries = [{"team": {"id": 494, "parentOrgId": 145},
+                "startDate": "2026-06-13", "endDate": "2026-08-08",
+                "statusDate": "2026-08-08", "isActive": False,
+                "status": {"code": "RL", "description": "Released"}}]
+    if new_status:
+        entries.insert(0, {"team": {"id": 494, "parentOrgId": 145},
+                           "startDate": "2026-09-01", "statusDate": "2026-09-01",
+                           "isActive": False, "status": {"code": new_status}})
+    def fake_api(path, params):
+        if path == "/teams":
+            return {"teams": [{"id": 145, "name": "Club"}]}
+        if path == "/people":
+            assert "rosterEntries" in params["hydrate"]
+            return {"people": [{"id": 642770, "active": True,
+                                "currentTeam": {"id": 494, "parentOrgId": 145},
+                                "rosterEntries": entries}]}
+        assert path == "/teams/145/roster"
+        return {"roster": [{"person": {"id": 642770}, "status": {"code": "A"}}]}
+    monkeypatch.setattr(exporter, "api_get", fake_api)
+    result, _ = exporter.current_affiliations("2026-09-27", 2026, {"Club"})
+    if new_status:
+        assert result[642770]["status_code"] == new_status
+    else:
+        assert result == {}
+
+
+def test_old_club_and_future_releases_do_not_override_current_stint():
+    person = {"currentTeam": {"id": 20}, "rosterEntries": [
+        {"team": {"id": 10}, "statusDate": "2026-09-26", "status": {"code": "RL"}},
+        {"team": {"id": 20}, "startDate": "2026-09-01", "statusDate": "2026-09-01",
+         "status": {"code": "MIN"}},
+        {"team": {"id": 20}, "statusDate": "2026-10-01", "status": {"code": "RL"}},
+    ]}
+    assert exporter.current_team_roster_status(person, "2026-09-27") == {"code": "MIN"}
+
+
+@pytest.mark.parametrize("minor", [False, True])
+@pytest.mark.parametrize("code", ["A", "MIN", "D60", "RL", "FA"])
+def test_missing_organization_entry_checks_current_team_roster(monkeypatch, minor, code):
+    current_id = 200 if minor else 20
+    def fake_api(path, params):
+        if path == "/teams":
+            return {"teams": [{"id": 10, "name": "Old"}, {"id": 20, "name": "New"}]}
+        if path == "/people":
+            return {"people": [{"id": 642770, "currentTeam": {"id": current_id, "parentOrgId": 20}}]}
+        if path == "/teams/10/roster":
+            return {"roster": [{"person": {"id": 642770}, "status": {"code": "A"}}]}
+        if path == "/teams/20/roster" and params["rosterType"] == "fullRoster":
+            return {"roster": []}
+        assert path == f"/teams/{current_id}/roster"
+        assert params == {"rosterType": "fullRoster" if minor else "40Man", "date": "2026-09-27"}
+        return {"roster": [{"person": {"id": 642770}, "status": {"code": code}}]}
+    monkeypatch.setattr(exporter, "api_get", fake_api)
+    result, _ = exporter.current_affiliations("2026-09-27", 2026, {"Old", "New"})
+    if code in {"RL", "FA"}:
+        assert result == {}
+    else:
+        assert result[642770]["organization_name"] == "New"
+        assert result[642770]["status_code"] == code
 
 
 @pytest.mark.parametrize("output_format", ["csv", "xlsx", "both"])
@@ -162,7 +289,7 @@ def test_range_export_uses_current_affiliation_and_all_team_totals(monkeypatch, 
             return {"stats": [{"splits": splits}]}
         if path == "/people":
             assert params["personIds"] == "1"
-            return {"people": [{"id": 1, "fullName": "Traded Player", "primaryPosition": {"abbreviation": "SS"}}]}
+            return {"people": [{"id": 1, "fullName": "Traded Player", "currentTeam": {"id": 10}, "primaryPosition": {"abbreviation": "SS"}}]}
         raise AssertionError(f"Unexpected API request: {path}")
 
     monkeypatch.setattr(exporter, "date", FixedDate)

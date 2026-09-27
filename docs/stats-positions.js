@@ -36,6 +36,8 @@ const statsViews={
 };
 function eligibleForStatsView(player,view){
   const position=String(player.position||"").trim().toUpperCase();
+  const assigned=Array.isArray(player.positions)?player.positions:[position];
+  if(["pitchers","sp","rp"].includes(view)&&!assigned.some(p=>["P","SP","RP","TWP"].includes(p)))return false;
   const rawStarts=player.stats?.GS;
   const starts=rawStarts===undefined||rawStarts===null||rawStarts===""?NaN:Number(rawStarts);
   if(Array.isArray(player.positions)){

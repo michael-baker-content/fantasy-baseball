@@ -33,11 +33,15 @@ class MlbStatsClient:
             "gameTypes": game_types,
         })
 
+    def live_game_feed(self, game_pk: int) -> dict:
+        """Fetch the current feed without reading or writing the final-game cache."""
+        return self._get(f"/v1.1/game/{game_pk}/feed/live")
+
     def game_feed(self, game_pk: int, refresh: bool = False) -> dict:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         path = self.cache_dir / f"{game_pk}.json"
         if path.exists() and not refresh:
             return json.loads(path.read_text(encoding="utf-8"))
-        data = self._get(f"/v1.1/game/{game_pk}/feed/live")
+        data = self.live_game_feed(game_pk)
         path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
         return data

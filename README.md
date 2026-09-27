@@ -105,6 +105,11 @@ the selected organizations, including optioned and injured-list players.
 Released players and free agents are excluded. Statistics include games played
 for previous teams, even teams outside the chosen pool.
 
+The exporter verifies roster candidates against each player's current team and
+maps minor-league affiliates to their MLB parent organization. An old team's
+roster entry alone cannot establish membership. Unresolved affiliations stop
+the export rather than publishing guessed assignments.
+
 ### 5. Prepare your player review sheet
 
 `config/sheet-players.csv` holds optional draft-sheet selections and manual
@@ -227,6 +232,43 @@ Unavailable categories receive no points. Equal total scores share a rank.
 Empty owners still count toward N. These appearance rules apply to the
 postseason configuration; historical regular-season scoring is unchanged.
 
+## Check one game's status
+
+Run `.\check-game.cmd 123456`, replacing `123456` with the MLB game ID
+(`gamePk`). It requests the latest feed without changing website data, Sheet
+selections, or cached game feeds. It reports whether MLB marks the game final
+and whether batting and pitching box scores are present for both teams.
+This does not verify that regular-season date-range totals have updated, or
+that later official scoring corrections are impossible.
+
+For postseason games, the same command also checks whether the game was included
+in the local Standings/owner totals and Postseason Player Stats. Updates now save
+the IDs used in each calculation. Older snapshots report Unknown until refreshed.
+Inclusion applies to eligible players in each pool, not every MLB player. This
+checks local files, not the deployed website or subsequent scoring corrections.
+Postseason totals are calculated directly from completed box scores; they do not
+wait for the regular-season date-range endpoint.
+
+The equivalent Python command is
+`.\.venv\Scripts\python.exe -m scripts.check_game 123456`.
+
+To check whether regular-season daily totals match the box scores, run:
+
+```powershell
+.\check-game.cmd 123456 --verify-totals
+```
+
+This uses the exporter's date-range endpoint for the game's official date and
+compares hitting AB, H, R, HR, RBI, SB, BB and pitching outs, H, ER, BB, K.
+It reports **Daily totals match**, **Totals not yet matching**, or **Unable to
+verify**. Doubleheaders are combined; another unfinished game for either team
+on that date prevents verification. Missing fields or ambiguous totals also
+prevent verification. W/L/SV and every other statistic are not checked.
+Matching confirms the checked daily values, not that every season-long query
+or the saved website has updated. No files or game caches are changed.
+For postseason games this option is not applicable; the normal local inclusion
+check still runs because postseason calculations use box scores directly.
+
 ## Change your league later
 
 Edit the league name, dates, categories, or owner list in `config/league.json`.
@@ -278,6 +320,13 @@ players, and saves a `.csv.bak` backup. Daily updates never regenerate this CSV,
 run selection estimates, or overwrite manual eligibility. They only publish its
 current contents.
 
+After a roster refresh, finish and save any spreadsheet edits before running
+`.\sheet.cmd`. It removes players absent from the refreshed YTD pool, updates
+team labels, preserves retained players' choices and positions by MLB ID, and
+adds new players with Sheet=No. Reopen or reimport that generated CSV before
+continuing spreadsheet edits, so an older spreadsheet does not restore removed
+rows. The backup contains the previous local CSV, including departed players.
+
 Publish Sheet edits without downloading statistics:
 
 ```powershell
@@ -322,8 +371,9 @@ tabs directly. Generic P/TWP assignments use starts and saves in the selected
 range: SP requires at least two starts; RP includes pitchers with at least two
 saves or fewer than two starts. The same thresholds apply to the original
 pitching fallback. Pitchers can qualify for both. Missing starts data does not
-imply zero starts. Incidental pitching by position players is excluded from RP
-but remains in the complete Pitchers list.
+imply zero starts. All pitching views exclude incidental pitching by position
+players. Pitchers, SP, and RP require a P, SP, RP, or TWP designation, using
+manual Sheet positions when present and the source position otherwise.
 
 IF includes C, 1B, 2B, 3B, and SS. OF includes LF, CF, RF, and generic OF;
 generic OF does not grant a specific outfield position. Primary DH-only players
@@ -389,13 +439,14 @@ you intend to replace them.
 | `mlb/` | Shared API, statistics, and scoring code. |
 | `docs/` | The static website served by GitHub Pages. |
 | `docs/data/` | Generated website JSON; commit these files to publish updates. |
-| `data/` | Local exports, cached MLB feeds, and historical fixtures. |
+| `data/` | Local exports and cached MLB feeds. |
 | `tests/` | Automated Python and JavaScript checks. |
 
 Run Python entry points from the project folder with `-m scripts.NAME`.
 The Windows shortcuts use the project's `.venv` environment. Downloaded
 exports, MLB caches, spreadsheet references, virtual environments, and review
-backups are ignored by Git. The authoritative Sheet CSV and generated website
+backups are ignored by Git, as are personal archives and local assistant settings.
+The authoritative Sheet CSV and generated website
 JSON are tracked.
 
 ## Tests and checks
