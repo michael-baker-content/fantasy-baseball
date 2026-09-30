@@ -162,6 +162,45 @@ preview, commit, and push to publish the new results.
 
 ## Update statistics during the season
 
+### Optional automatic postseason updates
+
+The **Update postseason statistics** GitHub Actions workflow checks every half
+hour from 1:00 p.m. through 11:30 p.m. in `America/Los_Angeles`. GitHub can delay
+scheduled jobs. Games finishing later are picked up at the next scheduled check;
+use **Actions → Update postseason statistics → Run workflow** for an earlier check.
+
+To enable it after pushing the workflow and scripts to your default branch:
+
+1. Set **Settings → Pages → Source** to **GitHub Actions**.
+2. Allow GitHub Actions in repository settings. Repository rules must allow the
+   workflow's token to push generated data to the default branch.
+3. Set `phase` to `postseason` and confirm the configured season dates and saved
+   regular-season player pool. Push those settings before running the workflow.
+4. Run the workflow manually once and inspect its log and deployment result.
+
+The workflow compares completed game IDs with both saved snapshots. It stops
+without a commit or deployment when there are no new games. At 1 p.m., and on
+manual runs, it also retrieves fresh completed box scores to detect corrections.
+It rebuilds both snapshots from the same feeds, keeping regular-season ranges,
+fantasy roster configuration, and Sheet files unchanged. Timestamp-only changes
+do not trigger publication. A new included game is recorded even if none of its
+players contribute to a fantasy roster.
+
+When data changes, the bot commits only `docs/data/league.json` and
+`docs/data/player-stats.json`, then explicitly deploys `docs/` to Pages. You do
+not need to push daily statistics yourself. Pull those bot commits before making
+local updates. No personal access token is needed. A rejected push stops deployment;
+the workflow never force-pushes. If deployment fails after a successful data commit,
+use **Re-run all jobs** on that failed run to retry publication.
+
+Updates are limited to the configured postseason window plus one extra day for
+late final games/corrections. Outside that window the job exits without MLB
+requests. Disable the workflow from its Actions menu when it is no longer needed.
+Only the default branch runs this workflow. Website code changes without data
+changes do not trigger deployment here; this workflow is for statistics updates.
+
+### Local updates
+
 Run this from the project folder:
 
 ```powershell
