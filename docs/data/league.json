@@ -36,7 +36,7 @@
       "Tim"
     ]
   },
-  "updated_at": "2026-09-30T05:19:23.273597+00:00",
+  "updated_at": "2026-09-30T06:44:32.533907+00:00",
   "through_date": "2026-09-29",
   "games_counted": 4,
   "included_game_ids": [
@@ -76,14 +76,14 @@
         "SB": 8.0,
         "BB": 8.0,
         "AVG": 5.0,
-        "W": 4.0,
-        "L": 6.0,
-        "SV": 4.5,
+        "W": 4.5,
+        "L": 6.5,
+        "SV": 5.0,
         "K": 5.0,
-        "ERA": 5.0,
-        "WHIP": 5.0
+        "ERA": 6.0,
+        "WHIP": 6.0
       },
-      "total_score": 73.0,
+      "total_score": 76.5,
       "place": 1
     },
     {
@@ -117,54 +117,14 @@
         "BB": 2.0,
         "AVG": 7.0,
         "W": 7.5,
-        "L": 6.0,
+        "L": 6.5,
         "SV": 8.0,
         "K": 6.0,
-        "ERA": 7.0,
-        "WHIP": 7.0
-      },
-      "total_score": 69.5,
-      "place": 2
-    },
-    {
-      "owner": "Reed",
-      "stats": {
-        "R": 2,
-        "HR": 2,
-        "RBI": 6,
-        "SB": 0,
-        "BB": 0,
-        "W": 0,
-        "L": 0,
-        "SV": 0,
-        "K": 0,
-        "H": 7,
-        "AB": 23,
-        "P_H": 1,
-        "P_BB": 0,
-        "P_ER": 0,
-        "P_OUTS": 5,
-        "AVG": 0.30434782608695654,
-        "ERA": 0.0,
-        "WHIP": 0.6,
-        "IP": "1.2"
-      },
-      "category_points": {
-        "R": 4.5,
-        "HR": 7.5,
-        "RBI": 8.0,
-        "SB": 4.0,
-        "BB": 2.0,
-        "AVG": 6.0,
-        "W": 4.0,
-        "L": 6.0,
-        "SV": 4.5,
-        "K": 2.0,
-        "ERA": 7.0,
+        "ERA": 7.5,
         "WHIP": 8.0
       },
-      "total_score": 63.5,
-      "place": 3
+      "total_score": 71.5,
+      "place": 2
     },
     {
       "owner": "Steve",
@@ -197,14 +157,14 @@
         "BB": 4.5,
         "AVG": 8.0,
         "W": 7.5,
-        "L": 2.0,
-        "SV": 4.5,
+        "L": 3.0,
+        "SV": 5.0,
         "K": 8.0,
-        "ERA": 4.0,
-        "WHIP": 4.0
+        "ERA": 5.0,
+        "WHIP": 5.0
       },
-      "total_score": 62.5,
-      "place": 4
+      "total_score": 66.0,
+      "place": 3
     },
     {
       "owner": "Tim",
@@ -236,15 +196,15 @@
         "SB": 4.0,
         "BB": 7.0,
         "AVG": 3.0,
-        "W": 4.0,
-        "L": 6.0,
-        "SV": 4.5,
+        "W": 4.5,
+        "L": 6.5,
+        "SV": 5.0,
         "K": 4.0,
-        "ERA": 7.0,
-        "WHIP": 3.0
+        "ERA": 7.5,
+        "WHIP": 4.0
       },
-      "total_score": 54.5,
-      "place": 5
+      "total_score": 57.5,
+      "place": 4
     },
     {
       "owner": "Russ",
@@ -276,15 +236,15 @@
         "SB": 4.0,
         "BB": 2.0,
         "AVG": 4.0,
-        "W": 4.0,
-        "L": 6.0,
-        "SV": 4.5,
+        "W": 4.5,
+        "L": 6.5,
+        "SV": 5.0,
         "K": 7.0,
-        "ERA": 3.0,
-        "WHIP": 6.0
+        "ERA": 4.0,
+        "WHIP": 7.0
       },
-      "total_score": 50.0,
-      "place": 6
+      "total_score": 53.5,
+      "place": 5
     },
     {
       "owner": "Brian",
@@ -316,14 +276,54 @@
         "SB": 4.0,
         "BB": 4.5,
         "AVG": 1.0,
-        "W": 4.0,
-        "L": 3.0,
-        "SV": 4.5,
+        "W": 4.5,
+        "L": 4.0,
+        "SV": 5.0,
         "K": 3.0,
-        "ERA": 2.0,
-        "WHIP": 2.0
+        "ERA": 3.0,
+        "WHIP": 3.0
       },
-      "total_score": 34.5,
+      "total_score": 38.5,
+      "place": 6
+    },
+    {
+      "owner": "Reed",
+      "stats": {
+        "R": 2,
+        "HR": 2,
+        "RBI": 6,
+        "SB": 0,
+        "BB": 0,
+        "W": null,
+        "L": null,
+        "SV": null,
+        "K": null,
+        "H": 7,
+        "AB": 23,
+        "P_H": null,
+        "P_BB": null,
+        "P_ER": null,
+        "P_OUTS": null,
+        "AVG": 0.30434782608695654,
+        "ERA": null,
+        "WHIP": null,
+        "IP": null
+      },
+      "category_points": {
+        "R": 4.5,
+        "HR": 7.5,
+        "RBI": 8.0,
+        "SB": 4.0,
+        "BB": 2.0,
+        "AVG": 6.0,
+        "W": null,
+        "L": null,
+        "SV": null,
+        "K": null,
+        "ERA": null,
+        "WHIP": null
+      },
+      "total_score": 32.0,
       "place": 7
     },
     {
@@ -2304,25 +2304,25 @@
           "owner": "Reed",
           "section": "pitching",
           "slot": "P",
-          "player_id": 621112,
-          "player_name": "Paul Blackburn",
+          "player_id": 621242,
+          "player_name": "Edwin D\u00edaz",
           "stats": {
-            "W": 0,
-            "L": 0,
-            "SV": 0,
-            "K": 0,
-            "G": 1,
-            "GS": 0,
-            "H": 1,
-            "R": 0,
-            "ER": 0,
-            "HR": 0,
-            "HB": 0,
-            "BB": 0,
-            "OUTS": 5,
-            "IP": "1.2",
-            "ERA": 0.0,
-            "WHIP": 0.6
+            "W": null,
+            "L": null,
+            "SV": null,
+            "K": null,
+            "G": null,
+            "GS": null,
+            "H": null,
+            "R": null,
+            "ER": null,
+            "HR": null,
+            "HB": null,
+            "BB": null,
+            "OUTS": null,
+            "IP": null,
+            "ERA": null,
+            "WHIP": null
           }
         }
       ],
@@ -2332,20 +2332,20 @@
         "RBI": 6,
         "SB": 0,
         "BB": 0,
-        "W": 0,
-        "L": 0,
-        "SV": 0,
-        "K": 0,
+        "W": null,
+        "L": null,
+        "SV": null,
+        "K": null,
         "H": 7,
         "AB": 23,
-        "P_H": 1,
-        "P_BB": 0,
-        "P_ER": 0,
-        "P_OUTS": 5,
+        "P_H": null,
+        "P_BB": null,
+        "P_ER": null,
+        "P_OUTS": null,
         "AVG": 0.30434782608695654,
-        "ERA": 0.0,
-        "WHIP": 0.6,
-        "IP": "1.2"
+        "ERA": null,
+        "WHIP": null,
+        "IP": null
       }
     },
     {
