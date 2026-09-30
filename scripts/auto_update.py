@@ -62,6 +62,11 @@ def main():
     today = datetime.now(ZoneInfo("America/Los_Angeles")).date()
     changed = refresh_if_needed(league, roster, MlbStatsClient(), today, args.audit)
     print("Statistics changed." if changed else "No statistics changes; no deployment needed.")
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+            summary.write("\n## Statistics result\n" + (
+                "Updated statistics; publication will follow.\n" if changed else
+                "No changes (or postseason date/phase gate inactive); deployment skipped.\n"))
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
             output.write(f"changed={str(changed).lower()}\n")

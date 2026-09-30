@@ -2,12 +2,9 @@ name: Update postseason statistics
 
 on:
   schedule:
-    - cron: '0 13 * * *'
-      timezone: America/Los_Angeles
-    - cron: '30 13-23 * * *'
-      timezone: America/Los_Angeles
-    - cron: '0 14-23 * * *'
-      timezone: America/Los_Angeles
+    # UTC coverage for both PDT and PST; the gate enforces Pacific hours.
+    - cron: '5,35 0-7,20-23 * * *'
+    - cron: '30 6,7 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -26,21 +23,32 @@ jobs:
       contents: write
     outputs:
       changed: ${{ steps.refresh.outputs.changed }}
+      allowed: ${{ steps.timing.outputs.allowed }}
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.repository.default_branch }}
+      - name: Record timing and check Pacific window
+        id: timing
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: python3 -m scripts.schedule_gate
       - uses: actions/setup-python@v7.0.0
+        if: steps.timing.outputs.allowed == 'true'
         with:
           python-version: '3.14'
       - name: Install test dependencies
+        if: steps.timing.outputs.allowed == 'true'
         run: python -m pip install pytest -r requirements-export.txt
       - name: Run offline tests
+        if: steps.timing.outputs.allowed == 'true'
         run: python -m pytest -q
       - name: Check completed games and refresh if needed
         id: refresh
+        if: steps.timing.outputs.allowed == 'true'
         env:
-          AUDIT: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 13 * * *' }}
+          AUDIT: ${{ steps.timing.outputs.audit }}
         shell: bash
         run: |
           if [ "$AUDIT" = "true" ]; then
@@ -57,13 +65,13 @@ jobs:
           git commit -m 'Update postseason statistics'
           git push
       - name: Package site
-        if: steps.refresh.outputs.changed == 'true' || github.run_attempt > 1
+        if: steps.timing.outputs.allowed == 'true' && (steps.refresh.outputs.changed == 'true' || github.run_attempt > 1)
         uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: docs
   deploy:
     needs: update
-    if: needs.update.outputs.changed == 'true' || github.run_attempt > 1
+    if: needs.update.outputs.allowed == 'true' && (needs.update.outputs.changed == 'true' || github.run_attempt > 1)
     runs-on: ubuntu-24.04
     permissions:
       pages: write

@@ -164,8 +164,13 @@ preview, commit, and push to publish the new results.
 
 ### Optional automatic postseason updates
 
-The **Update postseason statistics** GitHub Actions workflow checks every half
-hour from 1:00 p.m. through 11:30 p.m. in `America/Los_Angeles`. GitHub can delay
+The **Update postseason statistics** GitHub Actions workflow targets checks at
+:05 and :35 from 1:05 p.m. through 11:05 p.m., plus 11:30 p.m. Pacific.
+Explicit UTC schedules cover both daylight and standard time; a runtime check
+allows scheduled statistics work only from 1:00–11:30 p.m. Pacific. Extra or
+late runs outside that window stop after logging their timing. A delayed final
+check past 11:30 p.m. is skipped. Each run's Summary shows the trigger, UTC and
+Pacific start times, gate decision, and statistics result. GitHub can delay
 scheduled jobs. Games finishing later are picked up at the next scheduled check;
 use **Actions → Update postseason statistics → Run workflow** for an earlier check.
 
@@ -179,7 +184,8 @@ To enable it after pushing the workflow and scripts to your default branch:
 4. Run the workflow manually once and inspect its log and deployment result.
 
 The workflow compares completed game IDs with both saved snapshots. It stops
-without a commit or deployment when there are no new games. At 1 p.m., and on
+without a commit or deployment when there are no new games. During the first
+half hour after 1 p.m., and on
 manual runs, it also retrieves fresh completed box scores to detect corrections.
 It rebuilds both snapshots from the same feeds, keeping regular-season ranges,
 fantasy roster configuration, and Sheet files unchanged. Timestamp-only changes
