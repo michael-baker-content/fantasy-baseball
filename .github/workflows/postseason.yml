@@ -20,17 +20,17 @@ permissions:
 jobs:
   update:
     if: github.ref_name == github.event.repository.default_branch
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
     outputs:
       changed: ${{ steps.refresh.outputs.changed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.repository.default_branch }}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: '3.14'
       - name: Install test dependencies
@@ -58,13 +58,13 @@ jobs:
           git push
       - name: Package site
         if: steps.refresh.outputs.changed == 'true' || github.run_attempt > 1
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: docs
   deploy:
     needs: update
     if: needs.update.outputs.changed == 'true' || github.run_attempt > 1
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
@@ -74,4 +74,4 @@ jobs:
     steps:
       - name: Deploy updated site
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
