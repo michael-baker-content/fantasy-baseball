@@ -2,8 +2,9 @@ let CATEGORIES=[];
 const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
 
-const fmt=(key,value)=>value===null||value===undefined?"—":key==="IP"?String(value):key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
-const scoreText=value=>value===null||value===undefined?"—":Number(value).toFixed(1);
+const missingStat='<span class="missing-stat">—</span>';
+const fmt=(key,value)=>value===null||value===undefined?missingStat:key==="IP"?String(value):key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
+const scoreText=value=>value===null||value===undefined?missingStat:Number(value).toFixed(1);
 const placeClass=p=>p===1?"place place-1":p===2?"place place-2":p===3?"place place-3":"place place-n";
 const pointsClass=(pts,values)=>pts===null?"":pts===Math.max(...values.filter(v=>v!==null))?"pts-high":pts===Math.min(...values.filter(v=>v!==null))?"pts-low":"pts-mid";
 const ownerUrl=name=>`?owner=${encodeURIComponent(name)}`;
@@ -64,7 +65,7 @@ function renderOwner(name){
   setHeaderSubtitle(`${name}’s Roster`);
   document.querySelector("#standings-view").hidden=true;document.querySelector("#owner-view").hidden=false;
   document.querySelector("#owner-name").textContent=`Team ${name}`;document.querySelector("#owner-place").textContent=`${standing.place}${standing.place===1?'st':standing.place===2?'nd':standing.place===3?'rd':'th'} place`;
-  document.querySelector("#owner-score").textContent=`${scoreText(standing.total_score)} pts`;
+  document.querySelector("#owner-score").innerHTML=`${scoreText(standing.total_score)} pts`;
   const hitters=owner.players.filter(p=>p.section==="hitting").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${fmt("AB",p.stats.AB)}</td><td>${fmt("H",p.stats.H)}</td><td>${fmt("R",p.stats.R)}</td><td>${fmt("HR",p.stats.HR)}</td><td>${fmt("RBI",p.stats.RBI)}</td><td>${fmt("BB",p.stats.BB)}</td><td>${fmt("SB",p.stats.SB)}</td><td>${fmt('AVG',p.stats.AVG)}</td></tr>`).join('');
   document.querySelector("#hitter-table").innerHTML=`<thead><tr><th class="col-left">Pos</th><th class="col-left">Player</th><th>AB</th><th>H</th><th>R</th><th>HR</th><th>RBI</th><th>BB</th><th>SB</th><th>AVG</th></tr></thead><tbody>${hitters}${totalsRow('hitting',owner.totals,10)}</tbody>`;
   const pitchers=owner.players.filter(p=>p.section==="pitching").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${fmt("IP",p.stats.IP)}</td><td>${fmt("W",p.stats.W)}</td><td>${fmt("L",p.stats.L)}</td><td>${fmt("SV",p.stats.SV)}</td><td>${fmt("K",p.stats.K)}</td><td>${fmt("H",p.stats.H)}</td><td>${fmt("BB",p.stats.BB)}</td><td>${fmt("ER",p.stats.ER)}</td><td>${fmt('ERA',p.stats.ERA)}</td><td>${fmt('WHIP',p.stats.WHIP)}</td></tr>`).join('');

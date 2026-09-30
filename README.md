@@ -305,7 +305,8 @@ YTD data. Rows are sorted by league, team, last name, and first name. Two-way
 players have one row. Keep MLB IDs unchanged.
 
 - **Sheet:** enter `Yes` or `No`. The site's **Sheet Players Only** checkbox
-  limits results to Yes players.
+  limits results to Yes players during regular-season mode. In postseason mode,
+  the checkbox is hidden and this filter is disabled; manual positions still apply.
 - **Positions:** enter a JSON array such as `["CF","RF"]` or `["DH","SP"]`.
   Use `[]` for no assigned positions. All assigned positions appear under Pos.
   and control filters and tab eligibility, even for Sheet=No players.

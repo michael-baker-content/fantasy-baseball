@@ -33,7 +33,7 @@ connectInfoDialog(el("stats-minimum-dialog"),el("stats-minimum-close"),document.
 const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const normalize=value=>String(value).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function format(key,value){
-  const number=numeric(key,value);if(number===null)return "—";
+  const number=numeric(key,value);if(number===null)return '<span class="missing-stat">—</span>';
   if(key==="IP")return `${Math.floor(number/3)}.${number%3}`;
   if(key==="AVG")return number.toFixed(3).replace(/^0/,"");
   if(key==="ERA"||key==="WHIP")return number.toFixed(3);
@@ -61,7 +61,7 @@ function render(keepPage=false){
   const ownerStatus=el("stats-owner").value;
   const view=statsViews[group],source=range[view.source].map(player=>({...playerForStatsSource(player,view.source,sheetPositions),owners:ownership.get(String(player.id))||[],owner:(ownership.get(String(player.id))||[]).join(", ")}));
   Object.assign(state,visibleStatsSort(state,view.source,narrowStats.matches,Boolean(team)));
-  const sheetOnly=el("stats-sheet").checked;
+  const sheetOnly=!el("stats-sheet").disabled&&el("stats-sheet").checked;
   const eligible=source.filter(player=>eligibleForStatsView(player,group)&&matchesOwnerStatus(player.owners,ownerStatus)&&matchesSheet(player,sheetOnly,sheetPlayers));
   const position=el("stats-position").value;
   const rows=eligible.filter(player=>meetsQualification(player,view.source,minAB,minIP)&&matchesPositionFilter(player,position)&&(!team||player.team===team)&&normalize(player.name).includes(query));
@@ -152,6 +152,10 @@ Promise.all([fetch("data/player-stats.json",{cache:"no-store"}).then(response=>{
   return response.json();
 })]).then(([payload,league,sheet])=>{
   applyLeagueTitle(league.league,"Player Stats");
+  const postseason=league.league.phase==="postseason";
+  el("stats-sheet").closest(".stats-sheet-toggle").hidden=postseason;
+  el("stats-sheet").disabled=postseason;
+  if(postseason)el("stats-sheet").checked=false;
   if(!Array.isArray(sheet.player_ids))throw new Error("Sheet selections are invalid.");
   sheetPlayers=new Set(sheet.player_ids.map(String));
   sheetPositions=sheet.positions||{};
