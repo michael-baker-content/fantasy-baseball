@@ -6,6 +6,12 @@ on:
     - cron: '5,35 0-7,20-23 * * *'
     - cron: '30 6,7 * * *'
   workflow_dispatch:
+    inputs:
+      external_schedule:
+        description: 'Scheduled external request (enforce Pacific hours)'
+        type: boolean
+        default: false
+        required: false
 
 concurrency:
   group: postseason-pages
@@ -33,6 +39,7 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           SCHEDULE: ${{ github.event.schedule }}
+          EXTERNAL_SCHEDULE: ${{ inputs.external_schedule }}
         run: python3 -m scripts.schedule_gate
       - uses: actions/setup-python@v7.0.0
         if: steps.timing.outputs.allowed == 'true'

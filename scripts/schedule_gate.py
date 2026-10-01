@@ -4,10 +4,11 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 
-def decision(local, event):
+def decision(local, event, external_schedule=False):
     minutes = local.hour * 60 + local.minute
-    allowed = event == "workflow_dispatch" or 13 * 60 <= minutes <= 23 * 60 + 30
-    audit = event == "workflow_dispatch" or (local.hour == 13 and local.minute < 35)
+    manual = event == "workflow_dispatch" and not external_schedule
+    allowed = manual or 13 * 60 <= minutes <= 23 * 60 + 30
+    audit = manual or (local.hour == 13 and local.minute < 35)
     return allowed, audit
 
 
@@ -15,8 +16,10 @@ def main():
     utc = datetime.now(timezone.utc)
     local = utc.astimezone(ZoneInfo("America/Los_Angeles"))
     event = os.environ.get("EVENT_NAME", "schedule")
-    allowed, audit = decision(local, event)
+    external_schedule = os.environ.get("EXTERNAL_SCHEDULE", "").lower() == "true"
+    allowed, audit = decision(local, event, external_schedule)
     lines = ["## Schedule check", f"- Trigger: {event}",
+             f"- External scheduled request: {'Yes' if external_schedule else 'No'}",
              f"- UTC cron: `{os.environ.get('SCHEDULE', '')}`",
              f"- Actual start (UTC): {utc.isoformat()}",
              f"- Actual start (Pacific): {local.isoformat()}",

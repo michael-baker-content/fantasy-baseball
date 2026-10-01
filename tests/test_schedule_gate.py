@@ -8,8 +8,11 @@ from scripts.schedule_gate import decision
     (13,35,True,False), (15,35,True,False), (23,30,True,False),
     (23,31,False,False),
 ])
-def test_scheduled_window(hour, minute, allowed, audit):
-    assert decision(datetime(2026,9,30,hour,minute), "schedule") == (allowed,audit)
+@pytest.mark.parametrize("event,external_schedule", [
+    ("schedule", False), ("workflow_dispatch", True),
+])
+def test_scheduled_window(hour, minute, allowed, audit, event, external_schedule):
+    assert decision(datetime(2026,9,30,hour,minute), event, external_schedule) == (allowed,audit)
 
 
 def test_manual_request_can_run_outside_window():

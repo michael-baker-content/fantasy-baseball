@@ -195,7 +195,7 @@ players contribute to a fantasy roster.
 When data changes, the bot commits only `docs/data/league.json` and
 `docs/data/player-stats.json`, then explicitly deploys `docs/` to Pages. You do
 not need to push daily statistics yourself. Pull those bot commits before making
-local updates. No personal access token is needed. A rejected push stops deployment;
+local updates. GitHub's built-in schedule needs no personal access token. A rejected push stops deployment;
 the workflow never force-pushes. If deployment fails after a successful data commit,
 use **Re-run all jobs** on that failed run to retry publication.
 
@@ -204,6 +204,38 @@ late final games/corrections. Outside that window the job exits without MLB
 requests. Disable the workflow from its Actions menu when it is no longer needed.
 Only the default branch runs this workflow. Website code changes without data
 changes do not trigger deployment here; this workflow is for statistics updates.
+
+#### External scheduling with cron-job.org
+
+An external scheduler can call the same workflow. Push the workflow changes
+before enabling the external job. Create a fine-grained GitHub token restricted
+to this repository with **Actions: Read and write**, and store it only in the
+scheduler (never in repository files).
+
+In cron-job.org, create a job with these settings:
+
+- URL: `https://api.github.com/repos/OWNER/REPOSITORY/actions/workflows/postseason.yml/dispatches`
+  (replace `OWNER/REPOSITORY` with your repository).
+- Method: **POST**.
+- Time zone: **America/Los_Angeles**.
+- Custom schedule: minutes **0 and 30**, hours **13 through 23**, every day.
+- Headers: `Authorization: Bearer YOUR_TOKEN`, `Accept: application/vnd.github+json`,
+  `Content-Type: application/json`, `X-GitHub-Api-Version: 2026-03-10`.
+- Request body: `{"ref":"main","inputs":{"external_schedule":true}}`
+  (replace `main` if your default branch has another name).
+
+External scheduled requests enforce the same Pacific-time window and correction
+audit policy as the built-in schedule. Ordinary manual runs leave
+`external_schedule` unchecked and can run outside that daily window.
+GitHub labels external requests as `workflow_dispatch`; the run summary shows
+**External scheduled request: Yes**. A successful scheduler request confirms
+GitHub accepted the trigger, not that statistics processing or deployment finished.
+Check the corresponding Actions run to verify completion. Requests whose jobs
+start after 11:30 p.m. Pacific are skipped.
+
+After verifying an automatic external run, remove only the workflow's `schedule`
+block to avoid duplicate checks. Keep `workflow_dispatch` and the workflow enabled.
+Renew the scheduler's token before its expiration date.
 
 ### Local updates
 
