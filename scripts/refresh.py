@@ -13,6 +13,7 @@ from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds, player_output
 from mlb.scoring import owner_totals, roto_standings, scoring_categories
 from mlb.live_scoring import live_results, appearance_stats
+from scripts.roster_status import TEAM_CODES, apply_eliminations
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +28,11 @@ def validate_config(league: dict, roster: list[dict]) -> None:
     if len({name.casefold() for name in owners}) != len(owners):
         raise ValueError("config/league.json: owner names must be unique (ignoring case)")
     scoring_categories(league["categories"])
+    eliminated = league.get("eliminated_teams", [])
+    if (not isinstance(eliminated, list) or
+            any(not isinstance(code, str) or code not in TEAM_CODES.values() for code in eliminated) or
+            len(eliminated) != len(set(eliminated))):
+        raise ValueError("config/league.json: eliminated_teams must be a list of unique MLB abbreviations (e.g. BOS, HOU)")
     if league.get("phase", "regular") not in {"regular", "postseason"}:
         raise ValueError("config/league.json: phase must be regular or postseason")
     seen = set()
@@ -75,7 +81,7 @@ def build_roster_rows(roster: list[dict], pool: dict[int, dict]) -> list[dict]:
     return rows
 
 
-def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
+def public_payload(league: dict, games: list[dict], rows: list[dict], root=ROOT) -> dict:
     totals = owner_totals(rows, league["owners"])
     standings = roto_standings(totals, scoring_categories(league["categories"]))
     if league.get("game_types") == "F,D,L,W":
@@ -89,7 +95,7 @@ def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
             "totals": totals[owner],
         })
     latest_game_date = max((game["officialDate"] for game in games), default=None)
-    return {
+    return apply_eliminations({
         "league": league,
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "through_date": latest_game_date,
@@ -97,7 +103,7 @@ def public_payload(league: dict, games: list[dict], rows: list[dict]) -> dict:
         "included_game_ids": sorted({game["gamePk"] for game in games}),
         "standings": standings,
         "owners": owners,
-    }
+    }, league, root)
 
 
 def recalculate_payload(payload: dict, categories: dict) -> dict:
@@ -144,6 +150,7 @@ def main() -> int:
         if payload["league"]["owners"] != league["owners"] or signature(saved_rows) != signature(roster):
             parser.error("Owners or rosters changed. Run .\\update.cmd or a normal refresh; --recalculate uses saved rosters.")
         payload = recalculate_payload(payload, league["categories"])
+        payload = apply_eliminations(payload, league, ROOT)
         output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"Recalculated {output.relative_to(ROOT)} using saved stats; no MLB data downloaded.")
         return 0

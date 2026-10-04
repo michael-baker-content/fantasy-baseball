@@ -10,6 +10,8 @@ html{scrollbar-gutter:stable}body{font-family:-apple-system,BlinkMacSystemFont,"
 
 /* Missing values stay readable in both themes without competing with statistics. */
 .missing-stat{color:var(--muted);font-weight:400}
+.owner-table .eliminated-player td{color:var(--muted);font-weight:400}
+.eliminated-label{display:block;font-size:10px;font-weight:400;line-height:1.3}
 
 /* Keep all six hitting categories above all six pitching categories on mobile. */
 .site-nav{display:flex;align-items:center;gap:14px}

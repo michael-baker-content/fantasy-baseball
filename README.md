@@ -162,6 +162,34 @@ preview, commit, and push to publish the new results.
 
 ## Update statistics during the season
 
+### Mark eliminated MLB teams
+
+Edit `eliminated_teams` in `config/league.json`, for example:
+
+```json
+"eliminated_teams": ["BOS", "HOU"]
+```
+
+An empty list means no teams are marked eliminated. Use official abbreviations
+(such as ATL, BOS, CHC, CWS, CLE, HOU, LAD, MIL, NYY, PHI, SD, TB).
+Owner roster pages mute the entire player's row and add an “Eliminated” label.
+Statistics still count normally; standings and Player Stats are unaffected.
+Player IDs are matched to teams in the saved postseason Player Stats pool
+(YTD is used if no postseason pool exists). Players absent from that pool remain
+unmarked. Removing an abbreviation restores normal emphasis.
+
+After editing, publish the setting locally without downloading MLB data:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.refresh --recalculate
+```
+
+Preview, then commit and push the configuration and generated data. The next
+automatic check also detects elimination-list changes even without a new game.
+For immediate deployment, run the GitHub workflow manually; if you already
+published the recalculated snapshot and there are no data changes, use the
+existing deployment retry procedure (**Re-run all jobs**) to publish the site.
+
 ### Optional automatic postseason updates
 
 The **Update postseason statistics** GitHub Actions workflow is triggered by

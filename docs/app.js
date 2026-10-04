@@ -70,6 +70,17 @@ function renderOwner(name){
   document.querySelector("#hitter-table").innerHTML=`<thead><tr><th class="col-left">Pos</th><th class="col-left">Player</th><th>AB</th><th>H</th><th>R</th><th>HR</th><th>RBI</th><th>BB</th><th>SB</th><th>AVG</th></tr></thead><tbody>${hitters}${totalsRow('hitting',owner.totals,10)}</tbody>`;
   const pitchers=owner.players.filter(p=>p.section==="pitching").map(p=>`<tr><td class="col-left slot">${p.slot}</td><td class="col-left player-name">${p.player_name}</td><td>${fmt("IP",p.stats.IP)}</td><td>${fmt("W",p.stats.W)}</td><td>${fmt("L",p.stats.L)}</td><td>${fmt("SV",p.stats.SV)}</td><td>${fmt("K",p.stats.K)}</td><td>${fmt("H",p.stats.H)}</td><td>${fmt("BB",p.stats.BB)}</td><td>${fmt("ER",p.stats.ER)}</td><td>${fmt('ERA',p.stats.ERA)}</td><td>${fmt('WHIP',p.stats.WHIP)}</td></tr>`).join('');
   document.querySelector("#pitcher-table").innerHTML=`<thead><tr><th class="col-left">Pos</th><th class="col-left">Player</th><th>IP</th><th>W</th><th>L</th><th>SV</th><th>K</th><th>H</th><th>BB</th><th>ER</th><th>ERA</th><th>WHIP</th></tr></thead><tbody>${pitchers}${totalsRow('pitching',owner.totals,12)}</tbody>`;
+  for(const [section,id] of [["hitting","hitter-table"],["pitching","pitcher-table"]]){
+    const players=owner.players.filter(p=>p.section===section);
+    document.querySelectorAll(`#${id} tbody tr`).forEach((row,index)=>{
+      if(!players[index]?.eliminated)return;
+      row.classList.add("eliminated-player");
+      const label=document.createElement("span");
+      label.className="eliminated-label";
+      label.textContent="Eliminated";
+      row.querySelector(".player-name").append(label);
+    });
+  }
 }
 
 function renderStandings(){applyLeagueTitle(data.league);setHeaderSubtitle("Standings");document.querySelector("#owner-view").hidden=true;document.querySelector("#standings-view").hidden=false;renderDesktop();renderMobile()}

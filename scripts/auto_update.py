@@ -30,7 +30,8 @@ def refresh_if_needed(league, roster, client, today, audit=False, root=ROOT):
     old_post = next((row for row in old_stats["ranges"] if row["id"] == "postseason"), {})
     games = completed_games(client.schedule(start.isoformat(), through, "F,D,L,W"))
     ids = sorted({game["gamePk"] for game in games})
-    if not audit and old_league.get("included_game_ids") == ids and old_post.get("included_game_ids") == ids:
+    if (not audit and old_league.get("included_game_ids") == ids and old_post.get("included_game_ids") == ids
+            and old_league.get("league", {}).get("eliminated_teams", []) == league.get("eliminated_teams", [])):
         return False
     # Fetch fresh feeds: daily audits must see official scoring corrections.
     feeds = [client.live_game_feed(pk) for pk in ids]
@@ -40,7 +41,7 @@ def refresh_if_needed(league, roster, client, today, audit=False, root=ROOT):
                    for side in ("away", "home") for group in ("batting", "pitching")) for feed in feeds):
         raise ValueError("A completed game's feed is unavailable or no longer final; retaining saved data")
     pool = aggregate_feeds(feeds)
-    new_league = public_payload(league, games, build_roster_rows(roster, pool))
+    new_league = public_payload(league, games, build_roster_rows(roster, pool), root=root)
     new_post = postseason_range(old_stats, league, pool, through)
     new_post["included_game_ids"] = ids
     changed_league = meaningful(old_league) != meaningful(new_league)

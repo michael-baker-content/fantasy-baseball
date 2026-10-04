@@ -76,3 +76,19 @@ def test_bad_feed_leaves_snapshots_unchanged(tmp_path):
     with pytest.raises(ValueError, match="retaining saved data"):
         module.refresh_if_needed(league, roster, client, date(2026, 9, 29), root=tmp_path)
     assert all(path.read_bytes() == content for path, content in before.items())
+
+
+def test_elimination_change_publishes_without_new_game(tmp_path):
+    league, roster, data, ytd = setup(tmp_path)
+    ytd["batters"][0]["team"] = "Boston Red Sox"
+    (data / "player-stats.json").write_text(json.dumps({"ranges": [ytd]}))
+    client = Client()
+    today = date(2026, 9, 29)
+    assert module.refresh_if_needed(league, roster, client, today, root=tmp_path)
+    previous = json.loads((data / "league.json").read_text())
+    league["eliminated_teams"] = ["BOS"]
+    assert module.refresh_if_needed(league, roster, client, today, root=tmp_path)
+    updated = json.loads((data / "league.json").read_text())
+    assert updated["owners"][0]["players"][0]["eliminated"] is True
+    assert updated["standings"] == previous["standings"]
+    assert not module.refresh_if_needed(league, roster, client, today, root=tmp_path)
