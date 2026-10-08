@@ -10,7 +10,10 @@
       "BOS",
       "HOU",
       "PHI",
-      "CHC"
+      "CHC",
+      "NYY",
+      "ATL",
+      "SD"
     ],
     "regular_season_end": "2026-09-27",
     "categories": {
@@ -42,7 +45,7 @@
       "Tim"
     ]
   },
-  "updated_at": "2026-10-08T03:30:20.790242+00:00",
+  "updated_at": "2026-10-08T05:00:29.512458+00:00",
   "through_date": "2026-10-07",
   "games_counted": 22,
   "included_game_ids": [
@@ -416,7 +419,7 @@
             "CS": 0,
             "AVG": 0.2
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Ali",
@@ -462,7 +465,7 @@
             "CS": 0,
             "AVG": 0.25
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Ali",
@@ -485,7 +488,7 @@
             "CS": 0,
             "AVG": 0.375
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Ali",
@@ -577,7 +580,7 @@
             "CS": 0,
             "AVG": 0.14285714285714285
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Ali",
@@ -851,7 +854,7 @@
             "CS": 0,
             "AVG": 0.3684210526315789
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -920,7 +923,7 @@
             "CS": 0,
             "AVG": 0.35294117647058826
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -989,7 +992,7 @@
             "CS": null,
             "AVG": null
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -1012,7 +1015,7 @@
             "CS": 0,
             "AVG": 0.0
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -1087,7 +1090,7 @@
             "ERA": 3.857142857142857,
             "WHIP": 0.942857142857143
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -1139,7 +1142,7 @@
             "ERA": 2.076923076923077,
             "WHIP": 0.9230769230769231
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -1165,7 +1168,7 @@
             "ERA": 0.6428571428571429,
             "WHIP": 0.7142857142857143
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Baker",
@@ -1813,7 +1816,7 @@
             "CS": 0,
             "AVG": 0.19230769230769232
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -1836,7 +1839,7 @@
             "CS": 0,
             "AVG": 0.2857142857142857
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -1937,7 +1940,7 @@
             "ERA": 6.75,
             "WHIP": 1.875
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -1989,7 +1992,7 @@
             "ERA": 1.8,
             "WHIP": 1.2
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -2087,7 +2090,7 @@
             "CS": 0,
             "AVG": 0.42105263157894735
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Reed",
@@ -2110,7 +2113,7 @@
             "CS": 0,
             "AVG": 0.2
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Reed",
@@ -2248,7 +2251,7 @@
             "CS": 0,
             "AVG": 0.14814814814814814
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Reed",
@@ -2522,7 +2525,7 @@
             "CS": 0,
             "AVG": 0.25
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2545,7 +2548,7 @@
             "CS": 0,
             "AVG": 0.18181818181818182
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2591,7 +2594,7 @@
             "CS": 0,
             "AVG": 0.125
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2614,7 +2617,7 @@
             "CS": 0,
             "AVG": 0.4074074074074074
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2761,7 +2764,7 @@
             "ERA": 0.0,
             "WHIP": 0.6666666666666666
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2813,7 +2816,7 @@
             "ERA": 4.2631578947368425,
             "WHIP": 1.0263157894736843
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -3026,7 +3029,7 @@
             "CS": 0,
             "AVG": 0.19047619047619047
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3049,7 +3052,7 @@
             "CS": 1,
             "AVG": 0.3
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3121,7 +3124,7 @@
             "ERA": 1.6875,
             "WHIP": 0.9375
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3199,7 +3202,7 @@
             "ERA": 2.25,
             "WHIP": 1.0
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3300,7 +3303,7 @@
             "CS": 0,
             "AVG": 0.1111111111111111
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Tim",
