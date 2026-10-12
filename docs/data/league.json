@@ -13,7 +13,8 @@
       "CHC",
       "NYY",
       "ATL",
-      "SD"
+      "SD",
+      "CWS"
     ],
     "regular_season_end": "2026-09-27",
     "categories": {
@@ -1970,7 +1971,7 @@
             "ERA": 3.7674418604651163,
             "WHIP": 0.6976744186046512
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -2964,7 +2965,7 @@
             "CS": 0,
             "AVG": 0.18518518518518517
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3376,7 +3377,7 @@
             "CS": 0,
             "AVG": 0.18181818181818182
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Tim",
@@ -3491,7 +3492,7 @@
             "CS": 0,
             "AVG": 0.3076923076923077
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Tim",
@@ -3618,7 +3619,7 @@
             "ERA": 4.153846153846154,
             "WHIP": 1.6153846153846154
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Tim",
