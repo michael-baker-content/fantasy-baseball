@@ -186,9 +186,8 @@ After editing, publish the setting locally without downloading MLB data:
 
 Preview, then commit and push the configuration and generated data. The next
 automatic check also detects elimination-list changes even without a new game.
-For immediate deployment, run the GitHub workflow manually; if you already
-published the recalculated snapshot and there are no data changes, use the
-existing deployment retry procedure (**Re-run all jobs**) to publish the site.
+For immediate deployment after pushing the recalculated snapshot, use
+**Actions → Deploy website → Run workflow** on the default branch.
 
 ### Optional automatic postseason updates
 
@@ -234,6 +233,23 @@ requests. Disable the cron-job.org job when automatic updates are no longer need
 leave the GitHub workflow enabled if you still want manual updates.
 Only the default branch runs this workflow. Website code changes without data
 changes do not trigger deployment here; this workflow is for statistics updates.
+
+#### Publish website changes on demand
+
+Use the separate **Deploy website** action after committing and pushing changes
+to the site's layout, styling, scripts, or saved data:
+
+1. Open **Actions → Deploy website** in GitHub.
+2. Select **Run workflow**, choose the default branch (normally `main`), and run it.
+3. Wait for the deployment to finish, then open the live site.
+
+This action publishes the latest committed `docs/` folder on the default branch.
+It can run at any time, without a completed game or changed statistics. It does
+not fetch MLB data, regenerate JSON from `config/`, or commit files. Configuration
+changes that affect generated data must be published to `docs/data/` first (for
+example, use `--recalculate` for eliminated-team selections as described above).
+It shares a concurrency group with the statistics workflow so the two workflows
+cannot deploy simultaneously. Cron-job.org settings require no changes.
 
 #### External scheduling with cron-job.org
 

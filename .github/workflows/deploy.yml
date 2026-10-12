@@ -1,0 +1,37 @@
+name: Deploy website
+
+on:
+  workflow_dispatch:
+
+# Share the statistics workflow's lock so deployments cannot overlap.
+concurrency:
+  group: postseason-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out latest website
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - name: Package site
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: docs
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
