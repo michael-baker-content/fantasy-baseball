@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds
-from scripts.refresh import ROOT, load_config, completed_games, build_roster_rows, public_payload
+from scripts.refresh import ROOT, load_config, completed_games, is_completed_status, build_roster_rows, public_payload
 from scripts.publish_postseason import postseason_range
 
 
@@ -28,18 +28,21 @@ def refresh_if_needed(league, roster, client, today, audit=False, root=ROOT):
     old_league = json.loads(league_path.read_text(encoding="utf-8"))
     old_stats = json.loads(stats_path.read_text(encoding="utf-8"))
     old_post = next((row for row in old_stats["ranges"] if row["id"] == "postseason"), {})
-    games = completed_games(client.schedule(start.isoformat(), through, "F,D,L,W"))
+    games = completed_games(client.schedule(start.isoformat(), through, "F,D,L,W"), start.isoformat(), through)
     ids = sorted({game["gamePk"] for game in games})
     if (not audit and old_league.get("included_game_ids") == ids and old_post.get("included_game_ids") == ids
             and old_league.get("league", {}).get("eliminated_teams", []) == league.get("eliminated_teams", [])):
         return False
     # Fetch fresh feeds: daily audits must see official scoring corrections.
     feeds = [client.live_game_feed(pk) for pk in ids]
-    if any(feed.get("gameData", {}).get("status", {}).get("abstractGameState") != "Final" or
-           not all(any(player.get("stats", {}).get(group)
-                       for player in feed.get("liveData", {}).get("boxscore", {}).get("teams", {}).get(side, {}).get("players", {}).values())
-                   for side in ("away", "home") for group in ("batting", "pitching")) for feed in feeds):
-        raise ValueError("A completed game's feed is unavailable or no longer final; retaining saved data")
+    for pk, feed in zip(ids, feeds):
+        status = feed.get("gameData", {}).get("status", {})
+        if (not is_completed_status(status) or
+                not all(any(player.get("stats", {}).get(group)
+                            for player in feed.get("liveData", {}).get("boxscore", {}).get("teams", {}).get(side, {}).get("players", {}).values())
+                        for side in ("away", "home") for group in ("batting", "pitching"))):
+            raise ValueError(f"Game {pk}: feed unavailable, incomplete, or no longer final "
+                             f"(status: {status}); retaining saved data")
     pool = aggregate_feeds(feeds)
     new_league = public_payload(league, games, build_roster_rows(roster, pool), root=root)
     new_post = postseason_range(old_stats, league, pool, through)

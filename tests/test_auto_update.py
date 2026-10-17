@@ -40,6 +40,28 @@ class Client:
                 "liveData": {"boxscore": {"teams": {} if self.broken else {"away": team, "home": team}}}}
 
 
+def test_postponed_game_does_not_fail_or_fetch_feed(tmp_path):
+    league, roster, data, _ = setup(tmp_path)
+    client = Client()
+    today = date(2026, 10, 16)
+    assert module.refresh_if_needed(league, roster, client, today, root=tmp_path)
+    original_schedule = client.schedule
+
+    def schedule(*args):
+        result = original_schedule(*args)
+        result["dates"][0]["games"].append({"gamePk": 849817, "officialDate": "2026-10-18",
+            "status": {"abstractGameState": "Final", "detailedState": "Postponed"}})
+        return result
+
+    client.schedule = schedule
+    before = {p: p.read_bytes() for p in data.iterdir()}
+    for audit in (False, True):
+        client.calls.clear()
+        assert not module.refresh_if_needed(league, roster, client, today, audit=audit, root=tmp_path)
+        assert 849817 not in client.calls
+        assert all(p.read_bytes() == content for p, content in before.items())
+
+
 def test_new_game_then_noop_and_correction(tmp_path):
     league, roster, data, ytd = setup(tmp_path)
     client = Client()

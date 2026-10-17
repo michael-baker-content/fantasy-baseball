@@ -74,6 +74,21 @@ def test_generated_site_payload_is_valid():
     assert len(payload["standings"]) == len(payload["owners"]) == len(expected)
 
 
+@pytest.mark.parametrize("detail", ["Postponed", "Cancelled", "Canceled", "Suspended"])
+def test_final_but_unplayed_game_is_excluded(detail):
+    game = {"gamePk": 849817, "officialDate": "2026-10-16",
+            "status": {"abstractGameState": "Final", "detailedState": detail}}
+    assert completed_games({"dates": [{"games": [game]}]}) == []
+
+
+def test_completed_games_enforces_inclusive_official_dates():
+    games = [{"gamePk": i, "officialDate": day, "status": {
+        "abstractGameState": "Final", "detailedState": "Final"}}
+        for i, day in enumerate(["2026-09-28", "2026-09-29", "2026-10-16", "2026-10-18"])]
+    assert [g["gamePk"] for g in completed_games({"dates": [{"games": games}]},
+                                               "2026-09-29", "2026-10-16")] == [1, 2]
+
+
 def test_offline_recalculation_preserves_snapshot_and_adds_categories():
     league, _ = load_config()
     original = json.loads((ROOT / "docs/data/league.json").read_text(encoding="utf-8"))

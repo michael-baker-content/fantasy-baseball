@@ -61,12 +61,21 @@ def load_config() -> tuple[dict, list[dict]]:
     return league, roster
 
 
-def completed_games(schedule: dict) -> list[dict]:
+def is_completed_status(status: dict) -> bool:
+    return status.get("abstractGameState") == "Final" and not any(
+        word in status.get("detailedState", "").lower()
+        for word in ("postpon", "cancel", "suspend"))
+
+
+def completed_games(schedule: dict, start: str | None = None, through: str | None = None) -> list[dict]:
+    """MLB can label postponed games Final and return rescheduled dates outside the query."""
     return [
         game
         for day in schedule.get("dates", [])
         for game in day.get("games", [])
-        if game.get("status", {}).get("abstractGameState") == "Final"
+        if is_completed_status(game.get("status", {}))
+        and (start is None or game.get("officialDate", "") >= start)
+        and (through is None or "" < game.get("officialDate", "") <= through)
     ]
 
 
@@ -158,7 +167,7 @@ def main() -> int:
     through = min(requested, league["end_date"])
     client = MlbStatsClient(ROOT / "data/mlb_cache")
     schedule = client.schedule(league["start_date"], through, league["game_types"]) if through >= league["start_date"] else {"dates": []}
-    games = completed_games(schedule)
+    games = completed_games(schedule, league["start_date"], through)
     print(f"Found {len(games)} completed game(s) from {league['start_date']} through {through}.")
     pool = aggregate_feeds([client.game_feed(game["gamePk"], refresh=args.refresh) for game in games])
     rows = build_roster_rows(roster, pool)

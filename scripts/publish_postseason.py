@@ -31,7 +31,7 @@ def main():
     path = ROOT / "docs/data/player-stats.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
     client = MlbStatsClient(ROOT / "data/mlb_cache")
-    games = completed_games(client.schedule(league["start_date"], through, "F,D,L,W")) if through >= league["start_date"] else []
+    games = completed_games(client.schedule(league["start_date"], through, "F,D,L,W"), league["start_date"], through) if through >= league["start_date"] else []
     pool = aggregate_feeds([client.game_feed(game["gamePk"]) for game in games])
     entry = postseason_range(payload, league, pool, through)
     entry["included_game_ids"] = sorted({game["gamePk"] for game in games})
