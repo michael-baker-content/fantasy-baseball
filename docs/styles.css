@@ -10,6 +10,17 @@ html{scrollbar-gutter:stable}body{font-family:-apple-system,BlinkMacSystemFont,"
 
 /* Missing values stay readable in both themes without competing with statistics. */
 .missing-stat{color:var(--muted);font-weight:400}
+.leaderboard-heading{display:flex;align-items:center;gap:4px;margin-bottom:.5rem}
+.leaderboard-heading .section-heading{margin:0}
+#leaderboard-info-open{display:grid;place-items:center;min-width:44px;min-height:44px;background:transparent;border:0;color:var(--muted);cursor:pointer;border-radius:50%}
+#leaderboard-info-open:hover{background:var(--hover)}
+#leaderboard-info-open svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+#leaderboard-info-dialog{margin:auto;width:calc(100% - 32px);max-width:520px;max-height:calc(100dvh - 32px);overflow:auto;padding:24px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--text);box-shadow:0 20px 60px #0005}
+#leaderboard-info-dialog::backdrop{background:rgb(0 0 0 / .55)}
+.leaderboard-dialog-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.leaderboard-dialog-heading h2{font-size:18px}
+#leaderboard-info-close{min-height:44px;padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer}
+#leaderboard-info-open:focus-visible,#leaderboard-info-close:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .standings-note,.standings-help{color:var(--muted);font-size:12px;margin-bottom:.75rem}
 .standings-help summary{cursor:pointer}
 .rank-movement{font-size:11px;font-weight:400;color:var(--muted);white-space:nowrap}

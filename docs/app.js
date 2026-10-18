@@ -1,6 +1,23 @@
 let CATEGORIES=[];
 const LOWER_BETTER=new Set(["L","ERA","WHIP"]);
 let data,sort={key:"total_score",dir:"desc"};
+const leaderboardDialog=document.querySelector('#leaderboard-info-dialog');
+let leaderboardInfoOpener;
+function openLeaderboardInfo(opener){
+  leaderboardInfoOpener=opener;
+  leaderboardDialog.showModal();
+}
+document.querySelector('#leaderboard-info-open').addEventListener('click',event=>{
+  document.querySelector('#category-explanation').hidden=true;
+  openLeaderboardInfo(event.currentTarget);
+});
+document.querySelector('#leaderboard-info-close').addEventListener('click',()=>leaderboardDialog.close());
+leaderboardDialog.addEventListener('close',()=>leaderboardInfoOpener?.focus({preventScroll:true}));
+leaderboardDialog.addEventListener('click',event=>{
+  if(event.target!==leaderboardDialog)return;
+  const box=leaderboardDialog.getBoundingClientRect();
+  if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)leaderboardDialog.close();
+});
 
 const missingStat='<span class="missing-stat">—</span>';
 const fmt=(key,value)=>value===null||value===undefined?missingStat:key==="IP"?String(value):key==="AVG"?Number(value||0).toFixed(3).replace(/^0/,""):["ERA","WHIP"].includes(key)?Number(value||0).toFixed(3):Number(value||0).toLocaleString();
@@ -60,7 +77,7 @@ function addStandingsInsights(mobile){
       const description=`${row.owner}, ${category}: ${heat==='hot'?'very close':'moderately close'}. ${effect} ${lines.join('; ')}`;
       icon.title=description;icon.setAttribute('aria-label',description);
       const show=()=>{const note=document.querySelector('#category-explanation');note.textContent=description;note.hidden=false};
-      icon.addEventListener('focus',show);icon.addEventListener('click',show);
+      icon.addEventListener('click',()=>{show();openLeaderboardInfo(icon)});
       cell.querySelector('.cat-pts').append(icon);
     });
   });

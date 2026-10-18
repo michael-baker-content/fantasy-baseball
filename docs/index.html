@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f172a">
   <title>Fantasy Baseball</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=20261017-animated-glow">
+  <link rel="stylesheet" href="styles.css?v=20261018-info">
   <script src="theme.js?v=20260926-icons"></script>
 </head>
 <body>
@@ -45,16 +45,19 @@
     <div class="status-bar"><span class="status-dot"></span><span id="status-msg">Loading standings…</span></div>
 
     <section id="standings-view">
-      <h2 class="section-heading">Leaderboard</h2>
+      <div class="leaderboard-heading"><h2 class="section-heading">Leaderboard</h2><button id="leaderboard-info-open" type="button" aria-label="About the leaderboard" aria-haspopup="dialog" aria-controls="leaderboard-info-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></button></div>
+      <dialog id="leaderboard-info-dialog" aria-labelledby="leaderboard-info-title">
+      <div class="leaderboard-dialog-heading"><h2 id="leaderboard-info-title">About the leaderboard</h2><button id="leaderboard-info-close" type="button" autofocus>Close</button></div>
       <p class="standings-note" id="movement-note"></p>
       <details class="standings-help"><summary>Category icons: 🔥 very close · ♨️ moderately close</summary><p>Only the closest pair in each category is highlighted; equal gaps favor the higher-ranked pair. Ties take priority and include all tied owners. Very close means tied or within: R, RBI, BB: 3; HR, SB, W, L, SV: 1; K: 5; AVG: 0.005; ERA: 0.20; WHIP: 0.05. Moderately close means up to twice those gaps. Hover, focus, or tap an icon for details.</p></details>
       <p class="standings-note" id="category-explanation" aria-live="polite" hidden></p>
       <p class="standings-note">Glow: possible top-three movement · Normal: movement below third · Muted: no place change. Tests one category at a time; not a forecast.</p>
-      <div class="legend desktop-only">
+      <div class="legend">
         <span><i class="legend-dot pts-high"></i> Top category score</span>
         <span><i class="legend-dot pts-low"></i> Bottom category score</span>
         <span><i class="legend-dot pts-mid"></i> Mid-range score</span>
       </div>
+      </dialog>
       <div class="mobile-only mob-sort-bar"><label for="mobile-sort">Sort by</label><select id="mobile-sort"></select></div>
       <div class="table-wrap desktop-only"><table class="leaderboard" id="standings-table"></table></div>
       <div class="mobile-only" id="mobile-standings"></div>
@@ -74,6 +77,6 @@
   <script src="header.js" defer></script>
   <script src="league-title.js?v=20260926" defer></script>
   <script src="standings-insights.js?v=20261017-impact" defer></script>
-  <script src="app.js?v=20261017-impact" defer></script>
+  <script src="app.js?v=20261018-info" defer></script>
 </body>
 </html>

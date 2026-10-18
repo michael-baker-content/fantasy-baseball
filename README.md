@@ -198,7 +198,10 @@ Counting-category scenarios use one unit beyond the rival; rate categories use
 a small numerical increment. This is a sensitivity check, not a projection of
 games, player availability, or simultaneous changes across categories.
 🔥 means very close; ♨️ means moderately close (up to twice the very-close threshold).
-Hover, focus, or tap an icon to see ties and gaps. Very-close thresholds are R/RBI/BB: 3;
+Leaderboard explanations and the score-color legend are in the info modal beside
+the heading. Hover an icon for a tooltip, or click/tap it (Enter/Space with keyboard)
+to open the modal with matchup details. Escape or Close dismisses the modal and
+returns focus to the opener. Very-close thresholds are R/RBI/BB: 3;
 HR/SB/W/L/SV: 1; K: 5; AVG: 0.005; ERA: 0.20; WHIP: 0.05.
 These are descriptive gaps, not forecasts, and include eliminated teams.
 The thresholds are defined in `docs/standings-insights.js`.
@@ -239,9 +242,10 @@ For immediate deployment after pushing the recalculated snapshot, use
 ### Optional automatic postseason updates
 
 The **Update postseason statistics** GitHub Actions workflow is triggered by
-cron-job.org every 30 minutes from 1:00–11:30 p.m. Pacific when configured below.
-It has no native GitHub schedule. A runtime check allows externally scheduled
-statistics work only within that Pacific window. Late runs outside the window
+cron-job.org every 15 minutes when configured below.
+It has no native GitHub schedule. The schedule gate uses
+`config/update_schedule.json` to run statistics checks between two and five hours
+after first pitch, then every half hour through 11:30 p.m. Pacific. Other slots
 stop after logging their timing. Each run's Summary shows the trigger, UTC and
 Pacific start times, gate decision, and statistics result. Requests and workflow
 starts can be delayed. Games finishing later are picked up at the next scheduled check;
@@ -258,9 +262,9 @@ To enable it after pushing the workflow and scripts to your default branch:
 5. Configure and enable the external scheduler as described below.
 
 The workflow compares completed game IDs with both saved snapshots. It stops
-without a commit or deployment when there are no new games. During the first
-half hour after 1 p.m., and on
-manual runs, it also retrieves fresh completed box scores to detect corrections.
+without a commit or deployment when there are no new games. The daily 1 p.m.
+check (including off days), and manual runs, also retrieve fresh completed box
+scores to detect corrections.
 It rebuilds both snapshots from the same feeds, keeping regular-season ranges,
 fantasy roster configuration, and Sheet files unchanged. Timestamp-only changes
 do not trigger publication. A new included game is recorded even if none of its
@@ -311,8 +315,8 @@ In cron-job.org, create a job with these settings:
   (replace `OWNER/REPOSITORY` with your repository).
 - Method: **POST**.
 - Time zone: **America/Los_Angeles**.
-- Custom schedule: minutes **0 and 30**, hours **13 through 23**, every day.
-  Crontab expression: `0,30 13-23 * * *`.
+- Custom schedule: minutes **0, 15, 30, and 45**, hours **13 through 23**, every day.
+  Crontab expression: `*/15 13-23 * * *`.
 - Headers: `Authorization: Bearer YOUR_TOKEN`, `Accept: application/vnd.github+json`,
   `Content-Type: application/json`, `X-GitHub-Api-Version: 2026-03-10`.
 - Request body: `{"ref":"main","inputs":{"external_schedule":true}}`
@@ -326,6 +330,20 @@ GitHub labels external requests as `workflow_dispatch`; the run summary shows
 GitHub accepted the trigger, not that statistics processing or deployment finished.
 Check the corresponding Actions run to verify completion. Requests whose jobs
 start after 11:30 p.m. Pacific are skipped.
+
+Edit `config/update_schedule.json` to maintain game dates and scheduled first-pitch
+times in **Pacific time**, using `YYYY-MM-DD` dates and 24-hour `HH:MM` times.
+Each date contains a list of start times, so multiple games are supported. Dates
+not listed receive only the daily correction check. Remove unneeded games when
+a series ends, and update postponed games manually. Commit and push calendar edits
+to make them effective; no website deployment is needed.
+
+Checks use quarter-hour clock boundaries: a 5:08 p.m. first pitch starts checks
+at 7:15 p.m., continuing through 10:00 p.m., then at 10:30, 11:00, and 11:30 p.m.
+A delayed start is assigned to the current quarter-hour slot; this tolerates short
+delays but does not replay missed checks. The 1 p.m. audit slot ends at 1:15 p.m.
+Cron-job.org still triggers skipped slots, including 11:45 p.m., but those runs do
+not install dependencies or request MLB data. Manual runs bypass the calendar.
 
 Keep `workflow_dispatch` and the GitHub workflow enabled so external requests work.
 Renew the scheduler's token before its expiration date.
