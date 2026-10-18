@@ -162,6 +162,53 @@ preview, commit, and push to publish the new results.
 
 ## Update statistics during the season
 
+Player Stats includes **Last 7 Days - Postseason** in the Statistics range menu.
+It covers the update's cutoff date and six preceding calendar days, never before
+the configured postseason start. Only completed postseason games count; regular
+season statistics are never included. On opening day this range contains only
+opening-day results. Players without appearances in the range show dashes.
+The automatic check advances this window on off-days too, publishing the new
+range even without newly completed games. It reflects the last successful update,
+not a live browser calculation, and freezes at the configured season end.
+Local updates publish the same range. Existing regular-season ranges are preserved.
+
+### Standings movement and close categories
+
+Updates save cumulative daily standings in `docs/data/league.json`, rebuilding
+them from completed box scores already retrieved for the update. This also
+backfills the season's history on the first update after installation. Each
+date uses MLB's official game date; the display compares current ranks against
+the latest saved day before today in America/Los_Angeles. Days without games
+carry forward the previous close. Only games available to the last successful
+refresh are reflected; late results and scoring corrections can revise history.
+With no previous results, movement labels are hidden rather than showing “n/a”.
+Offline recalculation preserves history unless scoring categories change, in
+which case a normal update is needed to rebuild it.
+
+Desktop and mobile standings show compact icons beside category points for all owners.
+Only the closest pair per category is highlighted (equal gaps favor the higher-ranked
+pair). If there are ties, only tied groups are highlighted, without a limit on owners.
+Icon emphasis tests either highlighted owner overtaking the other in that category,
+recalculating category points (including ties) and overall ranks while holding
+other categories fixed. A possible change involving a top-three place glows;
+movement only below third uses normal emphasis; no overall place change is muted.
+High-impact icons pulse with a gold glow every 2.8 seconds. Users who enable
+reduced motion get a steady glow. The icons do not add outlines to table cells.
+Counting-category scenarios use one unit beyond the rival; rate categories use
+a small numerical increment. This is a sensitivity check, not a projection of
+games, player availability, or simultaneous changes across categories.
+🔥 means very close; ♨️ means moderately close (up to twice the very-close threshold).
+Hover, focus, or tap an icon to see ties and gaps. Very-close thresholds are R/RBI/BB: 3;
+HR/SB/W/L/SV: 1; K: 5; AVG: 0.005; ERA: 0.20; WHIP: 0.05.
+These are descriptive gaps, not forecasts, and include eliminated teams.
+The thresholds are defined in `docs/standings-insights.js`.
+
+After pushing this feature, the next statistics check backfills and publishes
+history and the seven-day postseason range even if no new game has finished.
+The local `update.cmd` also builds both. To publish interface-only changes
+immediately, use **Actions → Deploy website → Run workflow** after pushing.
+That action publishes saved files; it does not generate missing history or ranges.
+
 ### Mark eliminated MLB teams
 
 Edit `eliminated_teams` in `config/league.json`, for example:
@@ -595,7 +642,7 @@ $testTemp = Join-Path $env:TEMP ("fantasy-pytest-" + [guid]::NewGuid().ToString(
 With Node.js installed, run the JavaScript tests; no npm packages are needed:
 
 ```powershell
-node --test tests/test_stats_positions.cjs tests/test_ui.cjs
+node --test tests/test_stats_positions.cjs tests/test_ui.cjs tests/test_standings_insights.cjs
 ```
 
 Tests use saved fixtures or mocked responses and do not download MLB data.

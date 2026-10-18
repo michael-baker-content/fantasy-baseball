@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f172a">
   <title>Fantasy Baseball</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=20261003-eliminated">
+  <link rel="stylesheet" href="styles.css?v=20261017-animated-glow">
   <script src="theme.js?v=20260926-icons"></script>
 </head>
 <body>
@@ -46,6 +46,10 @@
 
     <section id="standings-view">
       <h2 class="section-heading">Leaderboard</h2>
+      <p class="standings-note" id="movement-note"></p>
+      <details class="standings-help"><summary>Category icons: 🔥 very close · ♨️ moderately close</summary><p>Only the closest pair in each category is highlighted; equal gaps favor the higher-ranked pair. Ties take priority and include all tied owners. Very close means tied or within: R, RBI, BB: 3; HR, SB, W, L, SV: 1; K: 5; AVG: 0.005; ERA: 0.20; WHIP: 0.05. Moderately close means up to twice those gaps. Hover, focus, or tap an icon for details.</p></details>
+      <p class="standings-note" id="category-explanation" aria-live="polite" hidden></p>
+      <p class="standings-note">Glow: possible top-three movement · Normal: movement below third · Muted: no place change. Tests one category at a time; not a forecast.</p>
       <div class="legend desktop-only">
         <span><i class="legend-dot pts-high"></i> Top category score</span>
         <span><i class="legend-dot pts-low"></i> Bottom category score</span>
@@ -69,6 +73,7 @@
   <footer class="site-footer"><div class="site-footer-inner"><span>Data through <span id="as-of">—</span></span><span>Official MLB game data</span></div></footer>
   <script src="header.js" defer></script>
   <script src="league-title.js?v=20260926" defer></script>
-  <script src="app.js?v=20261003-eliminated" defer></script>
+  <script src="standings-insights.js?v=20261017-impact" defer></script>
+  <script src="app.js?v=20261017-impact" defer></script>
 </body>
 </html>

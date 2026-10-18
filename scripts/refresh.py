@@ -123,10 +123,25 @@ def recalculate_payload(payload: dict, categories: dict) -> dict:
     if payload["league"].get("game_types") == "F,D,L,W":
         totals, standings = live_results(payload["league"] | {"categories": categories}, rows)
     return payload | {
+        "standings_history": payload.get("standings_history", []) if categories == payload["league"]["categories"] else [],
         "league": payload["league"] | {"categories": categories},
         "standings": standings,
         "owners": [owner | {"totals": totals[owner["name"]]} for owner in payload["owners"]],
     }
+
+
+def add_standings_history(payload, league, roster, games, feeds):
+    """Rebuild cumulative daily standings from the same completed feeds as the current totals."""
+    history = []
+    for day in sorted({g["officialDate"] for g in games}):
+        selected = [feed for game, feed in zip(games, feeds) if game["officialDate"] <= day]
+        rows = build_roster_rows(roster, aggregate_feeds(selected))
+        if league.get("game_types") == "F,D,L,W":
+            _, standings = live_results(league, rows)
+        else:
+            standings = roto_standings(owner_totals(rows, league["owners"]), scoring_categories(league["categories"]))
+        history.append({"date": day, "standings": standings})
+    return payload | {"standings_history": history}
 
 
 def main() -> int:
@@ -169,9 +184,11 @@ def main() -> int:
     schedule = client.schedule(league["start_date"], through, league["game_types"]) if through >= league["start_date"] else {"dates": []}
     games = completed_games(schedule, league["start_date"], through)
     print(f"Found {len(games)} completed game(s) from {league['start_date']} through {through}.")
-    pool = aggregate_feeds([client.game_feed(game["gamePk"], refresh=args.refresh) for game in games])
+    feeds = [client.game_feed(game["gamePk"], refresh=args.refresh) for game in games]
+    pool = aggregate_feeds(feeds)
     rows = build_roster_rows(roster, pool)
     payload = public_payload(league, games, rows)
+    payload = add_standings_history(payload, league, roster, games, feeds)
     output = ROOT / "docs/data/league.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2), encoding="utf-8")

@@ -68,16 +68,58 @@ def test_new_game_then_noop_and_correction(tmp_path):
     today = date(2026, 9, 29)
     assert module.refresh_if_needed(league, roster, client, today, root=tmp_path)
     before = {path: path.read_bytes() for path in data.iterdir()}
-    assert json.loads((data / "player-stats.json").read_text())["ranges"][1] == ytd
+    assert next(r for r in json.loads((data / "player-stats.json").read_text())["ranges"] if r["id"] == "ytd") == ytd
     client.calls.clear()
     assert not module.refresh_if_needed(league, roster, client, today, root=tmp_path)
     assert client.calls == ["schedule"]
-    assert not module.refresh_if_needed(league, roster, client, date(2026, 9, 30), audit=True, root=tmp_path)
+    assert not module.refresh_if_needed(league, roster, client, today, audit=True, root=tmp_path)
     assert all(path.read_bytes() == content for path, content in before.items())
     client.runs = 2
     assert module.refresh_if_needed(league, roster, client, today, audit=True, root=tmp_path)
     assert json.loads((data / "league.json").read_text())["included_game_ids"] == [123]
     assert (data / "sheet-players.json").read_text() == '{"untouched":true}'
+
+
+def test_recent_window_advances_without_new_games(tmp_path):
+    league, roster, data, ytd = setup(tmp_path)
+    client = Client()
+    assert module.refresh_if_needed(league, roster, client, date(2026, 10, 5), root=tmp_path)
+    before = (data / "league.json").read_bytes()
+    assert module.refresh_if_needed(league, roster, client, date(2026, 10, 6), root=tmp_path)
+    ranges = json.loads((data / "player-stats.json").read_text())["ranges"]
+    recent = next(r for r in ranges if r["id"] == "postseason-last7")
+    assert recent["start"] == "2026-09-30"
+    assert recent["included_game_ids"] == []
+    assert recent["batters"][0]["stats"]["R"] is None
+    assert next(r for r in ranges if r["id"] == "ytd") == ytd
+    assert (data / "league.json").read_bytes() == before
+    assert not module.refresh_if_needed(league, roster, client, date(2026, 10, 6), root=tmp_path)
+
+
+def test_recent_window_clamps_opening_day_and_excludes_regular_season(tmp_path):
+    league, _, _, ytd = setup(tmp_path)
+    games = [{"gamePk": 1, "officialDate": "2026-09-27"},
+             {"gamePk": 2, "officialDate": "2026-09-29"}]
+    client = Client()
+    feeds = [client.live_game_feed(1), client.live_game_feed(2)]
+    recent = module.postseason_last7_range({"ranges": [ytd]}, league, games, feeds, "2026-09-29")
+    assert recent["start"] == "2026-09-29"
+    assert recent["included_game_ids"] == [2]
+    assert recent["batters"][0]["stats"]["R"] == 2
+
+
+def test_daily_history_groups_games_and_keeps_previous_day_fixed(tmp_path):
+    league, roster, _, _ = setup(tmp_path)
+    client = Client()
+    games = [{"gamePk": pk, "officialDate": day} for pk, day in
+             [(1, "2026-09-29"), (2, "2026-09-30"), (3, "2026-09-30")]]
+    feeds = [client.live_game_feed(pk) for pk in (1, 2, 3)]
+    first = module.add_standings_history({}, league, roster, games[:2], feeds[:2])
+    later = module.add_standings_history({}, league, roster, games, feeds)
+    assert [entry["date"] for entry in later["standings_history"]] == ["2026-09-29", "2026-09-30"]
+    assert later["standings_history"][0] == first["standings_history"][0]
+    assert later["standings_history"][1]["standings"][0]["stats"]["R"] == 6
+    assert first["standings_history"][1]["standings"][0]["stats"]["R"] == 4
 
 
 @pytest.mark.parametrize("phase,today", [("regular", date(2026, 9, 29)),

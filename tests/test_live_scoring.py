@@ -65,7 +65,8 @@ def test_preseason_publishers_do_not_fetch_mlb_data(tmp_path, monkeypatch):
     assert all(row["total_score"] is None for row in result["standings"])
     ranges = json.loads((data / "player-stats.json").read_text())["ranges"]
     assert ranges[0]["id"] == "postseason"
-    assert ranges[1]["batters"] == regular["batters"]
+    assert next(row for row in ranges if row["id"] == "ytd") == regular | {"label": "2026 Regular Season"}
+    assert next(row for row in ranges if row["id"] == "postseason-last7")["included_game_ids"] == []
 
 
 def test_boxscore_appearance_without_games_played_and_unused_bench():
