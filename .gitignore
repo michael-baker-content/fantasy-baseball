@@ -17,6 +17,7 @@ __pycache__/
 /.agents/
 
 !config/league.json
+!config/update_schedule.json
 !config/roster.csv
 !config/sheet-players.csv
 config/sheet-players.csv.bak
