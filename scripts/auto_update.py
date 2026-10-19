@@ -9,7 +9,6 @@ from mlb.client import MlbStatsClient
 from mlb.postseason import aggregate_feeds
 from scripts.refresh import ROOT, load_config, completed_games, is_completed_status, build_roster_rows, public_payload
 from scripts.publish_postseason import postseason_range, postseason_last7_range
-from scripts.refresh import add_standings_history
 
 
 def meaningful(payload):
@@ -32,7 +31,7 @@ def refresh_if_needed(league, roster, client, today, audit=False, root=ROOT):
     old_recent = next((row for row in old_stats["ranges"] if row["id"] == "postseason-last7"), {})
     games = completed_games(client.schedule(start.isoformat(), through, "F,D,L,W"), start.isoformat(), through)
     ids = sorted({game["gamePk"] for game in games})
-    if (not audit and "standings_history" in old_league and old_league.get("included_game_ids") == ids and old_post.get("included_game_ids") == ids
+    if (not audit and old_league.get("included_game_ids") == ids and old_post.get("included_game_ids") == ids
             and old_recent.get("through") == through
             and old_league.get("league", {}).get("eliminated_teams", []) == league.get("eliminated_teams", [])):
         return False
@@ -49,7 +48,6 @@ def refresh_if_needed(league, roster, client, today, audit=False, root=ROOT):
     pool = aggregate_feeds(feeds)
     new_league = public_payload(league, games, build_roster_rows(roster, pool), root=root)
     by_id = dict(zip(ids, feeds))
-    new_league = add_standings_history(new_league, league, roster, games, [by_id[g["gamePk"]] for g in games])
     new_post = postseason_range(old_stats, league, pool, through)
     new_post["included_game_ids"] = ids
     recent = postseason_last7_range(old_stats, league, games, [by_id[g["gamePk"]] for g in games], through)

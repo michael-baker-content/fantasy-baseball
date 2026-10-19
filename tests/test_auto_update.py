@@ -108,20 +108,6 @@ def test_recent_window_clamps_opening_day_and_excludes_regular_season(tmp_path):
     assert recent["batters"][0]["stats"]["R"] == 2
 
 
-def test_daily_history_groups_games_and_keeps_previous_day_fixed(tmp_path):
-    league, roster, _, _ = setup(tmp_path)
-    client = Client()
-    games = [{"gamePk": pk, "officialDate": day} for pk, day in
-             [(1, "2026-09-29"), (2, "2026-09-30"), (3, "2026-09-30")]]
-    feeds = [client.live_game_feed(pk) for pk in (1, 2, 3)]
-    first = module.add_standings_history({}, league, roster, games[:2], feeds[:2])
-    later = module.add_standings_history({}, league, roster, games, feeds)
-    assert [entry["date"] for entry in later["standings_history"]] == ["2026-09-29", "2026-09-30"]
-    assert later["standings_history"][0] == first["standings_history"][0]
-    assert later["standings_history"][1]["standings"][0]["stats"]["R"] == 6
-    assert first["standings_history"][1]["standings"][0]["stats"]["R"] == 4
-
-
 @pytest.mark.parametrize("phase,today", [("regular", date(2026, 9, 29)),
                                          ("postseason", date(2026, 9, 28)),
                                          ("postseason", date(2026, 11, 2))])

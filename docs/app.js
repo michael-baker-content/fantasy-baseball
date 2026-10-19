@@ -8,7 +8,6 @@ function openLeaderboardInfo(opener){
   leaderboardDialog.showModal();
 }
 document.querySelector('#leaderboard-info-open').addEventListener('click',event=>{
-  document.querySelector('#category-explanation').hidden=true;
   openLeaderboardInfo(event.currentTarget);
 });
 document.querySelector('#leaderboard-info-close').addEventListener('click',()=>leaderboardDialog.close());
@@ -42,47 +41,6 @@ function categoryCell(row,category){
   return `<td class="${sort.key===category?'sort-active':''}"><div class="cat-cell"><span class="cat-val">${fmt(category,row.stats[category])}</span><span class="cat-pts ${pointsClass(pts,all)}">${scoreText(pts)}</span></div></td>`;
 }
 
-function addStandingsInsights(mobile){
-  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
-  const part=type=>parts.find(p=>p.type===type).value;
-  const today=`${part('year')}-${part('month')}-${part('day')}`;
-  const baseline=previousStandings(data.standings_history,today);
-  document.querySelector('#movement-note').textContent=baseline?
-    `Rank movement vs. previous day’s saved close (latest games: ${baseline.date}, Pacific time).`:
-    '';
-  document.querySelector('#movement-note').hidden=!baseline;
-  const containers=document.querySelectorAll(mobile?'#mobile-standings .mob-card':'#standings-table tbody tr');
-  sortedStandings().forEach((row,index)=>{
-    const container=containers[index],delta=rankMovement(row,baseline);
-    const movement=document.createElement('span');
-    movement.className='rank-movement';
-    movement.textContent=delta>0?` ↑${delta}`:delta<0?` ↓${-delta}`:' —';
-    movement.setAttribute('aria-label',delta==null?'Rank comparison unavailable':delta===0?'Rank unchanged':`${delta>0?'Up':'Down'} ${Math.abs(delta)} place${Math.abs(delta)===1?'':'s'} since previous day’s saved close`);
-    if(delta!=null)container.querySelector('.owner-link').append(movement);
-    CATEGORIES.forEach((category,i)=>{
-      const rivals=closeCategories(row,category,data.standings);
-      if(!rivals.length)return;
-      const cell=mobile?container.querySelectorAll('.mob-cat')[i]:container.querySelectorAll('td')[i+3];
-      const heat=categoryHeat(category,rivals[0].gap);
-      const impact=categoryImpact(row,category,rivals,data.standings);
-      const icon=document.createElement('button');
-      icon.type='button';icon.className=`category-heat ${heat} impact-${impact}`;
-      icon.textContent=heat==='hot'?'🔥':'♨️';
-      const lines=[];
-      for(const rival of rivals){
-        const gap=['AVG','ERA','WHIP'].includes(category)?rival.gap.toFixed(3):String(rival.gap);
-        lines.push(rival.gap<1e-10?`Tied with ${rival.owner}`:`${gap} ${category} ${rival.ahead?'ahead of':'behind'} ${rival.owner}`);
-      }
-      const effect={high:'Could change a top-three place.',medium:'Could change overall places below the top three.',low:'No overall place change in the tested category scenarios.'}[impact];
-      const description=`${row.owner}, ${category}: ${heat==='hot'?'very close':'moderately close'}. ${effect} ${lines.join('; ')}`;
-      icon.title=description;icon.setAttribute('aria-label',description);
-      const show=()=>{const note=document.querySelector('#category-explanation');note.textContent=description;note.hidden=false};
-      icon.addEventListener('click',()=>{show();openLeaderboardInfo(icon)});
-      cell.querySelector('.cat-pts').append(icon);
-    });
-  });
-}
-
 function renderDesktop(){
   const heading=(key,label)=>`<th scope="col" class="sortable ${sort.key===key?'sort-active':''}" aria-sort="${sort.key===key?(sort.dir==='asc'?'ascending':'descending'):'none'}"><button type="button" data-sort="${key}">${label}<span class="sort-indicator" aria-hidden="true">${sort.key===key?(sort.dir==='asc'?'▲':'▼'):''}</span></button></th>`;
   const headers=CATEGORIES.map(c=>heading(c,c)).join("");
@@ -92,7 +50,6 @@ function renderDesktop(){
     changeSort(button.dataset.sort);
     document.querySelector(`#standings-table button[data-sort="${sort.key}"]`).focus({preventScroll:true});
   }));
-  addStandingsInsights(false);
 }
 
 function renderMobile(){
@@ -103,7 +60,6 @@ function renderMobile(){
     return `<article class="mob-card"><button class="mob-card-header" aria-expanded="false"><span class="${placeClass(row.place)}">${row.place}</span><span class="owner-link mob-owner">${row.owner}</span><span class="mob-score">${sort.key==='total_score'?scoreText(row.total_score):fmt(sort.key,row.stats[sort.key])}</span><svg class="mob-chevron" viewBox="0 0 20 20"><path fill="currentColor" d="m5.2 7.2 4.8 5 4.8-5 1.1 1-5.4 5.7a.75.75 0 0 1-1.1 0L4.1 8.2l1.1-1Z"/></svg></button><div class="mob-detail" hidden><div class="mob-cat-grid">${cats}</div><a class="mob-detail-link" href="${ownerUrl(row.owner)}">View full roster →</a></div></article>`;
   }).join('');
   document.querySelectorAll(".mob-card-header").forEach(button=>button.addEventListener("click",()=>{const detail=button.nextElementSibling;detail.hidden=!detail.hidden;button.setAttribute("aria-expanded",String(!detail.hidden));button.querySelector("svg").style.transform=detail.hidden?"":"rotate(180deg)"}));
-  addStandingsInsights(true);
 }
 
 function changeSort(key){

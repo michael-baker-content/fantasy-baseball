@@ -172,45 +172,14 @@ range even without newly completed games. It reflects the last successful update
 not a live browser calculation, and freezes at the configured season end.
 Local updates publish the same range. Existing regular-season ranges are preserved.
 
-### Standings movement and close categories
+### Leaderboard
 
-Updates save cumulative daily standings in `docs/data/league.json`, rebuilding
-them from completed box scores already retrieved for the update. This also
-backfills the season's history on the first update after installation. Each
-date uses MLB's official game date; the display compares current ranks against
-the latest saved day before today in America/Los_Angeles. Days without games
-carry forward the previous close. Only games available to the last successful
-refresh are reflected; late results and scoring corrections can revise history.
-With no previous results, movement labels are hidden rather than showing “n/a”.
-Offline recalculation preserves history unless scoring categories change, in
-which case a normal update is needed to rebuild it.
+The leaderboard shows overall ranks, total scores, and category points. The info
+button beside its heading explains scoring and the category score colors.
+Escape or Close dismisses the modal and returns focus to the button.
 
-Desktop and mobile standings show compact icons beside category points for all owners.
-Only the closest pair per category is highlighted (equal gaps favor the higher-ranked
-pair). If there are ties, only tied groups are highlighted, without a limit on owners.
-Icon emphasis tests either highlighted owner overtaking the other in that category,
-recalculating category points (including ties) and overall ranks while holding
-other categories fixed. A possible change involving a top-three place glows;
-movement only below third uses normal emphasis; no overall place change is muted.
-High-impact icons pulse with a gold glow every 2.8 seconds. Users who enable
-reduced motion get a steady glow. The icons do not add outlines to table cells.
-Counting-category scenarios use one unit beyond the rival; rate categories use
-a small numerical increment. This is a sensitivity check, not a projection of
-games, player availability, or simultaneous changes across categories.
-🔥 means very close; ♨️ means moderately close (up to twice the very-close threshold).
-Leaderboard explanations and the score-color legend are in the info modal beside
-the heading. Hover an icon for a tooltip, or click/tap it (Enter/Space with keyboard)
-to open the modal with matchup details. Escape or Close dismisses the modal and
-returns focus to the opener. Very-close thresholds are R/RBI/BB: 3;
-HR/SB/W/L/SV: 1; K: 5; AVG: 0.005; ERA: 0.20; WHIP: 0.05.
-These are descriptive gaps, not forecasts, and include eliminated teams.
-The thresholds are defined in `docs/standings-insights.js`.
-
-After pushing this feature, the next statistics check backfills and publishes
-history and the seven-day postseason range even if no new game has finished.
-The local `update.cmd` also builds both. To publish interface-only changes
-immediately, use **Actions → Deploy website → Run workflow** after pushing.
-That action publishes saved files; it does not generate missing history or ranges.
+To publish interface-only changes after pushing, use **Actions → Deploy website
+→ Run workflow**. The seven-day postseason range remains available in Player Stats.
 
 ### Mark eliminated MLB teams
 
