@@ -15,7 +15,8 @@
       "ATL",
       "SD",
       "CWS",
-      "LAD"
+      "LAD",
+      "CLE"
     ],
     "regular_season_end": "2026-09-27",
     "categories": {
@@ -641,7 +642,7 @@
             "CS": 2,
             "AVG": 0.2926829268292683
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Ali",
@@ -1350,7 +1351,7 @@
             "CS": 1,
             "AVG": 0.14285714285714285
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Brian",
@@ -1396,7 +1397,7 @@
             "CS": 0,
             "AVG": 0.24444444444444444
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Brian",
@@ -1419,7 +1420,7 @@
             "CS": 0,
             "AVG": 0.1951219512195122
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Brian",
@@ -1543,7 +1544,7 @@
             "ERA": 2.3823529411764706,
             "WHIP": 0.5294117647058824
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Brian",
@@ -1569,7 +1570,7 @@
             "ERA": 3.4838709677419355,
             "WHIP": 1.064516129032258
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Brian",
@@ -1716,7 +1717,7 @@
             "CS": 0,
             "AVG": 0.16216216216216217
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Mitch",
@@ -2678,7 +2679,7 @@
             "CS": 0,
             "AVG": 0.09523809523809523
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Russ",
@@ -2857,7 +2858,7 @@
             "ERA": 3.951219512195122,
             "WHIP": 1.975609756097561
           },
-          "eliminated": false
+          "eliminated": true
         }
       ],
       "totals": {
@@ -2906,7 +2907,7 @@
             "CS": 0,
             "AVG": 0.2727272727272727
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3021,7 +3022,7 @@
             "CS": 1,
             "AVG": 0.30952380952380953
           },
-          "eliminated": false
+          "eliminated": true
         },
         {
           "owner": "Steve",
@@ -3269,7 +3270,7 @@
             "ERA": 2.1599999999999997,
             "WHIP": 0.84
           },
-          "eliminated": false
+          "eliminated": true
         }
       ],
       "totals": {
