@@ -20,7 +20,7 @@
       "id": "postseason",
       "label": "Postseason",
       "start": "2026-09-29",
-      "through": "2026-10-19",
+      "through": "2026-10-23",
       "batters": [
         {
           "id": 592450,
@@ -679,8 +679,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 5,
-            "AB": 8,
+            "G": 6,
+            "AB": 11,
             "R": 2,
             "H": 1,
             "2B": 0,
@@ -688,10 +688,10 @@
             "HR": 0,
             "RBI": 0,
             "BB": 2,
-            "SO": 0,
+            "SO": 1,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.125
+            "AVG": 0.09090909090909091
           }
         },
         {
@@ -943,19 +943,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 27,
+            "G": 9,
+            "AB": 29,
             "R": 6,
             "H": 6,
             "2B": 1,
             "3B": 0,
             "HR": 1,
             "RBI": 2,
-            "BB": 7,
-            "SO": 7,
+            "BB": 9,
+            "SO": 8,
             "SB": 1,
             "CS": 0,
-            "AVG": 0.2222222222222222
+            "AVG": 0.20689655172413793
           }
         },
         {
@@ -1279,19 +1279,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 25,
+            "G": 9,
+            "AB": 29,
             "R": 4,
-            "H": 6,
+            "H": 8,
             "2B": 1,
             "3B": 1,
             "HR": 0,
             "RBI": 4,
             "BB": 1,
-            "SO": 1,
-            "SB": 3,
+            "SO": 3,
+            "SB": 4,
             "CS": 0,
-            "AVG": 0.24
+            "AVG": 0.27586206896551724
           }
         },
         {
@@ -1399,19 +1399,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 7,
-            "AB": 24,
-            "R": 3,
-            "H": 7,
+            "G": 8,
+            "AB": 28,
+            "R": 4,
+            "H": 8,
             "2B": 1,
-            "3B": 0,
+            "3B": 1,
             "HR": 0,
-            "RBI": 3,
+            "RBI": 4,
             "BB": 2,
-            "SO": 6,
+            "SO": 7,
             "SB": 2,
             "CS": 0,
-            "AVG": 0.2916666666666667
+            "AVG": 0.2857142857142857
           }
         },
         {
@@ -1591,19 +1591,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 29,
-            "R": 2,
+            "G": 9,
+            "AB": 32,
+            "R": 3,
             "H": 9,
             "2B": 1,
             "3B": 0,
             "HR": 0,
             "RBI": 0,
-            "BB": 0,
+            "BB": 1,
             "SO": 6,
             "SB": 1,
             "CS": 1,
-            "AVG": 0.3103448275862069
+            "AVG": 0.28125
           }
         },
         {
@@ -1807,11 +1807,11 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 4,
-            "AB": 11,
+            "G": 5,
+            "AB": 13,
             "R": 5,
-            "H": 5,
-            "2B": 0,
+            "H": 6,
+            "2B": 1,
             "3B": 0,
             "HR": 1,
             "RBI": 2,
@@ -1819,7 +1819,7 @@
             "SO": 2,
             "SB": 3,
             "CS": 0,
-            "AVG": 0.45454545454545453
+            "AVG": 0.46153846153846156
           }
         },
         {
@@ -2311,8 +2311,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 29,
+            "G": 9,
+            "AB": 33,
             "R": 6,
             "H": 6,
             "2B": 0,
@@ -2320,10 +2320,10 @@
             "HR": 2,
             "RBI": 3,
             "BB": 4,
-            "SO": 12,
+            "SO": 13,
             "SB": 1,
             "CS": 0,
-            "AVG": 0.20689655172413793
+            "AVG": 0.18181818181818182
           }
         },
         {
@@ -2359,8 +2359,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 1,
-            "AB": 0,
+            "G": 2,
+            "AB": 1,
             "R": 0,
             "H": 0,
             "2B": 0,
@@ -2371,7 +2371,7 @@
             "SO": 0,
             "SB": 0,
             "CS": 0,
-            "AVG": null
+            "AVG": 0.0
           }
         },
         {
@@ -2719,19 +2719,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 35,
-            "R": 2,
-            "H": 6,
+            "G": 9,
+            "AB": 39,
+            "R": 3,
+            "H": 8,
             "2B": 0,
             "3B": 0,
             "HR": 2,
-            "RBI": 7,
+            "RBI": 8,
             "BB": 1,
-            "SO": 5,
+            "SO": 6,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.17142857142857143
+            "AVG": 0.20512820512820512
           }
         },
         {
@@ -2815,19 +2815,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 26,
+            "G": 9,
+            "AB": 30,
             "R": 2,
-            "H": 7,
+            "H": 8,
             "2B": 1,
             "3B": 0,
             "HR": 1,
             "RBI": 6,
             "BB": 7,
-            "SO": 13,
+            "SO": 14,
             "SB": 0,
             "CS": 1,
-            "AVG": 0.2692307692307692
+            "AVG": 0.26666666666666666
           }
         },
         {
@@ -3247,7 +3247,7 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 6,
+            "G": 7,
             "AB": 17,
             "R": 0,
             "H": 2,
@@ -3295,19 +3295,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 35,
-            "R": 4,
-            "H": 9,
+            "G": 10,
+            "AB": 38,
+            "R": 5,
+            "H": 12,
             "2B": 0,
             "3B": 0,
             "HR": 1,
             "RBI": 5,
-            "BB": 1,
+            "BB": 2,
             "SO": 5,
             "SB": 0,
-            "CS": 0,
-            "AVG": 0.2571428571428571
+            "CS": 1,
+            "AVG": 0.3157894736842105
           }
         },
         {
@@ -3343,8 +3343,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 30,
+            "G": 10,
+            "AB": 34,
             "R": 2,
             "H": 6,
             "2B": 1,
@@ -3352,10 +3352,10 @@
             "HR": 0,
             "RBI": 3,
             "BB": 1,
-            "SO": 4,
+            "SO": 5,
             "SB": 2,
             "CS": 0,
-            "AVG": 0.2
+            "AVG": 0.17647058823529413
           }
         },
         {
@@ -3391,9 +3391,9 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 4,
+            "G": 5,
             "AB": 0,
-            "R": 0,
+            "R": 1,
             "H": 0,
             "2B": 0,
             "3B": 0,
@@ -3401,7 +3401,7 @@
             "RBI": 0,
             "BB": 0,
             "SO": 0,
-            "SB": 0,
+            "SB": 1,
             "CS": 0,
             "AVG": null
           }
@@ -3535,19 +3535,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 33,
+            "G": 10,
+            "AB": 36,
             "R": 5,
-            "H": 9,
-            "2B": 3,
+            "H": 10,
+            "2B": 4,
             "3B": 0,
             "HR": 1,
             "RBI": 4,
-            "BB": 4,
-            "SO": 13,
+            "BB": 5,
+            "SO": 14,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.2727272727272727
+            "AVG": 0.2777777777777778
           }
         },
         {
@@ -3895,19 +3895,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 27,
+            "G": 10,
+            "AB": 31,
             "R": 1,
             "H": 6,
             "2B": 1,
             "3B": 0,
             "HR": 0,
-            "RBI": 4,
+            "RBI": 6,
             "BB": 3,
-            "SO": 5,
+            "SO": 6,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.2222222222222222
+            "AVG": 0.1935483870967742
           }
         },
         {
@@ -4015,7 +4015,7 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 4,
+            "G": 5,
             "AB": 10,
             "R": 0,
             "H": 1,
@@ -5359,8 +5359,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 5,
+            "G": 4,
+            "AB": 6,
             "R": 1,
             "H": 1,
             "2B": 0,
@@ -5371,7 +5371,7 @@
             "SO": 2,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.2
+            "AVG": 0.16666666666666666
           }
         },
         {
@@ -5383,19 +5383,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 5,
-            "AB": 15,
+            "G": 6,
+            "AB": 18,
             "R": 3,
-            "H": 3,
+            "H": 4,
             "2B": 0,
             "3B": 0,
             "HR": 0,
             "RBI": 2,
             "BB": 4,
             "SO": 3,
-            "SB": 2,
+            "SB": 3,
             "CS": 0,
-            "AVG": 0.2
+            "AVG": 0.2222222222222222
           }
         },
         {
@@ -5695,8 +5695,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 27,
+            "G": 10,
+            "AB": 29,
             "R": 2,
             "H": 4,
             "2B": 0,
@@ -5704,10 +5704,10 @@
             "HR": 0,
             "RBI": 0,
             "BB": 3,
-            "SO": 9,
+            "SO": 10,
             "SB": 2,
             "CS": 0,
-            "AVG": 0.14814814814814814
+            "AVG": 0.13793103448275862
           }
         },
         {
@@ -6031,19 +6031,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 31,
+            "G": 10,
+            "AB": 34,
             "R": 4,
-            "H": 4,
+            "H": 5,
             "2B": 0,
             "3B": 0,
             "HR": 1,
             "RBI": 2,
             "BB": 3,
-            "SO": 12,
+            "SO": 14,
             "SB": 2,
-            "CS": 0,
-            "AVG": 0.12903225806451613
+            "CS": 1,
+            "AVG": 0.14705882352941177
           }
         },
         {
@@ -6103,19 +6103,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 8,
-            "AB": 30,
+            "G": 9,
+            "AB": 33,
             "R": 5,
-            "H": 11,
+            "H": 13,
             "2B": 1,
             "3B": 0,
             "HR": 3,
-            "RBI": 5,
-            "BB": 5,
+            "RBI": 6,
+            "BB": 6,
             "SO": 6,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.36666666666666664
+            "AVG": 0.3939393939393939
           }
         },
         {
@@ -6223,8 +6223,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 9,
-            "AB": 39,
+            "G": 10,
+            "AB": 43,
             "R": 7,
             "H": 12,
             "2B": 4,
@@ -6235,7 +6235,7 @@
             "SO": 9,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.3076923076923077
+            "AVG": 0.27906976744186046
           }
         },
         {
@@ -6378,8 +6378,8 @@
             "W": 1,
             "L": 0,
             "SV": 2,
-            "K": 11,
-            "G": 6,
+            "K": 14,
+            "G": 7,
             "GS": 0,
             "H": 4,
             "R": 0,
@@ -6387,10 +6387,10 @@
             "HR": 0,
             "HB": 0,
             "BB": 3,
-            "OUTS": 37,
-            "IP": "12.1",
+            "OUTS": 42,
+            "IP": "14.0",
             "ERA": 0.0,
-            "WHIP": 0.5675675675675675
+            "WHIP": 0.5
           }
         },
         {
@@ -6486,19 +6486,19 @@
             "W": 0,
             "L": 0,
             "SV": 0,
-            "K": 6,
-            "G": 7,
+            "K": 8,
+            "G": 8,
             "GS": 0,
-            "H": 6,
+            "H": 7,
             "R": 3,
             "ER": 2,
             "HR": 0,
             "HB": 1,
             "BB": 5,
-            "OUTS": 19,
-            "IP": "6.1",
-            "ERA": 2.8421052631578947,
-            "WHIP": 1.736842105263158
+            "OUTS": 23,
+            "IP": "7.2",
+            "ERA": 2.3478260869565215,
+            "WHIP": 1.5652173913043477
           }
         },
         {
@@ -8539,7 +8539,7 @@
             "L": 0,
             "SV": 0,
             "K": 1,
-            "G": 1,
+            "G": 2,
             "GS": 0,
             "H": 2,
             "R": 3,
@@ -8547,10 +8547,10 @@
             "HR": 0,
             "HB": 0,
             "BB": 1,
-            "OUTS": 2,
-            "IP": "0.2",
-            "ERA": 40.5,
-            "WHIP": 4.5
+            "OUTS": 3,
+            "IP": "1.0",
+            "ERA": 27.0,
+            "WHIP": 3.0
           }
         },
         {
@@ -9831,22 +9831,22 @@
           "roster_status": "Injured 15-Day",
           "injured_list": true,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 0,
+            "G": 1,
+            "GS": 0,
+            "H": 0,
+            "R": 0,
+            "ER": 0,
+            "HR": 0,
+            "HB": 0,
+            "BB": 1,
+            "OUTS": 2,
+            "IP": "0.2",
+            "ERA": 0.0,
+            "WHIP": 1.5
           }
         },
         {
@@ -10614,22 +10614,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": 0,
+            "W": 1,
             "L": 0,
             "SV": 0,
-            "K": 11,
-            "G": 2,
-            "GS": 2,
-            "H": 9,
-            "R": 3,
-            "ER": 3,
+            "K": 14,
+            "G": 3,
+            "GS": 3,
+            "H": 13,
+            "R": 4,
+            "ER": 4,
             "HR": 0,
             "HB": 0,
-            "BB": 4,
-            "OUTS": 25,
-            "IP": "8.1",
-            "ERA": 3.2399999999999998,
-            "WHIP": 1.5599999999999998
+            "BB": 5,
+            "OUTS": 40,
+            "IP": "13.1",
+            "ERA": 2.6999999999999997,
+            "WHIP": 1.3499999999999999
           }
         },
         {
@@ -11860,18 +11860,18 @@
             "L": 0,
             "SV": 0,
             "K": 2,
-            "G": 5,
+            "G": 6,
             "GS": 0,
-            "H": 3,
+            "H": 6,
             "R": 1,
             "ER": 1,
             "HR": 0,
             "HB": 0,
             "BB": 1,
-            "OUTS": 7,
-            "IP": "2.1",
-            "ERA": 3.8571428571428568,
-            "WHIP": 1.7142857142857142
+            "OUTS": 8,
+            "IP": "2.2",
+            "ERA": 3.375,
+            "WHIP": 2.625
           }
         },
         {
@@ -12748,21 +12748,21 @@
           "injured_list": false,
           "stats": {
             "W": 1,
-            "L": 0,
+            "L": 1,
             "SV": 0,
-            "K": 6,
-            "G": 2,
-            "GS": 2,
-            "H": 7,
-            "R": 3,
-            "ER": 3,
+            "K": 11,
+            "G": 3,
+            "GS": 3,
+            "H": 12,
+            "R": 5,
+            "ER": 5,
             "HR": 0,
             "HB": 0,
             "BB": 3,
-            "OUTS": 27,
-            "IP": "9.0",
-            "ERA": 3.0,
-            "WHIP": 1.1111111111111112
+            "OUTS": 42,
+            "IP": "14.0",
+            "ERA": 3.2142857142857144,
+            "WHIP": 1.0714285714285714
           }
         },
         {
@@ -14047,18 +14047,18 @@
             "L": 0,
             "SV": 0,
             "K": 2,
-            "G": 1,
+            "G": 2,
             "GS": 0,
             "H": 0,
-            "R": 0,
-            "ER": 0,
+            "R": 1,
+            "ER": 1,
             "HR": 0,
             "HB": 0,
-            "BB": 0,
-            "OUTS": 6,
-            "IP": "2.0",
-            "ERA": 0.0,
-            "WHIP": 0.0
+            "BB": 3,
+            "OUTS": 11,
+            "IP": "3.2",
+            "ERA": 2.4545454545454546,
+            "WHIP": 0.8181818181818182
           }
         },
         {
@@ -14423,20 +14423,20 @@
           "stats": {
             "W": 1,
             "L": 0,
-            "SV": 4,
-            "K": 6,
-            "G": 5,
+            "SV": 5,
+            "K": 7,
+            "G": 6,
             "GS": 0,
-            "H": 1,
-            "R": 0,
-            "ER": 0,
+            "H": 3,
+            "R": 1,
+            "ER": 1,
             "HR": 0,
             "HB": 0,
-            "BB": 2,
-            "OUTS": 17,
-            "IP": "5.2",
-            "ERA": 0.0,
-            "WHIP": 0.5294117647058824
+            "BB": 3,
+            "OUTS": 20,
+            "IP": "6.2",
+            "ERA": 1.3499999999999999,
+            "WHIP": 0.8999999999999999
           }
         },
         {
@@ -15062,6 +15062,7 @@
         }
       ],
       "included_game_ids": [
+        849805,
         849809,
         849810,
         849811,
@@ -15778,8 +15779,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 2,
-            "AB": 5,
+            "G": 3,
+            "AB": 8,
             "R": 1,
             "H": 1,
             "2B": 0,
@@ -15787,10 +15788,10 @@
             "HR": 0,
             "RBI": 0,
             "BB": 0,
-            "SO": 0,
+            "SO": 1,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.2
+            "AVG": 0.125
           }
         },
         {
@@ -16042,19 +16043,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 2,
+            "R": 0,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 2,
+            "SO": 1,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.0
           }
         },
         {
@@ -16378,19 +16379,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 10,
+            "G": 4,
+            "AB": 14,
             "R": 2,
-            "H": 3,
+            "H": 5,
             "2B": 1,
             "3B": 0,
             "HR": 0,
             "RBI": 1,
             "BB": 1,
-            "SO": 0,
-            "SB": 2,
+            "SO": 2,
+            "SB": 3,
             "CS": 0,
-            "AVG": 0.3
+            "AVG": 0.35714285714285715
           }
         },
         {
@@ -16498,19 +16499,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 4,
+            "R": 1,
+            "H": 1,
+            "2B": 0,
+            "3B": 1,
+            "HR": 0,
+            "RBI": 1,
+            "BB": 0,
+            "SO": 1,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.25
           }
         },
         {
@@ -16690,19 +16691,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 3,
+            "R": 1,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 1,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.0
           }
         },
         {
@@ -16906,19 +16907,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 2,
+            "R": 0,
+            "H": 1,
+            "2B": 1,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.5
           }
         },
         {
@@ -17410,19 +17411,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 4,
+            "R": 0,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 1,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.0
           }
         },
         {
@@ -17458,19 +17459,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 1,
+            "R": 0,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.0
           }
         },
         {
@@ -17818,19 +17819,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 4,
+            "R": 1,
+            "H": 2,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 1,
+            "BB": 0,
+            "SO": 1,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.5
           }
         },
         {
@@ -17914,19 +17915,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 4,
+            "R": 0,
+            "H": 1,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 1,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.25
           }
         },
         {
@@ -18346,18 +18347,18 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
+            "G": 1,
+            "AB": 0,
+            "R": 0,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
             "AVG": null
           }
         },
@@ -18394,19 +18395,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 13,
-            "R": 2,
-            "H": 5,
+            "G": 4,
+            "AB": 16,
+            "R": 3,
+            "H": 8,
             "2B": 0,
             "3B": 0,
             "HR": 0,
             "RBI": 3,
-            "BB": 1,
+            "BB": 2,
             "SO": 2,
             "SB": 0,
-            "CS": 0,
-            "AVG": 0.38461538461538464
+            "CS": 1,
+            "AVG": 0.5
           }
         },
         {
@@ -18442,8 +18443,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 9,
+            "G": 4,
+            "AB": 13,
             "R": 0,
             "H": 0,
             "2B": 0,
@@ -18451,7 +18452,7 @@
             "HR": 0,
             "RBI": 2,
             "BB": 1,
-            "SO": 2,
+            "SO": 3,
             "SB": 0,
             "CS": 0,
             "AVG": 0.0
@@ -18490,9 +18491,9 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 1,
+            "G": 2,
             "AB": 0,
-            "R": 0,
+            "R": 1,
             "H": 0,
             "2B": 0,
             "3B": 0,
@@ -18500,7 +18501,7 @@
             "RBI": 0,
             "BB": 0,
             "SO": 0,
-            "SB": 0,
+            "SB": 1,
             "CS": 0,
             "AVG": null
           }
@@ -18634,16 +18635,16 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 12,
+            "G": 4,
+            "AB": 15,
             "R": 2,
-            "H": 4,
-            "2B": 1,
+            "H": 5,
+            "2B": 2,
             "3B": 0,
             "HR": 1,
             "RBI": 3,
-            "BB": 1,
-            "SO": 4,
+            "BB": 2,
+            "SO": 5,
             "SB": 0,
             "CS": 0,
             "AVG": 0.3333333333333333
@@ -18994,19 +18995,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 9,
+            "G": 4,
+            "AB": 13,
             "R": 1,
             "H": 3,
             "2B": 0,
             "3B": 0,
             "HR": 0,
-            "RBI": 1,
+            "RBI": 3,
             "BB": 2,
-            "SO": 1,
+            "SO": 2,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.3333333333333333
+            "AVG": 0.23076923076923078
           }
         },
         {
@@ -19114,18 +19115,18 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
+            "G": 1,
+            "AB": 0,
+            "R": 0,
+            "H": 0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
             "AVG": null
           }
         },
@@ -20458,8 +20459,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 1,
-            "AB": 1,
+            "G": 2,
+            "AB": 2,
             "R": 0,
             "H": 0,
             "2B": 0,
@@ -20482,19 +20483,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 3,
+            "R": 0,
+            "H": 1,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 0,
+            "BB": 0,
+            "SO": 0,
+            "SB": 1,
+            "CS": 0,
+            "AVG": 0.3333333333333333
           }
         },
         {
@@ -20794,8 +20795,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 8,
+            "G": 4,
+            "AB": 10,
             "R": 2,
             "H": 2,
             "2B": 0,
@@ -20803,10 +20804,10 @@
             "HR": 0,
             "RBI": 0,
             "BB": 3,
-            "SO": 3,
+            "SO": 4,
             "SB": 2,
             "CS": 0,
-            "AVG": 0.25
+            "AVG": 0.2
           }
         },
         {
@@ -21130,19 +21131,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 10,
+            "G": 4,
+            "AB": 13,
             "R": 1,
-            "H": 1,
+            "H": 2,
             "2B": 0,
             "3B": 0,
             "HR": 0,
             "RBI": 0,
             "BB": 1,
-            "SO": 3,
+            "SO": 5,
             "SB": 1,
-            "CS": 0,
-            "AVG": 0.1
+            "CS": 1,
+            "AVG": 0.15384615384615385
           }
         },
         {
@@ -21202,19 +21203,19 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": null,
-            "AB": null,
-            "R": null,
-            "H": null,
-            "2B": null,
-            "3B": null,
-            "HR": null,
-            "RBI": null,
-            "BB": null,
-            "SO": null,
-            "SB": null,
-            "CS": null,
-            "AVG": null
+            "G": 1,
+            "AB": 3,
+            "R": 0,
+            "H": 2,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0,
+            "RBI": 1,
+            "BB": 1,
+            "SO": 0,
+            "SB": 0,
+            "CS": 0,
+            "AVG": 0.6666666666666666
           }
         },
         {
@@ -21322,8 +21323,8 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "G": 3,
-            "AB": 14,
+            "G": 4,
+            "AB": 18,
             "R": 4,
             "H": 6,
             "2B": 2,
@@ -21334,7 +21335,7 @@
             "SO": 3,
             "SB": 0,
             "CS": 0,
-            "AVG": 0.42857142857142855
+            "AVG": 0.3333333333333333
           }
         },
         {
@@ -21474,22 +21475,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 3,
+            "G": 1,
+            "GS": 0,
+            "H": 0,
+            "R": 0,
+            "ER": 0,
+            "HR": 0,
+            "HB": 0,
+            "BB": 0,
+            "OUTS": 5,
+            "IP": "1.2",
+            "ERA": 0.0,
+            "WHIP": 0.0
           }
         },
         {
@@ -21582,22 +21583,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 2,
+            "G": 1,
+            "GS": 0,
+            "H": 1,
+            "R": 0,
+            "ER": 0,
+            "HR": 0,
+            "HB": 0,
+            "BB": 0,
+            "OUTS": 4,
+            "IP": "1.1",
+            "ERA": 0.0,
+            "WHIP": 0.75
           }
         },
         {
@@ -23634,22 +23635,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 0,
+            "G": 1,
+            "GS": 0,
+            "H": 0,
+            "R": 0,
+            "ER": 0,
+            "HR": 0,
+            "HB": 0,
+            "BB": 0,
+            "OUTS": 1,
+            "IP": "0.1",
+            "ERA": 0.0,
+            "WHIP": 0.0
           }
         },
         {
@@ -24930,22 +24931,22 @@
           "roster_status": "Injured 15-Day",
           "injured_list": true,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 0,
+            "G": 1,
+            "GS": 0,
+            "H": 0,
+            "R": 0,
+            "ER": 0,
+            "HR": 0,
+            "HB": 0,
+            "BB": 1,
+            "OUTS": 2,
+            "IP": "0.2",
+            "ERA": 0.0,
+            "WHIP": 1.5
           }
         },
         {
@@ -25713,22 +25714,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 1,
+            "L": 0,
+            "SV": 0,
+            "K": 3,
+            "G": 1,
+            "GS": 1,
+            "H": 4,
+            "R": 1,
+            "ER": 1,
+            "HR": 0,
+            "HB": 0,
+            "BB": 1,
+            "OUTS": 15,
+            "IP": "5.0",
+            "ERA": 1.8,
+            "WHIP": 1.0
           }
         },
         {
@@ -26959,18 +26960,18 @@
             "L": 0,
             "SV": 0,
             "K": 1,
-            "G": 2,
+            "G": 3,
             "GS": 0,
-            "H": 1,
+            "H": 4,
             "R": 0,
             "ER": 0,
             "HR": 0,
             "HB": 0,
             "BB": 0,
-            "OUTS": 3,
-            "IP": "1.0",
+            "OUTS": 4,
+            "IP": "1.1",
             "ERA": 0.0,
-            "WHIP": 1.0
+            "WHIP": 3.0
           }
         },
         {
@@ -27847,21 +27848,21 @@
           "injured_list": false,
           "stats": {
             "W": 1,
-            "L": 0,
+            "L": 1,
             "SV": 0,
-            "K": 3,
-            "G": 1,
-            "GS": 1,
-            "H": 2,
-            "R": 1,
-            "ER": 1,
+            "K": 8,
+            "G": 2,
+            "GS": 2,
+            "H": 7,
+            "R": 3,
+            "ER": 3,
             "HR": 0,
             "HB": 0,
             "BB": 2,
-            "OUTS": 16,
-            "IP": "5.1",
-            "ERA": 1.6875,
-            "WHIP": 0.75
+            "OUTS": 31,
+            "IP": "10.1",
+            "ERA": 2.6129032258064515,
+            "WHIP": 0.8709677419354839
           }
         },
         {
@@ -29142,22 +29143,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 0,
+            "K": 0,
+            "G": 1,
+            "GS": 0,
+            "H": 0,
+            "R": 1,
+            "ER": 1,
+            "HR": 0,
+            "HB": 0,
+            "BB": 3,
+            "OUTS": 5,
+            "IP": "1.2",
+            "ERA": 5.3999999999999995,
+            "WHIP": 1.7999999999999998
           }
         },
         {
@@ -29520,22 +29521,22 @@
           "roster_status": "Active",
           "injured_list": false,
           "stats": {
-            "W": null,
-            "L": null,
-            "SV": null,
-            "K": null,
-            "G": null,
-            "GS": null,
-            "H": null,
-            "R": null,
-            "ER": null,
-            "HR": null,
-            "HB": null,
-            "BB": null,
-            "OUTS": null,
-            "IP": null,
-            "ERA": null,
-            "WHIP": null
+            "W": 0,
+            "L": 0,
+            "SV": 1,
+            "K": 1,
+            "G": 1,
+            "GS": 0,
+            "H": 2,
+            "R": 1,
+            "ER": 1,
+            "HR": 0,
+            "HB": 0,
+            "BB": 1,
+            "OUTS": 3,
+            "IP": "1.0",
+            "ERA": 9.0,
+            "WHIP": 3.0
           }
         },
         {
@@ -30161,6 +30162,7 @@
         }
       ],
       "included_game_ids": [
+        849805,
         849815,
         849816,
         849817
