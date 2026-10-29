@@ -1,6 +1,7 @@
 from datetime import datetime
+import json
 import pytest
-from scripts.schedule_gate import decision
+from scripts.schedule_gate import decision, SCHEDULE_PATH
 
 
 @pytest.mark.parametrize("hour,minute,allowed,audit", [
@@ -33,7 +34,20 @@ def test_manual_request_can_run_outside_window():
     (21,13,15,False,False), (21,19,0,False,False),
 ])
 def test_game_calendar(day, hour, minute, allowed, audit):
-    assert decision(datetime(2026,10,day,hour,minute), "workflow_dispatch", True) == (allowed,audit)
+    schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8")) | {"enabled": True}
+    assert decision(datetime(2026,10,day,hour,minute), "workflow_dispatch", True, schedule) == (allowed,audit)
+
+
+@pytest.mark.parametrize("hour", [13, 19, 23])
+@pytest.mark.parametrize("event,external", [("schedule", False), ("workflow_dispatch", True)])
+def test_archived_schedule_blocks_audits_and_game_checks(hour, event, external):
+    schedule = {"enabled": False, "games": {"2026-10-23": ["17:00"]}}
+    assert decision(datetime(2026,10,23,hour), event, external, schedule) == (False, False)
+
+
+def test_archived_schedule_allows_explicit_manual_correction():
+    assert decision(datetime(2026,10,23,19), "workflow_dispatch",
+                    schedule={"enabled": False, "games": {}}) == (True, True)
 
 
 def test_multiple_games_and_manual_override():

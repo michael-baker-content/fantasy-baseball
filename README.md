@@ -7,6 +7,21 @@ Pages. Visitors do not need Python or a login.
 
 ## Set up your own league
 
+This season is in archival mode: `config/update_schedule.json` has `enabled`
+set to `false`. Scheduled statistics checks, including correction audits, are
+disabled. The published site remains available with its saved results.
+
+To finish archiving, disable the external job in cron-job.org, disable **Update
+postseason statistics** in GitHub Actions, and pull the final bot commits before
+committing local changes. The separate **Deploy website** workflow can remain
+available. Local update scripts and explicit manual statistics runs still work;
+avoid them when preserving the final snapshot. No data refresh is needed to archive.
+
+For a future season, update the league configuration, rosters, and game calendar,
+set `enabled` to `true`, and re-enable the statistics workflow and external job.
+Existing calendar dates are retained as a reference. Archival mode here does not
+set GitHub's repository-wide read-only archive setting.
+
 ### 1. Make your own copy
 
 Fork this repository into your GitHub account and download or clone your copy

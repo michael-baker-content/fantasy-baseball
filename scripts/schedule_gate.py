@@ -14,14 +14,16 @@ def decision(local, event, external_schedule=False, schedule=None):
     manual = event == "workflow_dispatch" and not external_schedule
     if manual:
         return True, True
+    if schedule is None:
+        schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
+    if not schedule.get("enabled", True):
+        return False, False
     if not 13 * 60 <= minutes <= 23 * 60 + 30:
         return False, False
     # Treat a slightly delayed run as belonging to its quarter-hour slot.
     slot = minutes // 15 * 15
     if slot == 13 * 60:
         return True, True
-    if schedule is None:
-        schedule = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8"))
     starts = schedule["games"].get(local.date().isoformat(), [])
     for start in starts:
         hour, minute = map(int, start.split(":"))
@@ -44,7 +46,7 @@ def main():
              f"- UTC cron: `{os.environ.get('SCHEDULE', '')}`",
              f"- Actual start (UTC): {utc.isoformat()}",
              f"- Actual start (Pacific): {local.isoformat()}",
-             f"- Decision: {'Run statistics check' if allowed else 'Skip: no check due in this Pacific time slot'}",
+             f"- Decision: {'Run statistics check' if allowed else 'Skip: scheduled updates disabled or no check due in this Pacific time slot'}",
              f"- Correction audit: {'Yes' if audit else 'No'}"]
     print("\n".join(lines))
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
